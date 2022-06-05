@@ -14,7 +14,6 @@ router = APIRouter()
 
 @router.get("/loans-chart")
 async def get_delegations(
-    response: Response,
     start_timestamp: int = -1,
     end_timestamp: int = -1,
     time_interval: int = -1,

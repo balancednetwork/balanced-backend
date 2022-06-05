@@ -13,11 +13,11 @@ from balanced_backend.config import settings
 from balanced_backend.log import logger
 
 tags_metadata = [
-    {"name": "icon-governance", "description": "...",},
+    {"name": "balanced-backend", "description": "...",},
 ]
 
 app = FastAPI(
-    title="ICON Governance Service",
+    title="Balanced Backend Service",
     description="...",
     version="v0.1.0",
     openapi_tags=tags_metadata,
