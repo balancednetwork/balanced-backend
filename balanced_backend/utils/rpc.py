@@ -45,7 +45,7 @@ def get_icx_call(to_address: str, params: dict):
 
 
 
-def get_loans_amount(params: dict):
+def get_loans_amount():
     payload = {
         "jsonrpc": "2.0",
         "id": 1234,
@@ -53,9 +53,7 @@ def get_loans_amount(params: dict):
         "params": {
             "to": settings.LOANS_CONTRACT_ADDRESS,
             "dataType": "call",
-            "data": params
+            "data": {"method": "getTotalCollateral"}
         },
     }
     return post_rpc(payload)
-
-
