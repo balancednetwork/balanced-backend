@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     METRICS_ADDRESS: str = "localhost"
 
     # Prefix
-    REST_PREFIX: str = "/api/v1"
+    REST_PREFIX: str = "/api/v2"
     HEALTH_PREFIX: str = "/heath"
     METRICS_PREFIX: str = "/metrics"
     DOCS_PREFIX: str = "/api/v1/governance/docs"
