@@ -1,3 +1,4 @@
+import pytest
 from sqlmodel import select
 
 from balanced_backend.models.loans_chart import LoansChart
@@ -17,6 +18,7 @@ def test_get_loans_chart_data_point_invalid():
     assert loans_value is None
 
 
+@pytest.mark.first
 def test_set_loans_chart_from_timestamp(db):
     """Check that we can idepotently update the DB with values at a given timestamp."""
     timestamp = 1654409623

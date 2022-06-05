@@ -1,6 +1,7 @@
 pytest
 pytest-mock
 pytest-cov
+pytest-ordering
 
 docker-compose
 grpcio-tools==1.40.0
