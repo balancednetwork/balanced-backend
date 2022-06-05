@@ -26,7 +26,25 @@ def get_loans_chart_data_point(timestamp: int = None) -> Union[float, None]:
         return
 
 
-def init_loans_chart():
+def set_loans_chart_from_timestamp(session, loan_time: int) -> bool:
+    loans_amount = get_loans_chart_data_point(loan_time * 1000)
+
+    if loans_amount is not None:
+        loans_chart = LoansChart(
+            timestamp=int(loan_time / 1e6),
+            value=loans_amount
+        )
+
+        session.merge(loans_chart)
+        session.commit()
+        return True
+    else:
+        logger.info("Loans contract likely does not have the method at this time "
+                    "or an API is down.")
+        return False
+
+
+def init_loans_chart(session):
     """
     Iterate through timestamps from start time every day.
     Start time: Loans contract started April 25, 2021 -> 1619308800
@@ -34,8 +52,9 @@ def init_loans_chart():
     now = datetime.now().timestamp()
     loan_time = 1619308800
     while now > loan_time:
-        loans_amount = get_loans_chart_data_point(loan_time * 1000)
-
+        set_loans_chart_from_timestamp(session, loan_time)
+        # Add a day
+        loan_time += 60 * 60 * 24
 
 
 def get_loans_chart(session):
@@ -53,7 +72,7 @@ def get_loans_chart(session):
     else:
         # We have an empty DB -> init
         logger.info("loans chart empty - initializing.")
-        init_loans_chart()
+        init_loans_chart(session)
         return
 
     if last_updated_time + 3600 * 1000 * settings.LOANS_CHART_MIN_TIME_STEP_MIN < datetime.now().timestamp():

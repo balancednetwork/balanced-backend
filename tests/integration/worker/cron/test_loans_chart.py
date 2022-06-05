@@ -1,5 +1,8 @@
+from sqlmodel import select
+
+from balanced_backend.models.loans_chart import LoansChart
 from balanced_backend.workers.crons.loans_chart import get_loans_chart, \
-    init_loans_chart, get_loans_chart_data_point
+    set_loans_chart_from_timestamp, get_loans_chart_data_point
 
 
 def test_get_loans_chart_data_point_valid():
@@ -14,8 +17,15 @@ def test_get_loans_chart_data_point_invalid():
     assert loans_value is None
 
 
-def test_init_loans_chart():
-    init_loans_chart
+def test_set_loans_chart_from_timestamp(db):
+    """Check that we can idepotently update the DB with values at a given timestamp."""
+    timestamp = 1654409623
+    assert set_loans_chart_from_timestamp(db, timestamp * 1000000)
+    with db as session:
+        result = session.execute(
+            select(LoansChart).where(LoansChart.timestamp == timestamp))
+        loans = result.scalars().all()
+        assert loans[0].timestamp == timestamp
 
 
 def test_get_loans_chart(db):
