@@ -45,7 +45,7 @@ def get_icx_call(to_address: str, params: dict):
 
 
 
-def get_loans_amount():
+def get_loans_amount(height: int = None):
     payload = {
         "jsonrpc": "2.0",
         "id": 1234,
@@ -56,4 +56,8 @@ def get_loans_amount():
             "data": {"method": "getTotalCollateral"}
         },
     }
+
+    if height is not None:
+        payload['params']['height'] = hex(height)
+
     return post_rpc(payload)
