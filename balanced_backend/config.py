@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     # TODO: RM?
     BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
 
+    # Community API
+    # COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
+    COMMUNITY_API_ENDPOINT: str = "https://tracker.v2.mainnet.sng.vultr.icon.community"
+
+
     # DB
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "changeme"

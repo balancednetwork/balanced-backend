@@ -1,18 +1,41 @@
 from sqlmodel import select
-from typing import List
+from typing import List, Union
 from datetime import datetime
 
 from balanced_backend.config import settings
 from balanced_backend.metrics import prom_metrics
 from balanced_backend.models.loans_chart import LoansChart
+from balanced_backend.utils.rpc import get_loans_amount, convert_hex_int
+from balanced_backend.utils.time_to_block import get_block_from_timestamp
+from balanced_backend.log import logger
 
 
-def init_loans_chart(timestamp: int):
-    pass
+def get_loans_chart_data_point(timestamp: int = None) -> Union[float, None]:
+    """Get the loans contract TotalCollateral from timestamp."""
+    height = get_block_from_timestamp(timestamp=timestamp)
+    if height == 0:
+        return
+
+    r = get_loans_amount(height=height)
+    if r.status_code == 200:
+        loans_amount = r.json()['result']
+        return convert_hex_int(loans_amount) / 1e18
+    else:
+        logger.info("Invalid response to get_loans_amount. Contract may not have "
+                    "method then.")
+        return
 
 
-def get_loans_chart_data_point(timestamp: int = None):
-    pass
+def init_loans_chart():
+    """
+    Iterate through timestamps from start time every day.
+    Start time: Loans contract started April 25, 2021 -> 1619308800
+    """
+    now = datetime.now().timestamp()
+    loan_time = 1619308800
+    while now > loan_time:
+        loans_amount = get_loans_chart_data_point(loan_time * 1000)
+
 
 
 def get_loans_chart(session):
@@ -28,13 +51,25 @@ def get_loans_chart(session):
     if len(loans_time_series) > 0:
         last_updated_time = loans_time_series[0].timestamp
     else:
-        last_updated_time = 0  # We have an empty DB -> proceed
+        # We have an empty DB -> init
+        logger.info("loans chart empty - initializing.")
+        init_loans_chart()
+        return
 
-    if last_updated_time + 3600 * 1000 * settings.LOANS_CHART_MIN_TIME_STEP_MIN > datetime.now().timestamp():
+    if last_updated_time + 3600 * 1000 * settings.LOANS_CHART_MIN_TIME_STEP_MIN < datetime.now().timestamp():
         prom_metrics.crons_last_timestamp = datetime.now().timestamp()
         prom_metrics.crons_ran.inc()
         loans_amount = get_loans_chart_data_point()
     else:
         return
 
+    if loans_amount is None:
+        logger.info("Could not get loans amount, endpoint not reachable most likely.")
 
+    loans_chart = LoansChart(
+        timestamp=datetime.now().timestamp(),
+        value=loans_amount
+    )
+
+    session.merge(loans_chart)
+    session.commit()
