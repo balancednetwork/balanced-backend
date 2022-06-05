@@ -1,5 +1,5 @@
 from sqlmodel import select
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
 from datetime import datetime
 
 from balanced_backend.config import settings
@@ -8,6 +8,9 @@ from balanced_backend.models.loans_chart import LoansChart
 from balanced_backend.utils.rpc import get_loans_amount, convert_hex_int
 from balanced_backend.utils.time_to_block import get_block_from_timestamp
 from balanced_backend.log import logger
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
 
 
 def get_loans_chart_data_point(timestamp: int = None) -> Union[float, None]:
@@ -26,7 +29,7 @@ def get_loans_chart_data_point(timestamp: int = None) -> Union[float, None]:
         return
 
 
-def set_loans_chart_from_timestamp(session, loan_time: int) -> bool:
+def set_loans_chart_from_timestamp(session: Session, loan_time: int) -> bool:
     loans_amount = get_loans_chart_data_point(loan_time * 1000)
 
     if loans_amount is not None:
@@ -44,7 +47,7 @@ def set_loans_chart_from_timestamp(session, loan_time: int) -> bool:
         return False
 
 
-def init_loans_chart(session):
+def init_loans_chart(session: Session):
     """
     Iterate through timestamps from start time every day.
     Start time: Loans contract started April 25, 2021 -> 1619308800
