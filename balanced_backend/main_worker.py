@@ -15,12 +15,23 @@ def main(worker_type: str = None):
 
     logger.info(f"Worker is a {worker_type}.")
 
-    if worker_type == "cron":
-        while True:
-            with session_factory() as session:
-                logger.info("Starting rewards cron")
-                get_loans_chart(session)
-                prom_metrics.rewards_cron_ran.inc()
+    # if worker_type == "cron":
+    while True:
+        with session_factory() as session:
+            logger.info("Starting rewards cron")
+            get_loans_chart(session)
+            prom_metrics.crons_ran.inc()
 
-                logger.info("Sleeping after crons.")
-                sleep(settings.CRON_SLEEP_SEC)
+            logger.info("Sleeping after crons.")
+            sleep(settings.CRON_SLEEP_SEC)
+
+
+if __name__ == '__main__':
+    # TODO: When enabling stream processing, uncomment this
+    # import argparse
+    #
+    # parser = argparse.ArgumentParser(description="Worker type input.")
+    # parser.add_argument("worker_type", type=str, help="The type of worker", default="")
+    # args = parser.parse_args()
+    # main(args.worker_type)
+    main()
