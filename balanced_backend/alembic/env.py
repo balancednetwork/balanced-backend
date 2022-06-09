@@ -7,7 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlmodel import SQLModel
 
 from balanced_backend.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABASE_URL
+
 from balanced_backend.models.loans_chart import LoansChart
+from balanced_backend.models.bnusd_supply_chart import BnusdSupplyChart
 
 # Other versions imported each object
 config = context.config
