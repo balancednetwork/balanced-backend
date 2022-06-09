@@ -67,9 +67,12 @@ class Settings(BaseSettings):
     BAND_CONTRACT_ADDRESS: str
     REBALANCING_CONTRACT_ADDRESS: str
 
+    # Contract start times
+    LOANS_START_TIME: int = 1619308800
+
     CRON_SLEEP_SEC: int = 600
 
-    LOANS_CHART_MIN_TIME_STEP_MIN: int = 60
+    LOANS_CHART_MIN_TIME_STEP_MIN: int = 60 * 24
 
     class Config:
         case_sensitive = True

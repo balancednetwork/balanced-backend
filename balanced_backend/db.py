@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine
 
 from balanced_backend.config import settings
-from balanced_backend.models.loans_chart import LoansChart
 
 SQLALCHEMY_DATABASE_URL_STUB = "://{user}:{password}@{server}:{port}/{db}".format(
     user=settings.POSTGRES_USER,
