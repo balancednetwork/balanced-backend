@@ -30,6 +30,20 @@ def post_rpc(payload: dict):
     return r
 
 
+def get_icx_call_block_height(params: dict, height: int = None):
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": params,
+    }
+
+    if height is not None:
+        payload['params']['height'] = hex(height)
+
+    return post_rpc(payload)
+
+
 def get_icx_call(to_address: str, params: dict):
     payload = {
         "jsonrpc": "2.0",
@@ -41,40 +55,4 @@ def get_icx_call(to_address: str, params: dict):
             "data": params
         },
     }
-    return post_rpc(payload)
-
-
-def loans_getTotalCollateral(height: int = None):
-    payload = {
-        "jsonrpc": "2.0",
-        "id": 1234,
-        "method": "icx_call",
-        "params": {
-            "to": settings.LOANS_CONTRACT_ADDRESS,
-            "dataType": "call",
-            "data": {"method": "getTotalCollateral"}
-        },
-    }
-
-    if height is not None:
-        payload['params']['height'] = hex(height)
-
-    return post_rpc(payload)
-
-
-def bnusd_totalSupply(height: int = None):
-    payload = {
-        "jsonrpc": "2.0",
-        "id": 1234,
-        "method": "icx_call",
-        "params": {
-            "to": settings.BNUSD_CONTRACT_ADDRESS,
-            "dataType": "call",
-            "data": {"method": "totalSupply"}
-        },
-    }
-
-    if height is not None:
-        payload['params']['height'] = hex(height)
-
     return post_rpc(payload)

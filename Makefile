@@ -16,10 +16,6 @@ test-unit:  ## Run unit tests
 test-integration:  ## Run integration tests - Need DB compose up
 	python3 -m pytest tests/integration
 
-test-coverage:  ## Run unit tests - Need DB compose up
-	PYTHONPATH=$PYTHONPATH:`pwd` pytest --cov=balanced_backend --cov-report xml tests/integration
-	PYTHONPATH=$PYTHONPATH:`pwd` pytest --cov=balanced_backend --cov-append --cov-report xml tests/unit
-
 up:  ## Bring everything up as containers
 	docker-compose -f docker-compose.db.yml -f docker-compose.yml up -d
 

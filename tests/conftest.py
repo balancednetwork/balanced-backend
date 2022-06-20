@@ -1,18 +1,11 @@
-import logging
 from typing import Generator
 
 import pytest
-from _pytest.logging import caplog as _caplog
 from fastapi.testclient import TestClient
-from loguru import logger
 from sqlalchemy.orm import sessionmaker
 
 from balanced_backend.db import engine
-
-# from balanced_backend.db import get_session
-# @pytest.fixture(scope="session")
-# def db() -> Generator:
-#     yield get_session()
+from balanced_backend.models.historical_base import HistoricalMethodInterval
 
 
 @pytest.fixture(scope="session")
@@ -31,12 +24,16 @@ def client() -> Generator:
         yield c
 
 
-@pytest.fixture
-def caplog(_caplog):
-    class PropogateHandler(logging.Handler):
-        def emit(self, record):
-            logging.getLogger(record.name).handle(record)
-
-    handler_id = logger.add(PropogateHandler(), format="{message} {extra}")
-    yield _caplog
-    logger.remove(handler_id)
+@pytest.fixture(scope="function")
+def loans_context():
+    context = HistoricalMethodInterval(
+        timestamp=1625745538,
+        params={
+            "to": "cx66d4d90f5f113eba575bf793570135f9b10cece1",
+            "dataType": "call",
+            "data": {"method": "getTotalCollateral"}
+        },
+        init_chart_time=1619308800,
+        update_interval=1000000000,
+    )
+    return context

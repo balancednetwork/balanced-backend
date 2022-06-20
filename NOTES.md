@@ -54,3 +54,20 @@ TTD:
     - https://balanced.sudoblock.io/api/v1/stats/token-stats
   - Stats 
     - https://balanced.sudoblock.io/api/v1/dex/stats/10
+
+
+## Additional Improvments 
+
+#### Add skip to Tx feature
+
+The above routines work well if you have very active addresses where the method changes each day but if we are going to index a large number of addresses (ie, every address in ICON) then we should think about a few optimizations to speed up sync time.  
+
+Further, if we want to be able to get more fine grained charts (ie every hour?), then the num data points will be much higher. 
+
+We could instead put something in that is some callable to determine when the next time to run the method. 
+
+Would work by supplying a callable that would inform the rpc getter when to call the next get. 
+
+Would be a different endpoint and produce a sparse time series 
+
+Endpoint could fill in the gaps but would be better if the FE did that 
