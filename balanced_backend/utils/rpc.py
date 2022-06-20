@@ -25,6 +25,7 @@ def post_rpc(payload: dict):
         r = requests.post(settings.BACKUP_ICON_NODE_URL, data=json.dumps(payload))
         if r.status_code != 200:
             logger.info(f"Error {r.status_code} with payload {payload} to backup")
+            return
         return r
 
     return r
