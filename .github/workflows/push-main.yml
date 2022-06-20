@@ -56,7 +56,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          target: prod
           push: true
           build-args: |
             SERVICE_NAME=api
@@ -67,7 +66,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          target: prod
           push: true
           build-args: |
             SERVICE_NAME=worker
