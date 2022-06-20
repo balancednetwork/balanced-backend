@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     # ICON Nodes
     ICON_NODE_URL: str = "https://api.icon.community/api/v3"
     # TODO: Remove?
-    BACKUP_ICON_NODE_URL: str = "https://ctz.solicwallet.io"
+    BACKUP_ICON_NODE_URL: str = "https://ctz.solicwallet.io/api/v3"
 
     # Community API
     # TODO: Update this when vultr migration is complete
