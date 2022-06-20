@@ -30,12 +30,9 @@ class Settings(BaseSettings):
 
     # ICON Nodes
     ICON_NODE_URL: str = "https://api.icon.community/api/v3"
-    # TODO: RM?
-    BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
 
     # Community API
-    # COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
-    COMMUNITY_API_ENDPOINT: str = "https://tracker.v2.mainnet.sng.vultr.icon.community"
+    COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
 
 
     # DB
@@ -47,25 +44,6 @@ class Settings(BaseSettings):
 
     # Endpoints
     MAX_PAGE_SIZE: int = 100
-
-    GOVERNANCE_ADDRESS: str = "cx0000000000000000000000000000000000000000"
-
-    # Contract addresses
-    LOANS_CONTRACT_ADDRESS: str 
-    STAKING_CONTRACT_ADDRESS: str
-    DIVIDENDS_CONTRACT_ADDRESS: str
-    RESERVE_CONTRACT_ADDRESS: str
-    DAOFUND_CONTRACT_ADDRESS: str
-    REWARDS_CONTRACT_ADDRESS: str
-    DEX_CONTRACT_ADDRESS: str
-    GOVERNANCE_CONTRACT_ADDRESS: str
-    ORACLE_CONTRACT_ADDRESS: str
-    SICX_CONTRACT_ADDRESS: str
-    BNUSD_CONTRACT_ADDRESS: str
-    BALANCED_TOKEN_CONTRACT_ADDRESS: str
-    BALANCED_WORKER_TOKEN_CONTRACT_ADDRESS: str 
-    BAND_CONTRACT_ADDRESS: str
-    REBALANCING_CONTRACT_ADDRESS: str
 
     CRON_SLEEP_SEC: int = 600
 
