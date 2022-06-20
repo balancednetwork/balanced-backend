@@ -32,7 +32,9 @@ class Settings(BaseSettings):
     ICON_NODE_URL: str = "https://api.icon.community/api/v3"
 
     # Community API
-    COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
+    # TODO: Update this when vultr migration is complete
+    # COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
+    COMMUNITY_API_ENDPOINT: str = "https://tracker.v2.mainnet.sng.vultr.icon.community"
 
 
     # DB
