@@ -14,10 +14,10 @@ class Settings(BaseSettings):
     METRICS_ADDRESS: str = "localhost"
 
     # Prefix
-    REST_PREFIX: str = "/api/v2"
+    REST_PREFIX: str = "/api/v1"
     HEALTH_PREFIX: str = "/heath"
     METRICS_PREFIX: str = "/metrics"
-    DOCS_PREFIX: str = "/api/v2/docs"
+    DOCS_PREFIX: str = "/api/v1/docs"
 
     CORS_ALLOW_ORIGINS: str = "*"
     CORS_ALLOW_CREDENTIALS: bool = False
