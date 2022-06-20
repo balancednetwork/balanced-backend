@@ -32,7 +32,7 @@ services:
         - SERVICE_NAME=worker
     command:
       - worker
-      - head
+#      - head
     security_opt:
       - "seccomp:unconfined"
     cap_add:
@@ -42,21 +42,21 @@ services:
     environment:
       <<: *env
 
-  balanced-cron:
-    build:
-      context: ${BALANCED_CONTEXT:-.}
-      target: ${BALANCED_TARGET:-prod}
-      args:
-        - SERVICE_NAME=worker
-    command:
-      - worker
-      - cron
-
-    security_opt:
-      - "seccomp:unconfined"
-    cap_add:
-      - SYS_PTRACE
-    volumes:
-      - ${BALANCED_CONTEXT:-.}/balanced_backend:/app
-    environment:
-      <<: *env
+#  balanced-cron:
+#    build:
+#      context: ${BALANCED_CONTEXT:-.}
+#      target: ${BALANCED_TARGET:-prod}
+#      args:
+#        - SERVICE_NAME=worker
+#    command:
+#      - worker
+#      - cron
+#
+#    security_opt:
+#      - "seccomp:unconfined"
+#    cap_add:
+#      - SYS_PTRACE
+#    volumes:
+#      - ${BALANCED_CONTEXT:-.}/balanced_backend:/app
+#    environment:
+#      <<: *env
