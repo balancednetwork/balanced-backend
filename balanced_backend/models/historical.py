@@ -1,10 +1,8 @@
 from datetime import datetime
 from typing import Optional
-
 import sqlalchemy as sa
 from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, SQLModel
-from pydantic import validator
 
 
 class DailyHistorical(SQLModel, table=True):
@@ -24,4 +22,4 @@ class DailyHistorical(SQLModel, table=True):
 
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805
-        return "daily_historical"
+        return "daily_historicals"
