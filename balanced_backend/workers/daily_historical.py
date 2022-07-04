@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from balanced_backend.utils.historical import build_interval_time_series
 from balanced_backend.workers.daily_historical_addresses import daily_historical
-from balanced_backend.models.historical import DailyHistorical
+from balanced_backend.tables.historical import DailyHistorical
 from balanced_backend.models.historical_base import HistoricalMethodInterval
 
 if TYPE_CHECKING:

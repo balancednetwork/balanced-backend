@@ -8,7 +8,8 @@ from sqlmodel import SQLModel
 
 from balanced_backend.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABASE_URL
 
-from balanced_backend.models.historical import DailyHistorical
+from balanced_backend.tables.historical import DailyHistorical
+from balanced_backend.tables.volumes import ContractMethodVolume
 
 # Other versions imported each object
 config = context.config

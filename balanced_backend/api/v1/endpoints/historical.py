@@ -2,29 +2,31 @@ import datetime
 from http import HTTPStatus
 from typing import List, Union
 
-from fastapi import APIRouter, Depends, Response, HTTPException
+from fastapi import APIRouter, Depends, Response, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
 from balanced_backend.db import get_session
-from balanced_backend.models.historical import DailyHistorical
+from balanced_backend.tables.historical import DailyHistorical
 
 router = APIRouter()
 
 
 @router.get("/historical")
-async def historical_daily(
+async def historical(
+    session: AsyncSession = Depends(get_session),
+    skip: int = Query(0),
+    limit: int = Query(1000, gt=0, lt=1001),
     address: str = None,
     contract_name: str = None,
     method: str = None,
     days_ago: int = None,
     start_timestamp: int = None,
     end_timestamp: int = None,
-    session: AsyncSession = Depends(get_session),
 ) -> Union[List[DailyHistorical], Response]:
     """Return list of delegations."""
 
-    query = select(DailyHistorical)
+    query = select(DailyHistorical).offset(skip).limit(limit)
 
     if address is not None:
         query = query.where(DailyHistorical.address == address)
@@ -40,8 +42,8 @@ async def historical_daily(
         query = query.where(DailyHistorical.method == method)
 
     if days_ago is not None:
-        start_timestamp = datetime.datetime.utcnow().timestamp()
-        end_timestamp = datetime.datetime.utcnow().timestamp() - \
+        end_timestamp = datetime.datetime.utcnow().timestamp()
+        start_timestamp = datetime.datetime.utcnow().timestamp() - \
                         (24 * 60 * 60) * days_ago
 
         query = query\
@@ -49,9 +51,9 @@ async def historical_daily(
             .where(DailyHistorical.timestamp <= end_timestamp)
 
     elif start_timestamp is not None:
-        query = query.where(DailyHistorical.timestamp >= start_timestamp)
+        query = query.where(DailyHistorical.timestamp <= start_timestamp)
     elif end_timestamp is not None:
-        query = query.where(DailyHistorical.timestamp >= start_timestamp)
+        query = query.where(DailyHistorical.timestamp >= end_timestamp)
 
     result = await session.execute(query)
     time_series = result.scalars().all()

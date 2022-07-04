@@ -1,5 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, validator
+from sqlmodel import SQLModel
 
 from balanced_backend.utils.time_to_block import get_timestamp_from_block
 
@@ -33,6 +34,8 @@ class HistoricalMethodInterval(BaseModel):
     method: str = None
     address: str = None
     contract_name: str = None
+
+    model: SQLModel = None
 
     def update_time(self):
         self.date = datetime.fromtimestamp(self.timestamp)

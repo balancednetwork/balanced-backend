@@ -4,7 +4,7 @@ from sqlmodel import select
 
 from balanced_backend.log import logger
 from balanced_backend.metrics import prom_metrics
-from balanced_backend.models.historical import DailyHistorical
+from balanced_backend.tables.historical import DailyHistorical
 from balanced_backend.models.historical_base import HistoricalMethodInterval
 from balanced_backend.utils.time_to_block import get_block_from_timestamp
 from balanced_backend.utils.rpc import convert_hex_int, get_icx_call_block_height
@@ -107,7 +107,7 @@ def build_interval_time_series(
 
             if value is None:
                 raise Exception(
-                    "Could not get loans amount, endpoint not reachable most likely.")
+                    "Could not get value amount, endpoint not reachable most likely.")
 
             # Metrics
             prom_metrics.crons_last_timestamp = datetime.now().timestamp()

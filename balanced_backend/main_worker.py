@@ -7,6 +7,7 @@ from balanced_backend.db import session_factory
 from balanced_backend.metrics import prom_metrics
 
 from balanced_backend.workers.daily_historical import build_daily_historical
+from balanced_backend.workers.daily_volumes import build_daily_volumes
 
 
 def main(worker_type: str = None):
@@ -20,6 +21,7 @@ def main(worker_type: str = None):
             logger.info("Starting rewards cron")
 
             build_daily_historical(session)
+            build_daily_volumes(session)
 
             prom_metrics.crons_ran.inc()
             logger.info("Sleeping after crons.")

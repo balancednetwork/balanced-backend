@@ -3,7 +3,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    NAME: str = "governance"
+    NAME: str = "balanced-backend"
     NETWORK_NAME: str = "mainnet"
 
     # Ports
@@ -34,10 +34,7 @@ class Settings(BaseSettings):
     BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
 
     # Community API
-    # TODO: Update this when vultr migration is complete
-    # COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
-    COMMUNITY_API_ENDPOINT: str = "https://tracker.v2.mainnet.sng.vultr.icon.community"
-
+    COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
 
     # DB
     POSTGRES_USER: str = "postgres"
@@ -60,5 +57,4 @@ class Settings(BaseSettings):
 if os.environ.get("ENV_FILE", False):
     settings = Settings(_env_file=os.environ.get("ENV_FILE"))
 else:
-    # settings = Settings()
-    settings = Settings(_env_file=os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '.env.mainnet'))
+    settings = Settings()

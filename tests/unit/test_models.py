@@ -1,4 +1,4 @@
-from balanced_backend.models.historical import DailyHistorical
+from balanced_backend.tables.historical import DailyHistorical
 
 
 def test_historical_model_datetime(db):
