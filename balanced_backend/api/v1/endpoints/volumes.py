@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+
 from http import HTTPStatus
 from typing import List, Union
 
@@ -50,8 +51,8 @@ async def contract_method_volumes(
             query = query.where(ContractMethodVolume.end_date <= end_date)
 
     elif days_ago is not None:
-        end_timestamp = datetime.datetime.utcnow().timestamp()
-        start_timestamp = datetime.datetime.utcnow().timestamp() - \
+        end_timestamp = datetime.utcnow().timestamp()
+        start_timestamp = datetime.utcnow().timestamp() - \
                           (24 * 60 * 60) * days_ago
         query = query \
             .where(ContractMethodVolume.start_timestamp >= start_timestamp) \
