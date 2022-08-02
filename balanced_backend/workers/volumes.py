@@ -36,11 +36,21 @@ def set_table_value_from_time_period(
     num_events = 0
 
     if events is not None:
-        value = get_total_indexed(
-            events=events,
-            indexed_position=context.indexed_position,
-            decimals=context.decimals,
-        )
+        try:
+            value = get_total_indexed(
+                events=events,
+                indexed_position=context.indexed_position,
+                decimals=context.decimals,
+            )
+        except IndexError as e:
+            logger.info(f"Error processing "
+                        f"address={context.address} "
+                        f"method={context.method} "
+                        f"indexed_position={context.indexed_position} "
+                        f"block_start=block_start ",
+                        f"block_end={block_end - 1} ",
+                        f"events={events}")
+            raise e
         num_events = len(events)
 
         # Metrics
