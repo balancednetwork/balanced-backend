@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 
 from balanced_backend.db import engine
-from balanced_backend.models.historical_base import HistoricalMethodInterval
+from balanced_backend.models.contract_method_base import ContractMethodBase
 from balanced_backend.models.volumes_base import VolumeIntervalBase
 
 
@@ -27,7 +27,7 @@ def client() -> Generator:
 
 @pytest.fixture(scope="function")
 def loans_historical_context():
-    context = HistoricalMethodInterval(
+    context = ContractMethodBase(
         timestamp=1625745538,
         params={
             "to": "cx66d4d90f5f113eba575bf793570135f9b10cece1",
@@ -50,6 +50,5 @@ def loans_volumes_context():
         method='FeePaid',
         init_chart_time=1619308800,
         update_interval=86400,
-
     )
     return context

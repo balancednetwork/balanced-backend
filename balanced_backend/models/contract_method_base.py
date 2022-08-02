@@ -17,7 +17,7 @@ class Params(BaseModel):
         return v
 
 
-class HistoricalMethodInterval(BaseModel):
+class ContractMethodBase(BaseModel):
     params: Params
 
     init_chart_time: int = None

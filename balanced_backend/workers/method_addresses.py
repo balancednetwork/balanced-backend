@@ -1,6 +1,6 @@
 from balanced_backend.addresses import addresses
 
-daily_historical = [
+contract_methods = [
     {
         'contract_name': 'loans',
         'params': {

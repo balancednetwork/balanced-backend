@@ -5,7 +5,7 @@ from sqlmodel import select
 from balanced_backend.log import logger
 from balanced_backend.metrics import prom_metrics
 from balanced_backend.tables.historical import DailyHistorical
-from balanced_backend.models.historical_base import HistoricalMethodInterval
+from balanced_backend.models.contract_method_base import ContractMethodBase
 from balanced_backend.utils.time_to_block import get_block_from_timestamp
 from balanced_backend.utils.rpc import convert_hex_int, get_icx_call_block_height
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 def get_value_from_timestamp(
-        context: 'HistoricalMethodInterval',
+        context: 'ContractMethodBase',
 ) -> Union[float, None]:
     """Get the loans contract TotalCollateral from timestamp."""
     height = get_block_from_timestamp(timestamp=int(context.timestamp * 1e6))
@@ -34,7 +34,7 @@ def get_value_from_timestamp(
 
 def set_table_value_from_timestamp(
         session: 'Session',
-        context: 'HistoricalMethodInterval',
+        context: 'ContractMethodBase',
 ):
     value = get_value_from_timestamp(context=context)
 
@@ -50,7 +50,7 @@ def set_table_value_from_timestamp(
 
 def init_time_series(
         session: 'Session',
-        context: 'HistoricalMethodInterval',
+        context: 'ContractMethodBase',
 ):
     """
     Iterate through timestamps from start time every day.
@@ -69,7 +69,7 @@ def init_time_series(
 
 def build_interval_time_series(
         session: 'Session',
-        context: 'HistoricalMethodInterval',
+        context: 'ContractMethodBase',
 ):
     """
     Run on a cron, this function first checks if we need to update the loans_chart table

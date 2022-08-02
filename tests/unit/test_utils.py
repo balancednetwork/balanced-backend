@@ -8,4 +8,3 @@ def test_extract_indexed_log():
         1,
     )
     assert x == "0x395ed40634fd7f2"
-

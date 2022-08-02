@@ -4,11 +4,11 @@ import pytest
 from freezegun import freeze_time
 from sqlmodel import select
 
-from balanced_backend.workers.daily_historical import build_daily_historical
-
 from balanced_backend.tables.volumes import ContractMethodVolume
-
-from balanced_backend.workers.daily_volumes import set_table_value_from_time_period, build_volumes_time_series
+from balanced_backend.workers.volumes import (
+    set_table_value_from_time_period,
+    build_volumes_time_series
+)
 
 
 @pytest.mark.first

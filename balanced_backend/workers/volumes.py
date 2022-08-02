@@ -12,7 +12,7 @@ from balanced_backend.utils.values import get_total_indexed
 
 from balanced_backend.models.volumes_base import VolumeIntervalBase
 from balanced_backend.tables.volumes import ContractMethodVolume
-from balanced_backend.workers.daily_volumes_addresses import daily_volumes
+from balanced_backend.workers.volumes_addresses import daily_volumes
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -38,7 +38,7 @@ def set_table_value_from_time_period(
     if events is not None:
         value = get_total_indexed(
             events=events,
-            indexed_position=1,
+            indexed_position=context.indexed_position,
             decimals=context.decimals,
         )
         num_events = len(events)
@@ -144,7 +144,7 @@ def build_volumes_time_series(
         )
 
 
-def build_daily_volumes(
+def build_volumes(
         session: 'Session',
 ):
     for i in daily_volumes:

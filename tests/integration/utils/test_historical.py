@@ -1,4 +1,4 @@
-from balanced_backend.utils.historical import get_value_from_timestamp
+from balanced_backend.utils.methods import get_value_from_timestamp
 
 
 def test_get_value_from_timestamp(loans_historical_context):
