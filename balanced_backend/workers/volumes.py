@@ -51,6 +51,7 @@ def set_table_value_from_time_period(
                         f"block_end={block_end - 1} ",
                         f"events={events}")
             raise e
+            # return
         num_events = len(events)
 
         # Metrics
@@ -72,7 +73,10 @@ def set_table_value_from_time_period(
     logger.info(f"Inserting value {value} into {ContractMethodVolume.__tablename__} for time "
                 f"{datetime.datetime.fromtimestamp(context.end_timestamp)}.")
     session.merge(model)
-    session.commit()
+    try:
+        session.commit()
+    except Exception as e:
+        raise e
 
 
 def init_time_series(
@@ -86,9 +90,9 @@ def init_time_series(
     now = datetime.datetime.now().replace(tzinfo=timezone.utc).timestamp()
 
     # Here we want to start the timestamps so that they fall exactly at 12 AM UTC
-    year = datetime.date.fromtimestamp(context.init_chart_time).year
-    month = datetime.date.fromtimestamp(context.init_chart_time).month
-    day = datetime.date.fromtimestamp(context.init_chart_time).day
+    year = datetime.date.fromtimestamp(context.init_chart_time / 1e6).year
+    month = datetime.date.fromtimestamp(context.init_chart_time / 1e6).month
+    day = datetime.date.fromtimestamp(context.init_chart_time / 1e6).day
     dt = datetime.datetime(year, month, day)
 
     context.start_timestamp = int(dt.replace(tzinfo=timezone.utc).timestamp())
@@ -167,5 +171,3 @@ def build_volumes(
             session=session,
             context=context,
         )
-
-        print()

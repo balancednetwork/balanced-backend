@@ -23,6 +23,7 @@ def get_logs_in_blocks(
                    f'&limit=100' \
                    f'&skip={skip}'
     endpoint = settings.COMMUNITY_API_ENDPOINT + '/api/v1/logs' + query_string
+    logger.info(f"GET {endpoint}")
     with requests.get(endpoint) as r:
         if r.status_code == 200:
             output = r.json()

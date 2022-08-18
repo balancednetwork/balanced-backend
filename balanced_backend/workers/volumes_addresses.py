@@ -46,7 +46,27 @@ daily_volumes = [
         'address': addresses.LOANS_CONTRACT_ADDRESS,
         'method': 'Rebalance',
         'indexed_position': 3,
-        'init_chart_time': 1619308800,
+        # 'init_chart_time': 1619308800,
+        'init_chart_block': 49969594,
         'decimals': 1e18,
     },
+    # {
+    #     'contract_name': 'loans',
+    #     'address': addresses.LOANS_CONTRACT_ADDRESS,
+    #     'method': 'Rebalance',
+    #     'indexed_position': 3,
+    #     # 'init_chart_time': 1619308800,
+    #     'init_chart_block': 49969595,
+    #     'decimals': 1e18,
+    #     'filters': [
+    #         {
+    #             'param': 'to_address',
+    #             'value': 'cxABC'
+    #         },
+    #         {
+    #             'param': 'from_address',
+    #             'value': 'cxABC'
+    #         },
+    #     ]
+    # },
 ]
