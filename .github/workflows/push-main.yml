@@ -17,7 +17,7 @@ jobs:
           pip3 install -r requirements-api.txt -r requirements-worker.txt -r requirements-dev.txt
 
       - name: Bring up stack
-        run: make up-dbs && sleep 30
+        run: make up-dbs && sleep 10
 
       - name: Check stack
         run: make ps

@@ -90,9 +90,9 @@ def init_time_series(
     now = datetime.datetime.now().replace(tzinfo=timezone.utc).timestamp()
 
     # Here we want to start the timestamps so that they fall exactly at 12 AM UTC
-    year = datetime.date.fromtimestamp(context.init_chart_time / 1e6).year
-    month = datetime.date.fromtimestamp(context.init_chart_time / 1e6).month
-    day = datetime.date.fromtimestamp(context.init_chart_time / 1e6).day
+    year = datetime.date.fromtimestamp(context.init_chart_time).year
+    month = datetime.date.fromtimestamp(context.init_chart_time).month
+    day = datetime.date.fromtimestamp(context.init_chart_time).day
     dt = datetime.datetime(year, month, day)
 
     context.start_timestamp = int(dt.replace(tzinfo=timezone.utc).timestamp())

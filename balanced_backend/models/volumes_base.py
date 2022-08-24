@@ -26,7 +26,7 @@ class VolumeIntervalBase(BaseModel):
     def update_time(self):
         self.date = datetime.fromtimestamp(self.start_timestamp)
         self.days_since_launch = int(
-            (self.start_timestamp - self.init_chart_time / 1e6) / 24 / 60 / 60)
+            (self.start_timestamp - self.init_chart_time) / 24 / 60 / 60)
 
     def init_model(self):
         if self.init_chart_time is None and self.init_chart_block:

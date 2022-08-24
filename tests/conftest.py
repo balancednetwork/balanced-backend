@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 
 from balanced_backend.db import engine
-from balanced_backend.models.contract_method_base import ContractMethodBase
+from balanced_backend.models.contract_method_base import ContractMethodBase, Params
 from balanced_backend.models.volumes_base import VolumeIntervalBase
 
 
@@ -29,11 +29,11 @@ def client() -> Generator:
 def loans_historical_context():
     context = ContractMethodBase(
         timestamp=1625745538,
-        params={
+        params=Params(**{
             "to": "cx66d4d90f5f113eba575bf793570135f9b10cece1",
             "dataType": "call",
             "data": {"method": "getTotalCollateral"}
-        },
+        }),
         init_chart_time=1619308800,
         update_interval=1000000000,
     )
