@@ -8,7 +8,7 @@ from balanced_backend.log import logger
 from balanced_backend.metrics import prom_metrics
 from balanced_backend.utils.time_to_block import get_block_from_timestamp
 from balanced_backend.utils.api import get_logs_in_blocks
-from balanced_backend.utils.values import get_total_indexed
+from balanced_backend.utils.values import get_total_volume
 
 from balanced_backend.models.volumes_base import VolumeIntervalBase
 from balanced_backend.tables.volumes import ContractMethodVolume
@@ -37,10 +37,9 @@ def set_table_value_from_time_period(
 
     if events is not None:
         try:
-            value = get_total_indexed(
+            value = get_total_volume(
                 events=events,
-                indexed_position=context.indexed_position,
-                decimals=context.decimals,
+                context=context,
             )
         except IndexError as e:
             logger.info(f"Error processing "

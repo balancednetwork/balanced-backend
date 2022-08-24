@@ -11,7 +11,11 @@ class VolumeIntervalBase(BaseModel):
     decimals: float = 1e18
     contract_name: str
     method: str
-    indexed_position: int
+
+    # Can be either one of indexed position or non_indexed_position
+    indexed_position: int = None
+    non_indexed_position: int = None
+
     update_interval: int = 86400
 
     init_chart_time: int = None
