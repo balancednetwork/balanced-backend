@@ -8,7 +8,11 @@ def convert_hex_int(hex_string: str) -> int:
 
 def extract_indexed_log(indexed_log: str, position: int):
     log_list = ast.literal_eval(indexed_log)
-    return log_list[position + 1]
+
+    try:
+        return log_list[position + 1]
+    except IndexError as e:
+        raise Exception(f"Index error at position={position} on indexed_log={indexed_log}", e)
 
 
 def get_total_indexed(
