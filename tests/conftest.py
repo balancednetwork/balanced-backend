@@ -41,7 +41,7 @@ def loans_historical_context():
 
 
 @pytest.fixture(scope="function")
-def loans_volumes_context():
+def loans_feepaid_volumes_context():
     context = VolumeIntervalBase(
         # timestamp=1625745538,
         address="cx66d4d90f5f113eba575bf793570135f9b10cece1",
@@ -49,6 +49,20 @@ def loans_volumes_context():
         indexed_position=1,
         method='FeePaid',
         init_chart_time=1619308800,
+        update_interval=86400,
+    )
+    return context
+
+
+@pytest.fixture(scope="function")
+def loans_rebalance_volumes_context():
+    context = VolumeIntervalBase(
+        # timestamp=1625745538,
+        address="cx66d4d90f5f113eba575bf793570135f9b10cece1",
+        contract_name="loans",
+        indexed_position=1,
+        method='Rebalance',
+        init_chart_block=39340509,
         update_interval=86400,
     )
     return context
