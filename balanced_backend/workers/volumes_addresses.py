@@ -46,7 +46,7 @@ daily_volumes = [
         'address': addresses.LOANS_CONTRACT_ADDRESS,
         'method': 'Rebalance',
         # 'indexed_position': 3,
-        'non_indexed_position': 2,
+        'non_indexed_position': 1,
         # 'init_chart_time': 1619308800,
         'init_chart_block': 49969594,
         'decimals': 1e18,
