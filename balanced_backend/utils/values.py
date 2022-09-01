@@ -6,7 +6,10 @@ if TYPE_CHECKING:
     from balanced_backend.models.volumes_base import VolumeIntervalBase
 
 def convert_hex_int(hex_string: str) -> int:
-    return int(hex_string, 16)
+    try:
+        return int(hex_string, 16)
+    except Exception as e:
+        print()
 
 
 def extract_indexed_log(indexed_log: str, position: int):
@@ -46,7 +49,7 @@ def get_total_non_indexed(
 ) -> float:
     fees = 0
     for i in events:
-        value = extract_non_indexed_log(data=i['indexed'], position=non_indexed_position)
+        value = extract_non_indexed_log(data=i['data'], position=non_indexed_position)
         fee = convert_hex_int(value) / decimals
         fees += fee
 
