@@ -24,12 +24,29 @@ services:
     environment:
       <<: *env
 
-  balanced-worker:
+  balanced-cron:
     build:
       context: ${BALANCED_CONTEXT:-.}
       target: ${BALANCED_TARGET:-prod}
       args:
         - SERVICE_NAME=worker
+    command:
+      - cron
+    security_opt:
+      - "seccomp:unconfined"
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - ${BALANCED_CONTEXT:-.}/balanced_backend:/app
+    environment:
+      <<: *env
+
+  balanced-streaming:
+    build:
+      context: ${BALANCED_CONTEXT:-.}
+      target: ${BALANCED_TARGET:-prod}
+      args:
+        - SERVICE_NAME=streaming
     command:
       - worker
 #      - head

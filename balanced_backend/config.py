@@ -4,7 +4,10 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     NAME: str = "balanced-backend"
-    NETWORK_NAME: str = "mainnet"
+    NETWORK_NAME: str = "mainnet"  # Not used?
+    VERSION: str = "v0.1.0"  # x-release-please-version
+
+    CHAIN_ID: int = 1  # 1 mainnet, 2 sejong, 7 lisbon
 
     # Ports
     PORT: int = 8000
@@ -43,10 +46,15 @@ class Settings(BaseSettings):
     POSTGRES_PORT: str = "5432"
     POSTGRES_DATABASE: str = "postgres"
 
+    # Kafka
+    KAFKA_BROKER_URL: str = "localhost:29092"
+    CONSUMER_GROUP: str = "balanced2"
+    CONSUMER_AUTO_OFFSET_RESET: str = "earliest"
+    CONSUMER_TOPIC_BLOCKS: str = "blocks"
+    CONSUMER_END_BLOCK: int = None
+
     # Endpoints
     MAX_PAGE_SIZE: int = 100
-
-    CRON_SLEEP_SEC: int = 600
 
     LOANS_CHART_MIN_TIME_STEP_MIN: int = 60 * 24
 

@@ -1,11 +1,6 @@
 syntax = "proto3";
-package models;
-option go_package = "./models";
 
-//import "github.com/mwitkow/go-proto-validators/validator.proto";
-//import "validate/validate.proto";
-
-message BlockETL {
+message Block {
 
   int64 number = 1 ;
   string hash = 2 ;
@@ -16,10 +11,10 @@ message BlockETL {
   int64 timestamp = 7;
   string version = 8;
 
-  repeated TransactionETL transactions = 9;
+  repeated Transaction transactions = 9;
 }
 
-message TransactionETL {
+message Transaction {
 
   string hash = 1;
   int64 timestamp = 2;
@@ -41,10 +36,10 @@ message TransactionETL {
   string signature = 18;
   string version = 19;
 
-  repeated LogETL logs = 20;
+  repeated Log logs = 20;
 }
 
-message LogETL {
+message Log {
   string address = 1;
   repeated string indexed = 2;
   repeated string data = 3;

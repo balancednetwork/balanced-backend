@@ -1,4 +1,4 @@
-from balanced_backend.utils.api import get_logs_in_blocks
+from balanced_backend.utils.api import get_logs_in_blocks, get_token_holders
 
 
 def test_get_logs_in_blocks():
@@ -21,3 +21,8 @@ def test_get_logs_in_blocks_rebalance():
     )
 
     assert len(events) > 1
+
+
+def test_get_token_holders():
+    holders = get_token_holders('cxf61cd5a45dc9f91c15aa65831a30a90d59a09619')
+    assert isinstance(holders, int)

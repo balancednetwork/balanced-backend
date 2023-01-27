@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.10-slim-buster
 
 ARG SERVICE_NAME
 ENV SERVICE_NAME ${SERVICE_NAME:-api}
@@ -17,4 +17,8 @@ COPY balanced_backend ./balanced_backend
 
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+
+RUN useradd -m icon
+USER icon
+
+ENTRYPOINT ./entrypoint.sh $SERVICE_NAME

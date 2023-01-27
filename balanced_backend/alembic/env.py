@@ -10,6 +10,11 @@ from balanced_backend.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABA
 
 from balanced_backend.tables.historical import DailyHistorical
 from balanced_backend.tables.volumes import ContractMethodVolume
+from balanced_backend.tables.tokens import Token, TokenPrice
+from balanced_backend.tables.pools import Pool
+from balanced_backend.tables.pool_participants import PoolParticipant
+from balanced_backend.tables.holders import Holder
+
 
 # Other versions imported each object
 config = context.config
@@ -52,13 +57,11 @@ def do_run_migrations(connection):
 
 
 async def run_migrations_online():
-    """Run migrations in 'online' mode.
+    """
+    Run migrations in 'online' mode.
     In this scenario we need to create an Engine
     and associate a connection with the context.
     """
-    x = config.get_section(config.config_ini_section)
-    print()
-
     connectable = AsyncEngine(
         engine_from_config(
             config.get_section(config.config_ini_section),

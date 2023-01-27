@@ -1,9 +1,10 @@
 import json
-
 import requests
+from typing import Optional
 
 from balanced_backend.config import settings
 from balanced_backend.log import logger
+from balanced_backend.addresses import addresses
 
 
 def convert_hex_int(hex_string: str) -> int:
@@ -56,3 +57,107 @@ def get_icx_call(to_address: str, params: dict):
         },
     }
     return post_rpc(payload)
+
+
+def get_contract_method_str(to_address: str, method: str) -> str:
+    r = get_icx_call(
+        to_address=to_address, params={'method': method}
+    )
+    if r.status_code == 200:
+        return r.json()['result']
+    else:
+        raise Exception(f"RPC endpoint not available for {method} method...")
+
+
+def get_contract_method_int(to_address: str, method: str) -> int:
+    r = get_icx_call(
+        to_address=to_address, params={'method': method}
+    )
+    if r.status_code == 200:
+        return int(r.json()['result'], 16)
+    else:
+        raise Exception(f"RPC endpoint not available for {method} method...")
+
+
+def get_pool_id(token_1_address: str, token_2_address: str) -> int:
+    r = get_icx_call(
+        to_address=addresses.DEX_CONTRACT_ADDRESS,
+        params={
+            'method': 'getPoolId',
+            'params': {
+                '_token1Address': token_1_address,
+                '_token2Address': token_2_address,
+            }
+        }
+    )
+    if r.status_code == 200:
+        return int(r.json()['result'], 16)
+    raise Exception(
+        f"DEX contract unreachable for token1={token_1_address} and/or for "
+        f"token2={token_2_address}..."
+    )
+
+
+class ReachableNotValidException(Exception):
+    pass
+
+
+def get_pool_price(
+        pool_id: int,
+        height: Optional[int] = None,
+):
+    r = get_icx_call_block_height(
+        params={
+            'to': addresses.DEX_CONTRACT_ADDRESS,
+            "dataType": "call",
+            "data": {
+                "method": "getBasePriceInQuote",
+                "params": {
+                    "_id": str(pool_id)
+                }
+            }
+        },
+        height=height
+    )
+    if r.status_code == 200:
+        return int(r.json()['result'], 16)
+    elif r.status_code == 400:
+        raise ReachableNotValidException()
+    raise Exception(
+        f"DEX contract for poolId={pool_id} unreachable for get base price..."
+    )
+
+
+def get_pool_stats(pool_id: int) -> Optional[dict]:
+    r = get_icx_call(
+        to_address=addresses.DEX_CONTRACT_ADDRESS,
+        params={
+            'method': 'getPoolStats',
+            'params': {
+                '_id': str(pool_id)
+            }
+        },
+    )
+    if r.status_code == 200:
+        return r.json()['result']
+    raise Exception(
+        f"DEX contract for poolId={pool_id} unreachable for get stats..."
+    )
+
+
+def get_band_price(symbol: str) -> float:
+    r = get_icx_call(
+        to_address=addresses.BAND_REF_CONTRACT_ADDRESS,
+        params={
+            'method': 'getRefData',
+            'params': {
+                'symbol': symbol
+            }
+        },
+    )
+    if r.status_code == 200:
+        return int(r.json()['result']['rate'], 16) / 1e9
+    raise Exception(
+        f"Band contract for symbol={symbol} unreachable for get ref..."
+    )
+

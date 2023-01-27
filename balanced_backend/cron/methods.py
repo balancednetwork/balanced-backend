@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from balanced_backend.utils.methods import build_interval_time_series
-from balanced_backend.workers.method_addresses import contract_methods
+from balanced_backend.cron.method_addresses import contract_methods
 from balanced_backend.models.contract_method_base import ContractMethodBase
 
 if TYPE_CHECKING:
