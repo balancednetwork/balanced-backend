@@ -4,7 +4,10 @@ from balanced_backend.utils.rpc import (
     convert_hex_int,
     get_icx_call_block_height,
     get_pool_price,
+    get_pool_stats,
+    get_contract_method_int,
 )
+from balanced_backend.addresses import addresses
 
 
 def test_get_icx_call_block_height():
@@ -28,3 +31,50 @@ def test_get_pool_price():
 
     price = get_pool_price(pool_id=61)
     assert isinstance(price, int)
+
+
+# These are all the contract update blocks
+STATS_HEIGHTS = [
+    33582638,
+    33582788,
+    33653148,
+    33729322,
+    33737128,
+    33901353,
+    33980981,
+    35748690,
+    38802010,
+    39008934,
+    39268803,
+    39352074,
+    39747797,
+    40926490,
+    42281806,
+    44536712,
+    45396500,
+    51433143,
+    51909391,
+    52901160,
+    54713801,
+    58036066,
+    58640633,
+    58855781,
+    60876175,
+    60927398,
+]
+
+@pytest.mark.parametrize("height", STATS_HEIGHTS)
+def test_get_pool_stats_and_nonce_over_range(height):
+    """
+    Test that the getStats and getNonce methods have existed through all the updates on
+    the dex contract.
+    """
+    stats = get_pool_stats(pool_id=1, height=height)
+    assert isinstance(stats, dict)
+
+    nonce = get_contract_method_int(
+        to_address=addresses.DEX_CONTRACT_ADDRESS,
+        method='getNonce',
+        height=height,
+    )
+    assert isinstance(nonce, int)

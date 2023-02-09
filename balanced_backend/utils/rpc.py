@@ -45,7 +45,7 @@ def get_icx_call_block_height(params: dict, height: int = None):
     return post_rpc(payload)
 
 
-def get_icx_call(to_address: str, params: dict):
+def get_icx_call(to_address: str, params: dict, height: int = None):
     payload = {
         "jsonrpc": "2.0",
         "id": 1234,
@@ -56,6 +56,9 @@ def get_icx_call(to_address: str, params: dict):
             "data": params
         },
     }
+    if height is not None:
+        payload['params']['height'] = hex(height)
+
     return post_rpc(payload)
 
 
@@ -69,9 +72,9 @@ def get_contract_method_str(to_address: str, method: str) -> str:
         raise Exception(f"RPC endpoint not available for {method} method...")
 
 
-def get_contract_method_int(to_address: str, method: str) -> int:
+def get_contract_method_int(to_address: str, method: str, height: int = None) -> int:
     r = get_icx_call(
-        to_address=to_address, params={'method': method}
+        to_address=to_address, params={'method': method}, height=height
     )
     if r.status_code == 200:
         return int(r.json()['result'], 16)
@@ -128,15 +131,19 @@ def get_pool_price(
     )
 
 
-def get_pool_stats(pool_id: int) -> Optional[dict]:
+def get_pool_stats(pool_id: int, height: int = None) -> Optional[dict]:
+    params = {
+                 'method': 'getPoolStats',
+                 'params': {
+                     '_id': str(pool_id)
+                 }
+             }
+    if height is not None:
+        params['height'] = hex(height)
+
     r = get_icx_call(
         to_address=addresses.DEX_CONTRACT_ADDRESS,
-        params={
-            'method': 'getPoolStats',
-            'params': {
-                '_id': str(pool_id)
-            }
-        },
+        params=params
     )
     if r.status_code == 200:
         return r.json()['result']
