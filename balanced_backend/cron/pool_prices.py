@@ -5,7 +5,11 @@ from loguru import logger
 
 from balanced_backend.config import settings
 from balanced_backend.tables.pools import Pool
-from balanced_backend.utils.rpc import get_pool_price, ReachableNotValidException
+from balanced_backend.utils.rpc import (
+    get_pool_stats,
+    get_pool_price,
+    ReachableNotValidException
+)
 from balanced_backend.utils.block_times import get_block_times
 
 if TYPE_CHECKING:
@@ -14,7 +18,14 @@ if TYPE_CHECKING:
 
 def get_pool_price_decimals(pool: Pool, height: Optional[int]) -> float:
     return get_pool_price(pool_id=pool.pool_id, height=height) / 10 ** (
-            18 + pool.base_decimals - pool.quote_decimals)
+            18 + pool.quote_decimals - pool.base_decimals)
+
+
+def update_total_supply_and_liquidites(pool: Pool):
+    stats = get_pool_stats(pool_id=pool.pool_id)
+    pool.total_supply = int(stats['total_supply'], 16)
+    pool.base_supply = int(stats['base'], 16) / 10 ** pool.base_decimals
+    pool.quote_supply = int(stats['quote'], 16) / 10 ** pool.quote_decimals
 
 
 def get_pool_price_decimals_fallback(
@@ -30,6 +41,8 @@ def get_pool_price_decimals_fallback(
 
 
 def run_pool_prices(session: 'Session'):
+    logger.info("Running pool prices cron...")
+
     result = session.execute(select(Pool).where(Pool.chain_id == settings.CHAIN_ID))
     pools: list[Pool] = result.scalars().all()
 
@@ -58,7 +71,12 @@ def run_pool_prices(session: 'Session'):
         pool.price_change_30d = price - price_30d
 
         # TODO: Fix this
-        # pool.total_supply = get_contract_method
+        update_total_supply_and_liquidites(pool=pool)
+
+        # pool.total_supply = get_contract_method_int(
+        #     to_address=addresses.DEX_CONTRACT_ADDRESS,
+        #     method='totalSupply',
+        # )
         # TODO: Implement stream processor to find total participants then query that
         # pool.holders =
 

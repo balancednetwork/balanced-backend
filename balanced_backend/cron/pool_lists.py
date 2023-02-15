@@ -1,4 +1,6 @@
 from sqlmodel import select
+from datetime import datetime
+from loguru import logger
 
 from balanced_backend.config import settings
 from balanced_backend.tables.pools import Pool
@@ -11,6 +13,7 @@ from balanced_backend.utils.rpc import (
 )
 
 from typing import TYPE_CHECKING, Optional
+
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
@@ -39,12 +42,15 @@ def get_pool_type(tokens: list[Token], quote_symbol: str, base_symbol: str):
     return 'balanced'
 
 
-def build_pool_list(
+def run_pool_list(
         session: 'Session',
 ):
+    logger.info("Running pool lists cron...")
     result = session.execute(select(Pool).where(Pool.chain_id == settings.CHAIN_ID))
     pools = result.scalars().all()
     pool_names_db = [i.name for i in pools]
+
+    current_timestamp = int(datetime.now().timestamp())
 
     result = session.execute(select(Token).where(Token.chain_id == settings.CHAIN_ID))
     tokens = result.scalars().all()
@@ -102,6 +108,7 @@ def build_pool_list(
             quote_decimals=int(ps['quote_decimals'], 16),
             chain_id=settings.CHAIN_ID,
             type=pool_type,
+            last_updated_timestamp=current_timestamp,
         )
         session.merge(pool_db)
         session.commit()
@@ -110,4 +117,4 @@ def build_pool_list(
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
-    build_pool_list(session_factory())
+    run_pool_list(session_factory())

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
 
-def build_methods(
+def run_methods(
         session: 'Session',
 ):
     for i in contract_methods:

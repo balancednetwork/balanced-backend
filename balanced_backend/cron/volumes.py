@@ -12,7 +12,7 @@ from balanced_backend.utils.values import get_total_volume
 
 from balanced_backend.models.volumes_base import VolumeIntervalBase
 from balanced_backend.tables.volumes import ContractMethodVolume
-from balanced_backend.workers.volumes_addresses import daily_volumes
+from balanced_backend.cron.volumes_addresses import daily_volumes
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -157,7 +157,7 @@ def build_volumes_time_series(
         )
 
 
-def build_volumes(
+def run_volumes(
         session: 'Session',
 ):
     for i in daily_volumes:
