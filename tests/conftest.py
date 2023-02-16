@@ -1,4 +1,5 @@
 from typing import Generator
+import os
 
 import pytest
 from fastapi.testclient import TestClient
@@ -23,6 +24,14 @@ def client() -> Generator:
 
     with TestClient(app) as c:
         yield c
+
+
+@pytest.fixture(scope='function')
+def get_fixture(request):
+    """Get the fixtures dir in the current directory of the test."""
+    def f(fixture_name):
+        return os.path.join(request.fspath.dirname, 'fixtures', fixture_name)
+    return f
 
 
 @pytest.fixture(scope="function")

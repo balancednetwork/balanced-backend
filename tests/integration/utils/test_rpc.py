@@ -2,10 +2,12 @@ import pytest
 from balanced_backend.utils.rpc import (
     ReachableNotValidException,
     convert_hex_int,
+    get_pool_id,
     get_icx_call_block_height,
     get_pool_price,
     get_pool_stats,
     get_contract_method_int,
+    post_rpc,
 )
 from balanced_backend.addresses import addresses
 
@@ -63,6 +65,7 @@ STATS_HEIGHTS = [
     60927398,
 ]
 
+
 @pytest.mark.parametrize("height", STATS_HEIGHTS)
 def test_get_pool_stats_and_nonce_over_range(height):
     """
@@ -78,3 +81,27 @@ def test_get_pool_stats_and_nonce_over_range(height):
         height=height,
     )
     assert isinstance(nonce, int)
+
+
+def test_get_pool_id():
+    pool = get_pool_id(
+        base_address="cx2609b924e33ef00b648a409245c7ea394c467824",
+        quote_address="cx88fd7df7ddff82f7cc735c871dc519838cb235bb"
+    )
+
+    assert pool == 2
+
+
+def test_get_tx_result():
+    r = post_rpc(
+        payload={
+            "jsonrpc": "2.0",
+            "id": 1234,
+            "method": "icx_getTransactionResult",
+            "params": {
+                "txHash": "0x036dc1dd5ee5d4c2ef4758e1c5c367b45598922088023b0f881bdc2fda42c469"
+            },
+        }
+    )
+    x = r.json()
+    print()
