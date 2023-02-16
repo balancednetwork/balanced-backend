@@ -82,22 +82,22 @@ def get_contract_method_int(to_address: str, method: str, height: int = None) ->
         raise Exception(f"RPC endpoint not available for {method} method...")
 
 
-def get_pool_id(token_1_address: str, token_2_address: str) -> int:
+def get_pool_id(base_address: str, quote_address: str) -> int:
     r = get_icx_call(
         to_address=addresses.DEX_CONTRACT_ADDRESS,
         params={
             'method': 'getPoolId',
             'params': {
-                '_token1Address': token_1_address,
-                '_token2Address': token_2_address,
+                '_token1Address': base_address,
+                '_token2Address': quote_address,
             }
         }
     )
     if r.status_code == 200:
         return int(r.json()['result'], 16)
     raise Exception(
-        f"DEX contract unreachable for token1={token_1_address} and/or for "
-        f"token2={token_2_address}..."
+        f"DEX contract unreachable for token1={base_address} and/or for "
+        f"token2={quote_address}..."
     )
 
 
@@ -133,11 +133,11 @@ def get_pool_price(
 
 def get_pool_stats(pool_id: int, height: int = None) -> Optional[dict]:
     params = {
-                 'method': 'getPoolStats',
-                 'params': {
-                     '_id': str(pool_id)
-                 }
-             }
+        'method': 'getPoolStats',
+        'params': {
+            '_id': str(pool_id)
+        }
+    }
     if height is not None:
         params['height'] = hex(height)
 
@@ -168,3 +168,15 @@ def get_band_price(symbol: str) -> float:
         f"Band contract for symbol={symbol} unreachable for get ref..."
     )
 
+
+def get_last_block() -> int:
+    r = post_rpc(payload={
+        "jsonrpc": "2.0",
+        "method": "icx_getLastBlock",
+        "id": 1234
+    })
+    if r.status_code == 200:
+        return r.json()['result']['height']
+    raise Exception(
+        f"Could not get the last block height..."
+    )
