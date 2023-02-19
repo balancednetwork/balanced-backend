@@ -24,4 +24,4 @@ def test_set_table_value_from_timestamp(db, loans_historical_context):
 @freeze_time("2021-04-26")
 def test_build_daily_historical(db):
     with db as session:
-        build_methods(session=session)
+        run_methods(session=session)
