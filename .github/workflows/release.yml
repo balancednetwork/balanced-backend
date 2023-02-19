@@ -29,7 +29,7 @@ jobs:
 
       - name: Install deps
         run: |
-          pip3 install -r requirements-api.txt -r requirements-worker.txt -r requirements-dev.txt
+          pip3 install -r requirements-api.txt -r requirements-cron.txt -r requirements-streaming.txt -r requirements-dev.txt
 
       - name: Bring up stack
         run: make up-dbs && sleep 30
@@ -84,7 +84,7 @@ jobs:
             SERVICE_NAME=api
           tags: balancednetwork/balanced-backend-api:latest, balancednetwork/balanced-backend-api:${{ steps.source.outputs.TAG }}
 
-      - name: Build and push worker
+      - name: Build and push cron
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -92,8 +92,8 @@ jobs:
           target: prod
           push: true
           build-args: |
-            SERVICE_NAME=worker
-          tags: balancednetwork/balanced-backend-worker:latest, balancednetwork/balanced-backend-worker:${{ steps.source.outputs.TAG }}
+            SERVICE_NAME=cron
+          tags: balancednetwork/balanced-backend-cron:latest, balancednetwork/balanced-backend-cron:${{ steps.source.outputs.TAG }}
 
   push_refs:
     runs-on: ubuntu-latest
