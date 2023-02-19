@@ -158,12 +158,10 @@ def run_token_pool_prices(session: 'Session'):
             reference_supply=tp.supply,
             chain_id=settings.CHAIN_ID,
         )
-        try:
-            session.merge(token_pool_price)
-            session.merge(reference_token_pool_price)
-            session.commit()
-        except Exception as e:
-            print(e)
+
+        session.merge(token_pool_price)
+        session.merge(reference_token_pool_price)
+        session.commit()
 
 
 if __name__ == "__main__":

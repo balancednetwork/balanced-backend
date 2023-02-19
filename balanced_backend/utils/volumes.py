@@ -98,7 +98,7 @@ def get_swaps(
             receiver=data[3],
             from_value=from_value,
             to_value=to_value,
-            timestamp=data[6],
+            timestamp=int(int(data[6], 16) / 1e6),
             lp_fees=lp_fees,
             baln_fees=baln_fees,
             pool_base=pool_base,

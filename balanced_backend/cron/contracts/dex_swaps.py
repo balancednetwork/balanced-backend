@@ -48,7 +48,6 @@ def run_dex_swaps(session: 'Session'):
     )
 
 
-
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 

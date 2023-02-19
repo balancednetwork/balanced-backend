@@ -73,25 +73,8 @@ def run_pool_prices(session: 'Session'):
         # TODO: Fix this
         update_total_supply_and_liquidites(pool=pool)
 
-        # pool.total_supply = get_contract_method_int(
-        #     to_address=addresses.DEX_CONTRACT_ADDRESS,
-        #     method='totalSupply',
-        # )
-        # TODO: Implement stream processor to find total participants then query that
-        # pool.holders =
-
         session.merge(pool)
-        session.commit()
-
-        # TODO: RM this -> Should go in contract methods
-        # pool_price = PoolPrice(
-        #     base_address=pool.base_address,
-        #     quote_address=pool.quote_address,
-        #     pool_id=pool.pool_id,
-        #     name=pool.name,
-        #     timestamp=int(datetime.now().timestamp()),
-        #     price=pool.price,
-        # )
+    session.commit()
 
 
 if __name__ == "__main__":

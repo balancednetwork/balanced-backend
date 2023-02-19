@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from loguru import logger
 
 from balanced_backend.utils.methods import build_interval_time_series
 from balanced_backend.cron.method_addresses import contract_methods
@@ -11,6 +12,7 @@ if TYPE_CHECKING:
 def run_methods(
         session: 'Session',
 ):
+    logger.info("Running methods cron...")
     for i in contract_methods:
         historical_method_interval = ContractMethodBase(**i)
         historical_method_interval.init_model()

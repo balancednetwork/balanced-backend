@@ -72,10 +72,10 @@ def set_table_value_from_time_period(
     logger.info(f"Inserting value {value} into {ContractMethodVolume.__tablename__} for time "
                 f"{datetime.datetime.fromtimestamp(context.end_timestamp)}.")
     session.merge(model)
-    try:
-        session.commit()
-    except Exception as e:
-        raise e
+    # try:
+    session.commit()
+    # except Exception as e:
+    #     raise e
 
 
 def init_time_series(
@@ -160,6 +160,8 @@ def build_volumes_time_series(
 def run_volumes(
         session: 'Session',
 ):
+    logger.info("Running volumes cron...")
+
     for i in daily_volumes:
         context = VolumeIntervalBase(**i)
 

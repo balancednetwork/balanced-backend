@@ -4,6 +4,7 @@ from loguru import logger
 
 from balanced_backend.config import settings
 from balanced_backend.tables.tokens import Token, TokenPool
+from balanced_backend.utils.api import get_token_holders
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -28,14 +29,14 @@ def run_token_prices(session: 'Session'):
 
         weighted_price = supply_weighted_price / total_supply
 
+        token.holders = get_token_holders(token.address)
+
         token.price = weighted_price
         token.total_supply = total_supply
 
-        try:
-            session.merge(token)
-            session.commit()
-        except Exception as e:
-            print(e)
+        session.merge(token)
+
+    session.commit()
 
 
 if __name__ == "__main__":
