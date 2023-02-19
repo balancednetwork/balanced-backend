@@ -33,7 +33,6 @@ class Settings(BaseSettings):
 
     # ICON Nodes
     ICON_NODE_URL: str = "https://api.icon.community/api/v3"
-    # TODO: Remove?
     BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
 
     # Community API
@@ -57,6 +56,11 @@ class Settings(BaseSettings):
     MAX_PAGE_SIZE: int = 100
 
     LOANS_CHART_MIN_TIME_STEP_MIN: int = 60 * 24
+
+    FIRST_BLOCK: int = 33518615
+    FIRST_BLOCK_TIMESTAMP: int = None  # Will be updated in volumes cron
+    BLOCK_SYNC_CHUNK: int = 10000  # For 20M blocks this is 2000 gets
+    MAX_TS_RECORDS: int = 5000
 
     class Config:
         case_sensitive = True
