@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-if [ "$1" = "cron" ]; then
+if [ "$1" = "worker" ]; then
   echo "Migrating backend..."
   cd balanced_backend
   alembic upgrade head
