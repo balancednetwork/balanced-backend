@@ -5,7 +5,7 @@ from freezegun import freeze_time
 from sqlmodel import select
 
 from balanced_backend.tables.volumes import ContractMethodVolume
-from balanced_backend.workers.volumes import (
+from balanced_backend.cron.volumes import (
     set_table_value_from_time_period,
     build_volumes_time_series
 )

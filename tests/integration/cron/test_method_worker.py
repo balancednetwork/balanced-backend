@@ -2,7 +2,7 @@ import pytest
 from freezegun import freeze_time
 from sqlmodel import select
 
-from balanced_backend.workers.methods import build_methods
+from balanced_backend.cron.methods import run_methods
 from balanced_backend.tables.historical import DailyHistorical
 from balanced_backend.utils.methods import set_table_value_from_timestamp
 

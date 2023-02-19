@@ -14,7 +14,7 @@ def test_get_token_volume():
 
 SWAP_CASES = [
     (61946326, 0, {
-        'to_value_decimals': 113,
+        'to_value_decimal': 113,
     })
 ]
 
