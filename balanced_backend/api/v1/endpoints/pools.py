@@ -7,6 +7,10 @@ from sqlmodel import select
 
 from balanced_backend.db import get_session
 from balanced_backend.tables.pools import Pool
+from balanced_backend.tables.volumes import VolumeTableType
+# from balanced_backend.cron.pool_volumes_series import get_table
+from balanced_backend.tables.utils import get_table
+from balanced_backend.config import settings
 
 router = APIRouter()
 
@@ -74,3 +78,80 @@ async def pools(
     response.headers["x-total-count"] = total_count
 
     return pools
+
+
+INTERVAL_MAP = {
+    "5m": {
+        "table_name": "5Min",
+        "seconds": 60 * 5,
+    },
+    "15m": {
+        "table_name": "15Min",
+        "seconds": 60 * 15,
+    },
+    "1h": {
+        "table_name": "1Hour",
+        "seconds": 60 * 60,
+    },
+    "4h": {
+        "table_name": "4Hour",
+        "seconds": 60 * 60 * 4,
+    },
+    "1d": {
+        "table_name": "1Day",
+        "seconds": 86400,
+    },
+    "1w": {
+        "table_name": "1Week",
+        "seconds": 86400 * 7,
+    },
+}
+INTERVALS = {k for k, _ in INTERVAL_MAP.items()}
+
+
+@router.get("/pools/series/{pool_id}/{interval}/{start}/{end}")
+async def pools(
+        response: Response,
+        session: AsyncSession = Depends(get_session),
+        pool_id: int = None,
+        interval: str = None,
+        start: int = None,
+        end: int = None,
+) -> Union[List[VolumeTableType], Response]:
+    """Return list of pools price/volumes time series."""
+
+    if interval not in INTERVALS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Interval must be one of {', '.join([i for i in INTERVALS])}."
+        )
+
+    num_records = (end - start) / INTERVAL_MAP[interval]['seconds']
+    if num_records > settings.MAX_TS_RECORDS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Maximum of {settings.MAX_TS_RECORDS} returned. Attempting to get "
+                   f"{num_records}..."
+        )
+
+    table = get_table(table_suffix=INTERVAL_MAP[interval]['table_name'])
+
+    query = select(table).where(
+        table.chain_id == settings.CHAIN_ID,
+        table.timestamp >= start,
+        table.timestamp <= end,
+        table.pool_id == pool_id,
+    )
+
+    result = await session.execute(query)
+    timeseries: list[table] = result.scalars().all()
+
+    # Check if exists
+    if len(timeseries) == 0:
+        return Response(status_code=HTTPStatus.NO_CONTENT.value)  # noqa
+
+    # Return the count in header
+    total_count = str(len(timeseries))
+    response.headers["x-total-count"] = total_count
+
+    return timeseries
