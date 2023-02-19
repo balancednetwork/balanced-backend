@@ -1,20 +1,13 @@
-import json
 from typing import Any, Type
 from loguru import logger
 
 from balanced_backend.config import settings
-from balanced_backend.db import session_factory
 from balanced_backend.streaming.kafka import Worker
 from balanced_backend.proto.block_pb2 import Block, Transaction, Log  # noqa
 from balanced_backend.addresses import addresses
 
-
-def extract_method(transaction: Transaction):
-    if 'method' in transaction.data:
-        return json.loads(transaction.data)['method']
-    else:
-        return ''
-
+from balanced_backend.utils.streaming import extract_method_from_log
+from balanced_backend.streaming.contracts.dex import process_dex_log
 
 class Processor(Worker):
     # Metrics
@@ -25,25 +18,26 @@ class Processor(Worker):
     data: dict = None
 
     block: Type[Block] = Block()
-    transaction: Type[Transaction] = Transaction()
-    log: Type[Log] = Log()
+    # transaction: Type[Transaction] = Transaction()
+    # log: Type[Log] = Log()
+
+    tx_index: int = None
+    log_index: int = None
 
     def process_transaction(self):
-        # Block production
-        if self.transaction.to_address == '':
-            return
+        match self.block.transaction[self.tx_index].to_address:
+            case addresses.DEX_CONTRACT_ADDRESS:
+                pass
 
-        # Handle verification process
-        if self.transaction.to_address == addresses.DEX_CONTRACT_ADDRESS:
-            method = extract_method(self.transaction)
-            match method:
-                case "add":
-                    print()
-
-                case _:
-                    logger.info("Unrecognized method")
-
-            print()
+    def process_log(self):
+        match self.block.transaction[self.tx_index].log[self.log_index].address:
+            case addresses.DEX_CONTRACT_ADDRESS:
+                process_dex_log(
+                    session=self.session,
+                    block=self.block,
+                    tx_index=self.tx_index,
+                    log_index=self.log_index
+                )
 
     def process(self):
         value = self.msg.value()
@@ -61,10 +55,18 @@ class Processor(Worker):
                 logger.info("Finished processing batch...")
                 sys.exit(0)
 
-        for tx in self.block.transactions:
+        for tx_index, _ in enumerate(self.block.transactions):
             # Filter failed Txs
-            if tx.status != '0x1':
+            if self.block.transactions[tx_index].status != '0x1':
                 continue
 
-            self.transaction = tx
+            # Block production
+            if self.block.transactions[tx_index].to_address == '':
+                continue
+
+            self.tx_index = tx_index
             self.process_transaction()
+
+            for log_index, _ in enumerate(self.block.transaction[self.tx_index].log):
+                self.log_index = log_index
+                self.process_log()
