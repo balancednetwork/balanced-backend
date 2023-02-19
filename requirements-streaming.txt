@@ -4,7 +4,6 @@ prometheus_client==0.11.0
 grpcio==1.40.0
 protobuf
 confluent_kafka==1.8.2
-alembic==1.7.1
 asyncpg==0.24.0
 psycopg2-binary
 sqlmodel==0.0.8
