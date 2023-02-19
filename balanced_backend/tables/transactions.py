@@ -7,22 +7,21 @@ class Transaction(SQLModel, table=True):
 
     hash: Optional[str] = Field(primary_key=True, index=True)
 
-    timestamp
-    transaction_index
-    from_address
-    to_address
-    value
-    status
-    step_price
-    step_used
-    cumulative_step_used
-    data
-    data_type
-    score_address
-    signature
-    version
-    method
-
+    timestamp: int = Field(None)
+    transaction_index: int = Field(None)
+    from_address: str = Field(None)
+    to_address: str = Field(None)
+    value: float = Field(None)
+    status: str = Field(None)
+    step_price: int = Field(None)
+    step_used: int = Field(None)
+    cumulative_step_used: int = Field(None)
+    data: dict = Field(None)
+    data_type: str = Field(None)
+    score_address: str = Field(None)
+    signature: str = Field(None)
+    version: str = Field(None)
+    method: str = Field(None)
 
     class Config:
         extra = "ignore"

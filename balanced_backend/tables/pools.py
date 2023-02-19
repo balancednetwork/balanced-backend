@@ -9,22 +9,31 @@ class Pool(SQLModel, table=True):
 
     chain_id: int = Field(None, index=True)
     pool_id: int = Field(None, index=True)
-    name: str = Field(None, index=False)
-    base_name: str = Field(None, index=False)
-    quote_name: str = Field(None, index=False)
-    base_symbol: str = Field(None, index=False)
-    quote_symbol: str = Field(None, index=False)
-    base_decimals: int = Field(None, index=False)
-    quote_decimals: int = Field(None, index=False)
+    name: str = Field(None)
+    base_name: str = Field(None)
+    quote_name: str = Field(None)
+    base_symbol: str = Field(None)
+    quote_symbol: str = Field(None)
+    base_decimals: int = Field(None)
+    quote_decimals: int = Field(None)
 
-    type: str = Field(None, index=False)
+    type: str = Field(None)
 
-    price: float = Field(None, index=False)
-    price_change_24h: float = Field(None, index=False)
-    price_change_7d: float = Field(None, index=False)
-    price_change_30d: float = Field(None, index=False)
-    holders: int = Field(None, index=False)
-    total_supply: float = Field(None, index=False)
+    price: float = Field(None)
+    price_change_24h: float = Field(None)
+    price_change_7d: float = Field(None)
+    price_change_30d: float = Field(None)
+
+    base_price: float = Field(None)
+    quote_price: float = Field(None)
+    base_supply: float = Field(None)
+    quote_supply: float = Field(None)
+    base_liquidity: float = Field(None)
+    quote_liquidity: float = Field(None)
+
+    holders: int = Field(None)
+    total_supply: float = Field(None)
+    last_updated_timestamp: int = Field(None)
 
     class Config:
         extra = "ignore"
@@ -32,22 +41,3 @@ class Pool(SQLModel, table=True):
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805
         return "pools"
-
-# TODO: RM this -> Should go in contract methods
-# class PoolPrice(SQLModel, table=True):
-#     base_address: Optional[str] = Field(primary_key=True)
-#     quote_address: Optional[str] = Field(primary_key=True)
-#     pool_id: int = Field(None, index=True)
-#     name: str = Field(None, index=False)
-#
-#     timestamp: Optional[int] = Field(primary_key=True)
-#     price: int = Field(None, index=False)
-#
-#     total_supply: float = Field(None, index=False)
-#
-#     class Config:
-#         extra = "ignore"
-#
-#     @declared_attr
-#     def __tablename__(cls) -> str:  # noqa: N805
-#         return "pool_prices"

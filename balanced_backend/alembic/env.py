@@ -9,12 +9,18 @@ from sqlmodel import SQLModel
 from balanced_backend.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABASE_URL
 
 from balanced_backend.tables.historical import DailyHistorical
-from balanced_backend.tables.volumes import ContractMethodVolume
-from balanced_backend.tables.tokens import Token, TokenPrice
+from balanced_backend.tables.volumes import (
+    ContractMethodVolume,
+    VolumeSeries5Min,
+    VolumeSeries15Min,
+    VolumeSeries1Hour,
+    VolumeSeries4Hour,
+    VolumeSeries1Day,
+    VolumeSeries1Month,
+)
+from balanced_backend.tables.tokens import Token, TokenPool, TokenPrice
 from balanced_backend.tables.pools import Pool
-from balanced_backend.tables.pool_participants import PoolParticipant
-from balanced_backend.tables.holders import Holder
-
+from balanced_backend.tables.dex import DexSwap
 
 # Other versions imported each object
 config = context.config
