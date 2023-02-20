@@ -19,7 +19,7 @@ COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
 
 RUN useradd -m icon
-RUN chown icon:icon -R /opt/balanced_backend
+RUN chown icon:icon -R /opt
 USER icon
 
 ENTRYPOINT ./entrypoint.sh $SERVICE_NAME
