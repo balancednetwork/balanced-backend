@@ -10,6 +10,7 @@ ENV PYTHONPATH="/opt:${PYTHONPATH}"
 WORKDIR /opt
 
 RUN pip install --upgrade pip
+RUN apt update && apt install -y build-essential librdkafka-dev
 COPY ./requirements-$SERVICE_NAME.txt .
 RUN pip install -r ./requirements-$SERVICE_NAME.txt
 

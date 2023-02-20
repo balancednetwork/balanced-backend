@@ -8,7 +8,6 @@ services:
   balanced-api:
     build:
       context: ${BALANCED_CONTEXT:-.}
-      target: ${BALANCED_TARGET:-prod}
       args:
         - SERVICE_NAME=api
     ports:
@@ -27,11 +26,8 @@ services:
   balanced-cron:
     build:
       context: ${BALANCED_CONTEXT:-.}
-      target: ${BALANCED_TARGET:-prod}
       args:
-        - SERVICE_NAME=worker
-    command:
-      - cron
+        - SERVICE_NAME=cron
     security_opt:
       - "seccomp:unconfined"
     cap_add:
@@ -43,13 +39,10 @@ services:
 
   balanced-streaming:
     build:
-      context: ${BALANCED_CONTEXT:-.}
-      target: ${BALANCED_TARGET:-prod}
+      context: ${BALANCED_CONTEXT:-./.}
+      dockerfile: Dockerfile.streaming
       args:
         - SERVICE_NAME=streaming
-    command:
-      - worker
-#      - head
     security_opt:
       - "seccomp:unconfined"
     cap_add:
@@ -58,22 +51,3 @@ services:
       - ${BALANCED_CONTEXT:-.}/balanced_backend:/app
     environment:
       <<: *env
-
-#  balanced-cron:
-#    build:
-#      context: ${BALANCED_CONTEXT:-.}
-#      target: ${BALANCED_TARGET:-prod}
-#      args:
-#        - SERVICE_NAME=worker
-#    command:
-#      - worker
-#      - cron
-#
-#    security_opt:
-#      - "seccomp:unconfined"
-#    cap_add:
-#      - SYS_PTRACE
-#    volumes:
-#      - ${BALANCED_CONTEXT:-.}/balanced_backend:/app
-#    environment:
-#      <<: *env

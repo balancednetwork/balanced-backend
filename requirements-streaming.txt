@@ -2,8 +2,8 @@ requests==2.26.0
 loguru==0.5.3
 prometheus_client==0.11.0
 grpcio==1.40.0
-protobuf
-confluent_kafka==1.8.2
+protobuf==3.20.1
+confluent_kafka
 asyncpg==0.24.0
 psycopg2-binary
 sqlmodel==0.0.8
