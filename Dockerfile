@@ -19,7 +19,7 @@ COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
 
 RUN useradd -m icon
-USER icon
 RUN chown icon:icon -R /opt
+USER icon
 
 ENTRYPOINT ["bash", "-c", "./entrypoint.sh", "$SERVICE_NAME"]
