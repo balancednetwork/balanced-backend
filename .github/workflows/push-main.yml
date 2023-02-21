@@ -111,7 +111,7 @@ jobs:
           workDir: charts
           repository: balancednetwork/balanced-community-infra
           valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}/backend-v2/tags.yaml'
-          propertyPath: 'worker.image.tag'
+          propertyPath: 'cron.image.tag'
           value: ${{needs.docker.outputs.tag}}
           branch: main
           createPR: 'false'
