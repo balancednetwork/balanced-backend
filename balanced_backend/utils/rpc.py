@@ -180,3 +180,18 @@ def get_last_block() -> int:
     raise Exception(
         f"Could not get the last block height..."
     )
+
+
+def get_icx_total_supply():
+    r = post_rpc(
+        payload={
+            "jsonrpc": "2.0",
+            "method": "icx_getTotalSupply",
+            "id": 1234
+        }
+    )
+    if r.status_code == 200:
+        return int(r.json()['result'], 16)
+    raise Exception(
+        f"Could not get the last block height..."
+    )
