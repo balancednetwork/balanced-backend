@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from loguru import logger
 
 from balanced_backend.config import settings
-from balanced_backend.tables.tokens import Token, TokenPool, TokenPrice
+from balanced_backend.tables.tokens import TokenPool, TokenPrice
 from balanced_backend.tables.pools import Pool
 from balanced_backend.utils.rpc import get_band_price
 
@@ -73,7 +73,12 @@ def get_prices(
         else:
             name = p.base_name
             symbol = p.base_symbol
-            price = input_price * p.price
+            try:
+                price = input_price * p.price
+            except TypeError:
+                logger.info(
+                    f"ERORR: !! -> input_price: {input_price} p.price {p.price}"
+                    f" address: {p.quote_address}")
             address = p.base_address
             reference_name = p.quote_name
             reference_symbol = p.quote_symbol
@@ -103,6 +108,7 @@ def get_prices(
     # Recurse to find
     for at in added_tokens:
         if at['price'] == 0:
+            logger.info(f"Skipping token {at}")
             continue
 
         get_prices(
@@ -128,6 +134,7 @@ def run_token_pool_prices(session: 'Session'):
 
     # Need to seed our
     icx_price = get_band_price(symbol='ICX')
+    logger.info(f"icx price: {icx_price}")
 
     token_prices = get_prices(
         token_prices=token_prices,
