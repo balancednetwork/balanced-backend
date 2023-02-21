@@ -3,6 +3,7 @@ version: "3.7"
 x-env: &env
   NAME: "balanced"
   NETWORK_NAME: "mainnet"
+  POSTGRES_SERVER: "postgres"
 
 services:
   balanced-api:
@@ -28,6 +29,8 @@ services:
       context: ${BALANCED_CONTEXT:-.}
       args:
         - SERVICE_NAME=cron
+    command:
+      - cron
     security_opt:
       - "seccomp:unconfined"
     cap_add:
