@@ -22,4 +22,4 @@ RUN useradd -m icon
 RUN chown icon:icon -R /opt
 USER icon
 
-ENTRYPOINT ["bash", "-c", "./entrypoint.sh", "$SERVICE_NAME"]
+ENTRYPOINT ./entrypoint.sh $SERVICE_NAME
