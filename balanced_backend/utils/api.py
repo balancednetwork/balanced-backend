@@ -175,5 +175,9 @@ def get_token_holders(address: str):
                + address
     r = requests.head(endpoint)
     if r.status_code == 200:
-        return int(dict(r.headers)['x-total-count'])
+        # Within cluster the headers are upper case, outside lower case.. :(
+        try:
+            return int(dict(r.headers)['x-total-count'])
+        except KeyError:
+            return int(dict(r.headers)['X-Total-Count'])
     logger.info("API endpoint down for holders...")
