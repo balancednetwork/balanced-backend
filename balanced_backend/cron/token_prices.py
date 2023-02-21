@@ -5,6 +5,7 @@ from loguru import logger
 from balanced_backend.config import settings
 from balanced_backend.tables.tokens import Token, TokenPool
 from balanced_backend.utils.api import get_token_holders
+from balanced_backend.utils.supply import get_total_supply
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -25,18 +26,24 @@ def run_token_prices(session: 'Session'):
         token_pool_list: list[TokenPool] = result.scalars().all()
 
         supply_weighted_price = sum([i.price * i.supply for i in token_pool_list])
-        total_supply = sum([i.supply for i in token_pool_list])
+        # Not the total supply as this is what is only in the pools
+        pool_supply = sum([i.supply for i in token_pool_list])
 
-        weighted_price = supply_weighted_price / total_supply
+        weighted_price = supply_weighted_price / pool_supply
 
-        token.holders = get_token_holders(token.address)
+        if token.address == 'ICX':
+            token.holders = 0
+        else:
+            token.holders = get_token_holders(token.address)
 
         token.price = weighted_price
-        token.total_supply = total_supply
+        token.total_supply = get_total_supply(
+            address=token.address,
+            decimals=token.decimals
+        )
 
         session.merge(token)
-
-    session.commit()
+        session.commit()
 
 
 if __name__ == "__main__":

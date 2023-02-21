@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from balanced_backend.tables.dex import DexSwap
 from balanced_backend.tables.volumes import VolumeTableType
+from balanced_backend.tables.utils import get_table
 from balanced_backend.config import settings
 from balanced_backend.utils.time_to_block import get_timestamp_from_block
 
