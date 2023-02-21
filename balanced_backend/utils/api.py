@@ -180,4 +180,5 @@ def get_token_holders(address: str):
             return int(dict(r.headers)['x-total-count'])
         except KeyError:
             return int(dict(r.headers)['X-Total-Count'])
+    logger.info(f"Making call to {endpoint} resulted in status {r.status_code}...")
     logger.info("API endpoint down for holders...")
