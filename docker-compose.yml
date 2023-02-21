@@ -29,8 +29,6 @@ services:
       context: ${BALANCED_CONTEXT:-.}
       args:
         - SERVICE_NAME=cron
-    command:
-      - cron
     security_opt:
       - "seccomp:unconfined"
     cap_add:

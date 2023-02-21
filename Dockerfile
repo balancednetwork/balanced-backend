@@ -18,8 +18,9 @@ COPY balanced_backend ./balanced_backend
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
 
-RUN useradd -m icon
-RUN chown icon:icon -R /opt
-USER icon
+# For some reason this is giving permission denied errors in k8s but not in compose???
+#RUN useradd -m icon
+#RUN chown icon:icon -R /opt
+#USER icon
 
 ENTRYPOINT ./entrypoint.sh $SERVICE_NAME
