@@ -6,6 +6,13 @@ if [ "$1" = "cron" ]; then
   alembic upgrade head
   echo "Starting cron..."
   python main_cron.py
+# TODO: Remove this later - Only while supporting legacy chart
+elif [ "$1" = "worker" ]; then
+  echo "Migrating backend..."
+  cd balanced_backend
+  alembic upgrade head
+  echo "Starting cron..."
+  python main_cron.py
 elif [ "$1" = "streaming" ]; then
   echo "Starting stream processor..."
   python balanced_backend/main_streaming.py
