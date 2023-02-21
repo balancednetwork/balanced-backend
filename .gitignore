@@ -1,3 +1,5 @@
+.env*
+
 .idea/
 .vscode/
 
@@ -48,8 +50,6 @@ coverage.xml
 *.cover
 .hypothesis/
 
-# dotenv
-.env
 
 # virtualenv
 .venv
