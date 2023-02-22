@@ -8,6 +8,7 @@ from sqlmodel import select
 from balanced_backend.db import get_session
 from balanced_backend.tables.pools import Pool
 from balanced_backend.tables.volumes import VolumeTableType
+from balanced_backend.tables.dividends import Dividend
 # from balanced_backend.cron.pool_volumes_series import get_table
 from balanced_backend.tables.utils import get_table
 from balanced_backend.config import settings
@@ -110,7 +111,7 @@ INTERVALS = {k for k, _ in INTERVAL_MAP.items()}
 
 
 @router.get("/pools/series/{pool_id}/{interval}/{start}/{end}")
-async def pools(
+async def pools_series(
         response: Response,
         session: AsyncSession = Depends(get_session),
         pool_id: int = None,
@@ -155,3 +156,36 @@ async def pools(
     response.headers["x-total-count"] = total_count
 
     return timeseries
+
+
+@router.get("/pools/dividends")
+async def pools_dividends(
+        response: Response,
+        session: AsyncSession = Depends(get_session),
+        pool_id: int = None,
+        base_address: str = None,
+        quote_address: str = None,
+) -> Union[List[Dividend], Response]:
+    """Return list of pool dividends."""
+
+    query = select(Dividend).where(Dividend.chain_id == settings.CHAIN_ID)
+
+    if pool_id is not None:
+        query.where(Dividend.pool_id >= pool_id)
+    if quote_address is not None:
+        query.where(Dividend.quote_address >= quote_address)
+    if base_address is not None:
+        query.where(Dividend.base_address >= base_address)
+
+    result = await session.execute(query)
+    dividends: list[Dividend] = result.scalars().all()
+
+    # Check if exists
+    if len(dividends) == 0:
+        return Response(status_code=HTTPStatus.NO_CONTENT.value)  # noqa
+
+    # Return the count in header
+    total_count = str(len(dividends))
+    response.headers["x-total-count"] = total_count
+
+    return dividends
