@@ -87,7 +87,7 @@ def main():
             id=i['func'].__name__
         )
 
-        sched.start()
+    sched.start()
 
 
 if __name__ == '__main__':

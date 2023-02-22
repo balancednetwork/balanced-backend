@@ -21,3 +21,4 @@ def run_methods(
             session=session,
             context=historical_method_interval,
         )
+    logger.info("Ending methods cron...")
