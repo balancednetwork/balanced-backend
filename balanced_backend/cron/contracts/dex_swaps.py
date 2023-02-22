@@ -25,7 +25,7 @@ def get_dex_swaps_in_range(
 
         for s in swaps:
             session.merge(s)
-        session.commit()
+            session.commit()
 
 
 def get_last_swap(session: 'Session') -> DexSwap:

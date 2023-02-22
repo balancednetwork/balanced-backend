@@ -59,7 +59,7 @@ class Settings(BaseSettings):
 
     FIRST_BLOCK: int = 33518615
     FIRST_BLOCK_TIMESTAMP: int = None  # Will be updated in volumes cron
-    BLOCK_SYNC_CHUNK: int = 10000  # For 20M blocks this is 2000 gets
+    BLOCK_SYNC_CHUNK: int = 1000  # For 20M blocks this is 2000 gets
     MAX_TS_RECORDS: int = 5000
 
     class Config:
