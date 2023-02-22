@@ -24,30 +24,30 @@ class Cron(TypedDict):
 
 
 CRONS: list[Cron] = [
-    # {
-    #     'func': volumes.run_volumes,
-    #     'interval': 600,
-    # },
-    # {
-    #     'func': methods.run_methods,
-    #     'interval': 600,
-    # },
-    # {
-    #     'func': token_lists.run_token_list,
-    #     'interval': 86400 / 4,
-    # },
-    # {
-    #     'func': pool_lists.run_pool_list,
-    #     'interval': 60 * 60,
-    # },
-    # {
-    #     'func': pool_prices.run_pool_prices,
-    #     'interval': 600,
-    # },
-    # {
-    #     'func': token_pools.run_token_pool_prices,
-    #     'interval': 600,
-    # },
+    {
+        'func': volumes.run_volumes,
+        'interval': 600,
+    },
+    {
+        'func': methods.run_methods,
+        'interval': 600,
+    },
+    {
+        'func': token_lists.run_token_list,
+        'interval': 86400 / 4,
+    },
+    {
+        'func': pool_lists.run_pool_list,
+        'interval': 60 * 60,
+    },
+    {
+        'func': pool_prices.run_pool_prices,
+        'interval': 600,
+    },
+    {
+        'func': token_pools.run_token_pool_prices,
+        'interval': 600,
+    },
     {
         'func': token_prices.run_token_prices,
         'interval': 600,
