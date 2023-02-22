@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from sqlmodel import select
+from loguru import logger
 
 from balanced_backend.config import settings
 from balanced_backend.tables.dex import DexSwap
@@ -34,6 +35,8 @@ def get_last_swap(session: 'Session') -> DexSwap:
 
 
 def run_dex_swaps(session: 'Session'):
+    logger.info("Running dex swap cron...")
+
     last_swap = get_last_swap(session=session)
 
     if last_swap is None:
@@ -46,9 +49,11 @@ def run_dex_swaps(session: 'Session'):
         start_block=start_block,
         end_block=get_last_block(),
     )
+    logger.info("Ending dex swap cron...")
 
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
-    run_dex_swaps(session_factory())
+    with session_factory() as session:
+        run_dex_swaps(session=session)

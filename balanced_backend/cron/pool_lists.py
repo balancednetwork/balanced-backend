@@ -112,9 +112,11 @@ def run_pool_list(
         )
         session.merge(pool_db)
         session.commit()
+    logger.info("Ending pool lists cron...")
 
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
-    run_pool_list(session_factory())
+    with session_factory() as session:
+        run_pool_list(session=session)

@@ -29,7 +29,7 @@ def set_table_value_from_time_period(
         address=context.address,
         method=context.method,
         block_start=block_start,
-        block_end=block_end-1,
+        block_end=block_end - 1,
     )
 
     value = 0
@@ -69,8 +69,9 @@ def set_table_value_from_time_period(
         end_block=block_end,
         num_events=num_events,
     )
-    logger.info(f"Inserting value {value} into {ContractMethodVolume.__tablename__} for time "
-                f"{datetime.datetime.fromtimestamp(context.end_timestamp)}.")
+    logger.info(
+        f"Inserting value {value} into {ContractMethodVolume.__tablename__} for time "
+        f"{datetime.datetime.fromtimestamp(context.end_timestamp)}.")
     session.merge(model)
     # try:
     session.commit()
@@ -118,9 +119,9 @@ def build_volumes_time_series(
     """
     time_series = session.execute(
         select(ContractMethodVolume)
-            .where(ContractMethodVolume.address == context.address)
-            .where(ContractMethodVolume.method == context.method)
-            .order_by(ContractMethodVolume.end_timestamp.desc())
+        .where(ContractMethodVolume.address == context.address)
+        .where(ContractMethodVolume.method == context.method)
+        .order_by(ContractMethodVolume.end_timestamp.desc())
     ).scalars().all()
 
     # Calc last updated time
@@ -146,7 +147,6 @@ def build_volumes_time_series(
 
     num_updates = int(round(diff_last_updated_time / context.update_interval, 0))
     for i in range(1, num_updates + 1):
-
         context.end_timestamp = int(last_updated_time + i * context.update_interval)
         context.start_timestamp = context.end_timestamp - context.update_interval
         context.update_time()
@@ -172,3 +172,4 @@ def run_volumes(
             session=session,
             context=context,
         )
+    logger.info("Ending volumes cron...")

@@ -169,9 +169,11 @@ def run_token_pool_prices(session: 'Session'):
         session.merge(token_pool_price)
         session.merge(reference_token_pool_price)
         session.commit()
+    logger.info("Ending token pool prices cron...")
 
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
-    run_token_pool_prices(session_factory())
+    with session_factory() as session:
+        run_token_pool_prices(session=session)

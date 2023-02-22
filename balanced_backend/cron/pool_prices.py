@@ -75,9 +75,11 @@ def run_pool_prices(session: 'Session'):
 
         session.merge(pool)
     session.commit()
+    logger.info("Ending pool prices cron...")
 
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
-    run_pool_prices(session_factory())
+    with session_factory() as session:
+        run_pool_prices(session=session)

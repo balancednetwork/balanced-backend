@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 from sqlmodel import select
 from loguru import logger
-import sys
 from pydantic import BaseModel
 
+from balanced_backend.crud.dex import get_swaps_within_times
 from balanced_backend.tables.dex import DexSwap
 from balanced_backend.tables.volumes import VolumeTableType
 from balanced_backend.tables.utils import get_table
@@ -53,13 +53,6 @@ TIME_SERIES_TABLES: list[PoolVolume] = [
 ]
 
 
-# def get_table(table_suffix: str) -> VolumeTableType:
-#     Table: VolumeTableType = getattr(
-#         sys.modules['__main__'].sys.modules['balanced_backend.tables'].volumes,
-#         "VolumeSeries" + table_suffix)
-#     return Table
-
-
 def get_last_volume_time(session: 'Session', table: VolumeTableType) -> int:
     result = session.execute(select(table).where(
         table.chain_id == settings.CHAIN_ID
@@ -90,19 +83,6 @@ def get_last_swap_time(session: 'Session') -> DexSwap:
     ).order_by(DexSwap.timestamp.desc()))
     last_swap = result.scalars().first()
     return last_swap
-
-
-def get_time_series(
-        session: 'Session',
-        start_time: int,
-        end_time: int
-) -> list[DexSwap]:
-    result = session.execute(select(DexSwap).where(
-        DexSwap.chain_id == settings.CHAIN_ID).where(
-        DexSwap.timestamp > start_time).where(
-        DexSwap.timestamp <= end_time)
-    )
-    return result.scalars().all()
 
 
 def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
@@ -138,7 +118,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
         pool_volume.pool_close[p] = pool_series.close
 
     while volume_time < last_swap_time:
-        swaps = get_time_series(
+        swaps = get_swaps_within_times(
             session=session,
             start_time=volume_time,
             end_time=volume_time + pool_volume.delta
@@ -191,7 +171,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
             )
             session.merge(t)
 
-        session.commit()
+            session.commit()
         volume_time = volume_time + pool_volume.delta
 
 
@@ -201,9 +181,11 @@ def run_pool_volumes_series(session: 'Session'):
     # Update each of the tables
     for ts in TIME_SERIES_TABLES:
         get_time_series_for_interval(session=session, pool_volume=ts)
+    logger.info("Ending pool volumes cron...")
 
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
-    run_pool_volumes_series(session_factory())
+    with session_factory() as session:
+        run_pool_volumes_series(session=session)

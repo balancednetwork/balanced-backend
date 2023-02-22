@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from balanced_backend.tables.tokens import Token
 from balanced_backend.config import settings
-from balanced_backend.utils.rpc import get_pool_stats, get_contract_method_str
+from balanced_backend.utils.rpc import get_contract_method_str
 from balanced_backend.cron.pool_lists import get_pools
 
 if TYPE_CHECKING:
@@ -77,7 +77,6 @@ def create_token(session: 'Session', address: str, decimals: str):
 def add_tokens_to_db(
         session: 'Session',
         tokens_json: dict,
-        # tokens: list[Token],
         token_type: str
 ):
     for t in tokens_json['tokens']:
@@ -112,8 +111,10 @@ def add_tokens_to_db(
             token.decimals = token_item.decimals
             token.type = token_type
 
+        logger.info(token.address)
         session.merge(token)
         session.commit()
+        logger.info(token.address)
 
 
 def run_token_list(
@@ -130,22 +131,28 @@ def run_token_list(
         tokens_json=get_icon_dict(),
         token_type="balanced",
     )
+    logger.info("a")
+    out = get_token_json(tokens_uri=token_list_uri)
+    logger.info("a")
+
     # Balanced tokens
     add_tokens_to_db(
         session=session,
-        tokens_json=get_token_json(tokens_uri=token_list_uri),
+        tokens_json=out,
         token_type="balanced",
     )
+    logger.info("a")
     # Community tokens
     add_tokens_to_db(
         session=session,
         tokens_json=get_token_json(tokens_uri=community_tokens_uri),
         token_type="community",
     )
-
+    logger.info("a")
     # Finally grab all the tokens that are missing via the getPoolStats
     pools = get_pools()
     for p in pools:
+        logger.info(p)
         token = get_token_from_db(session=session, address=p['base_token'])
         if token is None:
             create_token(
@@ -165,9 +172,11 @@ def run_token_list(
                 address=p['quote_token'],
                 decimals=p['quote_decimals']
             )
+    logger.info("Ending token lists cron...")
 
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
-    run_token_list(session_factory())
+    with session_factory() as session:
+        run_token_list(session=session)
