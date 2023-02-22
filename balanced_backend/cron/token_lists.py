@@ -111,10 +111,8 @@ def add_tokens_to_db(
             token.decimals = token_item.decimals
             token.type = token_type
 
-        logger.info(token.address)
         session.merge(token)
         session.commit()
-        logger.info(token.address)
 
 
 def run_token_list(
@@ -131,9 +129,7 @@ def run_token_list(
         tokens_json=get_icon_dict(),
         token_type="balanced",
     )
-    logger.info("a")
     out = get_token_json(tokens_uri=token_list_uri)
-    logger.info("a")
 
     # Balanced tokens
     add_tokens_to_db(
@@ -141,18 +137,15 @@ def run_token_list(
         tokens_json=out,
         token_type="balanced",
     )
-    logger.info("a")
     # Community tokens
     add_tokens_to_db(
         session=session,
         tokens_json=get_token_json(tokens_uri=community_tokens_uri),
         token_type="community",
     )
-    logger.info("a")
     # Finally grab all the tokens that are missing via the getPoolStats
     pools = get_pools()
     for p in pools:
-        logger.info(p)
         token = get_token_from_db(session=session, address=p['base_token'])
         if token is None:
             create_token(

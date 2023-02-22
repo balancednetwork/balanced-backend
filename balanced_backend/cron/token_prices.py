@@ -24,24 +24,17 @@ def run_token_prices(session: 'Session'):
             TokenPool.address == token.address
         ))
         token_pool_list: list[TokenPool] = result.scalars().all()
-        logger.info(token_pool_list)
 
         supply_weighted_price = sum([i.price * i.supply for i in token_pool_list])
         # Not the total supply as this is what is only in the pools
         pool_supply = sum([i.supply for i in token_pool_list])
 
-        logger.info("a")
-
         weighted_price = supply_weighted_price / pool_supply
-
-        logger.info("b")
 
         if token.address == 'ICX':
             token.holders = 0
         else:
             token.holders = get_token_holders(token.address)
-
-        logger.info("c")
 
         token.price = weighted_price
         token.total_supply = get_total_supply(
@@ -51,8 +44,6 @@ def run_token_prices(session: 'Session'):
 
         session.merge(token)
         session.commit()
-
-        logger.info("d")
 
     logger.info("Ending token prices cron...")
 
