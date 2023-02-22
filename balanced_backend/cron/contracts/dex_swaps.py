@@ -30,7 +30,8 @@ def get_dex_swaps_in_range(
 
 def get_last_swap(session: 'Session') -> DexSwap:
     result = session.execute(select(DexSwap).where(
-        DexSwap.chain_id == settings.CHAIN_ID).order_by(DexSwap.block_number.desc()))
+        DexSwap.chain_id == settings.CHAIN_ID
+    ).order_by(DexSwap.block_number.desc()).limit(1))
     return result.scalars().first()
 
 

@@ -80,7 +80,7 @@ def get_last_volume_timeseries(
 def get_last_swap_time(session: 'Session') -> DexSwap:
     result = session.execute(select(DexSwap).where(
         DexSwap.chain_id == settings.CHAIN_ID
-    ).order_by(DexSwap.timestamp.desc()))
+    ).order_by(DexSwap.timestamp.desc()).limit(1))
     last_swap = result.scalars().first()
     return last_swap
 
