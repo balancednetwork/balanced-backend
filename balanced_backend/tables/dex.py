@@ -49,4 +49,25 @@ class DexSwap(SQLModel, table=True):
         return "dex_swaps"
 
 
+class DexAdd(SQLModel, table=True):
+    chain_id: int = Field(None, primary_key=True)
+    transaction_hash: str = Field(None, primary_key=True)
+    log_index: int = Field(None, primary_key=True)
+    timestamp: int = Field(None, index=True)
+    block_number: int = Field(None, index=True)
 
+    pool_id: int = Field(None)
+    owner: str = Field(None)
+    value: str = Field(None)
+    value_decimal: float = Field(None)
+    base: str = Field(None)
+    base_decimal: float = Field(None)
+    quote: str = Field(None)
+    quote_decimal: float = Field(None)
+
+    class Config:
+        extra = "ignore"
+
+    @declared_attr
+    def __tablename__(cls) -> str:  # noqa: N805
+        return "dex_adds"

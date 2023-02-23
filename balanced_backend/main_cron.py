@@ -16,7 +16,7 @@ from balanced_backend.cron import (
     pool_series,
     dividends,
 )
-from balanced_backend.cron.contracts import dex_swaps
+from balanced_backend.cron.contracts import dex_swaps, dex_adds
 
 
 class Cron(TypedDict):
@@ -56,6 +56,10 @@ CRONS: list[Cron] = [
     {
         'func': dex_swaps.run_dex_swaps,
         'interval': 60,
+    },
+    {
+        'func': dex_adds.run_dex_adds,
+        'interval': 60 * 60 * 4,
     },
     {
         'func': pool_series.run_pool_volumes_series,

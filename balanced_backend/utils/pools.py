@@ -1,8 +1,17 @@
-from typing import Union
+from typing import TypedDict
 from balanced_backend.utils.rpc import get_pool_id, get_pool_stats
 
+
+class PoolDecimals(TypedDict):
+    base_address: str
+    quote_address: str
+    base_decimals: int
+    quote_decimals: int
+    pool_decimals: int
+
+
 POOL_IDS: dict[str, int] = {}
-POOL_DECIMALS: dict[int, dict[str, int]] = {}
+POOL_DECIMALS: dict[int, PoolDecimals] = {}
 
 
 def get_cached_pool_id(base_address: str, quote_address: str) -> int:
@@ -21,7 +30,7 @@ def get_cached_pool_id(base_address: str, quote_address: str) -> int:
         return pool_id
 
 
-def get_cached_pool_decimals(pool_id: int) -> dict[str, Union[int, str]]:
+def get_cached_pool_decimals(pool_id: int) -> PoolDecimals:
     """
     Will error if the pool does not exist. These should be immutable over the span of
      the chain.

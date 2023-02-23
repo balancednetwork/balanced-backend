@@ -8,6 +8,7 @@ from balanced_backend.utils.rpc import (
     get_pool_stats,
     get_contract_method_int,
     post_rpc,
+    get_icx_total_supply,
 )
 from balanced_backend.addresses import addresses
 
@@ -105,3 +106,8 @@ def test_get_tx_result():
     )
     x = r.json()
     print()
+
+
+def test_get_icx_total_supply():
+    total_supply = get_icx_total_supply()
+    assert isinstance(total_supply, int)
