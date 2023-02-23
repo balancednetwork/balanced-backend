@@ -56,7 +56,7 @@ TIME_SERIES_TABLES: list[PoolVolume] = [
 def get_last_volume_time(session: 'Session', table: VolumeTableType) -> int:
     result = session.execute(select(table).where(
         table.chain_id == settings.CHAIN_ID
-    ).order_by(table.timestamp.desc()))
+    ).order_by(table.timestamp.desc()).limit(1).limit(1))
     last_volume = result.scalars().first()
     if last_volume is None:
         volume_time = int(get_timestamp_from_block(block=settings.FIRST_BLOCK) / 1e6)
@@ -168,6 +168,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
                 quote_volume=quote_volume,
                 lp_fees=lp_fees,
                 baln_fees=baln_fees,
+
             )
             session.merge(t)
 
