@@ -25,8 +25,6 @@ This is just the `getPoolStats` method -> no need to do anything
 }
 ```
 
-- Replaced by `/pools`
-
 ### `stats/token-stats`
 
 ```json
@@ -91,6 +89,8 @@ Q: Is price change 24 hour?
 }
 ```
 
+- From token is what generates the fees 
+
 **New format**
 
 ```json
@@ -144,6 +144,8 @@ select sum(metric) where pool_id = 2 and timestam > x and timestam > y
 - This is non-ideal as then we can't run this independently and will need to tunnel to test 
 
 ### `stats/dividends-fees`
+
+- Not needed 
 
 ```json
 {
