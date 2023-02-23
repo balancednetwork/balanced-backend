@@ -59,16 +59,14 @@ def get_prices(
     added_tokens: list[dict] = []
 
     for p in target_pools:
+        if p.price == 0:
+            logger.info(f"Zero price in pool_id: {p.pool_id} - {p.name}. Skipping...")
+            continue
+
         if p.base_address == input_address:
             name = p.quote_name
             symbol = p.quote_symbol
-            try:
-                price = input_price / p.price
-            except TypeError:
-                logger.info(
-                    f"ERORR: !! -> input_price: {input_price} p.price {p.price}"
-                    f" address: {p.quote_address}")
-                raise Exception
+            price = input_price / p.price
             address = p.quote_address
             reference_name = p.base_name
             reference_symbol = p.base_symbol
@@ -79,13 +77,7 @@ def get_prices(
         else:
             name = p.base_name
             symbol = p.base_symbol
-            try:
-                price = input_price * p.price
-            except TypeError:
-                logger.info(
-                    f"ERORR: !! -> input_price: {input_price} p.price {p.price}"
-                    f" address: {p.quote_address}")
-                raise Exception
+            price = input_price * p.price
             address = p.base_address
             reference_name = p.quote_name
             reference_symbol = p.quote_symbol
