@@ -62,7 +62,13 @@ def get_prices(
         if p.base_address == input_address:
             name = p.quote_name
             symbol = p.quote_symbol
-            price = input_price / p.price
+            try:
+                price = input_price / p.price
+            except TypeError:
+                logger.info(
+                    f"ERORR: !! -> input_price: {input_price} p.price {p.price}"
+                    f" address: {p.quote_address}")
+                raise Exception
             address = p.quote_address
             reference_name = p.base_name
             reference_symbol = p.base_symbol
@@ -79,6 +85,7 @@ def get_prices(
                 logger.info(
                     f"ERORR: !! -> input_price: {input_price} p.price {p.price}"
                     f" address: {p.quote_address}")
+                raise Exception
             address = p.base_address
             reference_name = p.quote_name
             reference_symbol = p.quote_symbol
