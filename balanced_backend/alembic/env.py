@@ -19,7 +19,7 @@ from balanced_backend.tables.volumes import (
     VolumeSeries1Month,
 )
 from balanced_backend.tables.tokens import Token, TokenPool
-from balanced_backend.tables.prices import TokenPrice
+# from balanced_backend.tables.prices import TokenPrice
 from balanced_backend.tables.pools import Pool
 from balanced_backend.tables.dex import DexSwap, DexAdd
 from balanced_backend.tables.dividends import Dividend
