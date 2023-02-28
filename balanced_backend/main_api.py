@@ -12,14 +12,19 @@ from balanced_backend.config import settings
 from balanced_backend.log import logger
 from balanced_backend.cache.cache_cron import cache_cron
 
+description = """
+Backend that maintains indexes of all pools, tokens, and associated data such as 
+ prices, volumes, and fees for the stats page and coin-market-cap data feeds. 
+"""
+
 tags_metadata = [
-    {"name": "balanced-backend", "description": "...", },
+    {"name": "balanced-backend", "description": description, },
 ]
 
 app = FastAPI(
     title="Balanced Backend Service",
-    description="...",
-    version="v0.1.0",
+    description=description,
+    version=settings.VERSION,
     openapi_tags=tags_metadata,
     openapi_url=f"{settings.DOCS_PREFIX}/openapi.json",
     docs_url=f"{settings.DOCS_PREFIX}",
