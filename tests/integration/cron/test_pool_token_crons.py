@@ -1,3 +1,4 @@
+import pytest
 from sqlmodel import select
 
 from balanced_backend.tables.pools import Pool
@@ -10,6 +11,7 @@ from balanced_backend.cron.token_price import run_token_pool_prices
 #   NOTE: Tests must be run in order - cron scheduler forces this
 #
 
+@pytest.mark.order(1)
 def test_run_token_list(db):
     with db as session:
         run_token_list(session=db)
@@ -19,6 +21,7 @@ def test_run_token_list(db):
     assert len(tokens) > 30
 
 
+@pytest.mark.order(1)
 def test_run_pool_list(db):
     with db as session:
         run_pool_list(session=db)
@@ -28,6 +31,7 @@ def test_run_pool_list(db):
     assert len(pools) > 30
 
 
+@pytest.mark.order(1)
 def test_run_pool_prices(db):
     with db as session:
         run_pool_prices(session=db)
@@ -37,6 +41,7 @@ def test_run_pool_prices(db):
     assert pools[0].price > 0
 
 
+@pytest.mark.order(1)
 def test_run_token_pool_prices(db):
     with db as session:
         run_token_pool_prices(session=db)
