@@ -7,17 +7,17 @@ from sqlmodel import select
 
 from balanced_backend.db import get_session
 from balanced_backend.tables.pools import Pool
-from balanced_backend.tables.volumes import VolumeTableType
+from balanced_backend.tables.series import PoolSeriesTableType
 from balanced_backend.tables.dividends import Dividend
 # from balanced_backend.cron.pool_volumes_series import get_table
-from balanced_backend.tables.utils import get_table
+from balanced_backend.tables.utils import get_pool_series_table
 from balanced_backend.config import settings
 
 router = APIRouter()
 
 
 @router.get("/pools")
-async def pools(
+async def get_pools(
         response: Response,
         session: AsyncSession = Depends(get_session),
         base_address: str = None,
@@ -111,14 +111,14 @@ INTERVALS = {k for k, _ in INTERVAL_MAP.items()}
 
 
 @router.get("/pools/series/{pool_id}/{interval}/{start}/{end}")
-async def pools_series(
+async def get_pools_series(
         response: Response,
         session: AsyncSession = Depends(get_session),
         pool_id: int = None,
         interval: str = None,
         start: int = None,
         end: int = None,
-) -> Union[List[VolumeTableType], Response]:
+) -> Union[List[PoolSeriesTableType], Response]:
     """Return list of pools price/volumes time series."""
 
     if interval not in INTERVALS:
@@ -135,7 +135,7 @@ async def pools_series(
                    f"{num_records}..."
         )
 
-    table = get_table(table_suffix=INTERVAL_MAP[interval]['table_name'])
+    table = get_pool_series_table(table_suffix=INTERVAL_MAP[interval]['table_name'])
 
     query = select(table).where(
         table.chain_id == settings.CHAIN_ID,

@@ -1,5 +1,4 @@
 from multiprocessing.pool import ThreadPool
-
 import uvicorn
 from fastapi import FastAPI
 from fastapi_health import health
@@ -11,9 +10,10 @@ from balanced_backend.api.health import is_database_online
 from balanced_backend.api.v1.router import api_router
 from balanced_backend.config import settings
 from balanced_backend.log import logger
+from balanced_backend.cache.cache_cron import cache_cron
 
 tags_metadata = [
-    {"name": "balanced-backend", "description": "...",},
+    {"name": "balanced-backend", "description": "...", },
 ]
 
 app = FastAPI(
@@ -31,7 +31,8 @@ app.add_middleware(
     allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
     allow_methods=[method.strip() for method in settings.CORS_ALLOW_METHODS.split(',')],
     allow_headers=[header.strip() for header in settings.CORS_ALLOW_HEADERS.split(',')],
-    expose_headers=[header.strip() for header in settings.CORS_EXPOSE_HEADERS.split(',')],
+    expose_headers=[header.strip() for header in
+                    settings.CORS_EXPOSE_HEADERS.split(',')],
 )
 
 app.add_middleware(
@@ -39,9 +40,18 @@ app.add_middleware(
     quality=8,
 )
 
-logger.info("Starting metrics server.")
-metrics_pool = ThreadPool(1)
-metrics_pool.apply_async(start_http_server, (settings.METRICS_PORT, settings.METRICS_ADDRESS))
+
+@app.on_event("startup")
+async def setup():
+    logger.info("Starting metrics server.")
+    metrics_pool = ThreadPool(1)
+    metrics_pool.apply_async(start_http_server,
+                             (settings.METRICS_PORT, settings.METRICS_ADDRESS))
+
+    logger.info("Starting cache loop...")
+    pool = ThreadPool(1)
+    pool.apply_async(cache_cron)
+
 
 logger.info("Starting application...")
 app.include_router(api_router, prefix=settings.REST_PREFIX)
