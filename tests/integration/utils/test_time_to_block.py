@@ -9,6 +9,8 @@ def test_get_block_from_timestamp():
 def test_get_timestamp_from_block():
     timestamp = get_timestamp_from_block(50941046)
     assert timestamp == 1654408653732543
+    timestamp = get_timestamp_from_block(33585760)
+    assert timestamp
 
 
 def test_timestamp_and_block():
