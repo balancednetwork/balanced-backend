@@ -2,7 +2,9 @@ from typing import TYPE_CHECKING
 from sqlmodel import select
 from typing import Optional
 from loguru import logger
+from datetime import datetime
 
+from balanced_backend.crud.dex import get_dex_swaps
 from balanced_backend.config import settings
 from balanced_backend.tables.pools import Pool
 from balanced_backend.utils.rpc import (
@@ -40,6 +42,34 @@ def get_pool_price_decimals_fallback(
         return fallback
 
 
+def update_pool_with_swap_data(session: 'Session', pool: 'Pool'):
+    current_time = int(datetime.now().timestamp())
+    swaps_24h = get_dex_swaps(
+        session=session,
+        pool_id=pool.pool_id,
+        start_time=current_time,
+        end_time=current_time - 86400,
+    )
+    fill_prices = [i.effective_fill_price_decimal for i in swaps_24h]
+
+    if len(fill_prices) == 0:
+        pool.price_24h_low = pool.price
+        pool.price_24h_high = pool.price
+        pool.base_volume_24h = 0
+        pool.quote_volume_24h = 0
+
+    else:
+        lowest = min(fill_prices)
+        highest = max(fill_prices)
+        base_volume = sum([i.base_token_value_decimal for i in swaps_24h])
+        quote_volume = sum([i.quote_token_value_decimal for i in swaps_24h])
+
+        pool.price_24h_low = lowest
+        pool.price_24h_high = highest
+        pool.base_volume_24h = base_volume
+        pool.quote_volume_24h = quote_volume
+
+
 def run_pool_prices(session: 'Session'):
     logger.info("Running pool prices cron...")
 
@@ -66,12 +96,17 @@ def run_pool_prices(session: 'Session'):
         )
 
         pool.price = price
+        pool.price_24h = price_24h
+        pool.price_7d = price_7d
+        pool.price_30d = price_30d
+
         pool.price_change_24h = price - price_24h
         pool.price_change_7d = price - price_7d
         pool.price_change_30d = price - price_30d
 
         # TODO: Fix this
         update_total_supply_and_liquidites(pool=pool)
+        update_pool_with_swap_data(session=session, pool=pool)
 
         session.merge(pool)
     session.commit()

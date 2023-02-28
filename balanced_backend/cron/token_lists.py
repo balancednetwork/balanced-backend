@@ -7,7 +7,9 @@ from pydantic import BaseModel
 from balanced_backend.tables.tokens import Token
 from balanced_backend.config import settings
 from balanced_backend.utils.rpc import get_contract_method_str
-from balanced_backend.cron.pool_lists import get_pools
+from balanced_backend.cron.pool_lists import get_pools_from_stats
+from balanced_backend.crud.pools import get_pools
+from balanced_backend.crud.tokens import get_tokens
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -115,6 +117,20 @@ def add_tokens_to_db(
         session.commit()
 
 
+def add_pools_to_tokens(session: 'Session'):
+    pools = get_pools(session=session)
+    tokens = get_tokens(session=session)
+
+    for t in tokens:
+        tokens_pools = [
+            i.pool_id for i in pools if
+            i.base_address == t.address or i.quote_address == t.address
+        ]
+        t.pools = tokens_pools
+        session.merge(t)
+    session.commit()
+
+
 def run_token_list(
         session: 'Session',
 ):
@@ -144,7 +160,7 @@ def run_token_list(
         token_type="community",
     )
     # Finally grab all the tokens that are missing via the getPoolStats
-    pools = get_pools()
+    pools = get_pools_from_stats()
     for p in pools:
         token = get_token_from_db(session=session, address=p['base_token'])
         if token is None:
@@ -165,6 +181,9 @@ def run_token_list(
                 address=p['quote_token'],
                 decimals=p['quote_decimals']
             )
+
+    # Last add all the pools a token participates in
+    add_pools_to_tokens(session=session)
     logger.info("Ending token lists cron...")
 
 

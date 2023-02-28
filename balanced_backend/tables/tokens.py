@@ -1,6 +1,7 @@
 from typing import Optional
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, SQLModel
+from sqlalchemy.sql.schema import Column
+from sqlmodel import Field, SQLModel, JSON
 
 
 class Token(SQLModel, table=True):
@@ -28,6 +29,8 @@ class Token(SQLModel, table=True):
     baln_fees: str = Field(None)
     baln_fees_decimal: float = Field(None)
 
+    path: dict = Field(None, sa_column=Column(JSON))
+    pools: dict = Field(None, sa_column=Column(JSON))
 
     class Config:
         extra = "ignore"
@@ -35,44 +38,3 @@ class Token(SQLModel, table=True):
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805
         return "tokens"
-
-
-class TokenPool(SQLModel, table=True):
-    pool_id: int = Field(primary_key=True)
-    chain_id: int = Field(None, index=True)
-    timestamp: int = Field(None)
-    pool_price: float = Field(None)
-    pool_name: str = Field(None)
-    total_supply: float = Field(None)
-    address: str = Field(primary_key=True)
-    symbol: str = Field(None, index=True)
-    name: str = Field(None)
-    price: Optional[float] = Field(None)
-    supply: Optional[float] = Field(None)
-    reference_address: str = Field(None, index=True)
-    reference_symbol: str = Field(None, index=True)
-    reference_name: str = Field(None)
-    reference_price: float = Field(None)
-    reference_supply: float = Field(None)
-
-    class Config:
-        extra = "ignore"
-
-    @declared_attr
-    def __tablename__(cls) -> str:  # noqa: N805
-        return "token_pool"
-
-
-class TokenPrice(SQLModel, table=True):
-    name: Optional[str] = Field(primary_key=True)
-    chain_id: int = Field(None, index=True)
-    timestamp: Optional[int] = Field(primary_key=True)
-    price: float = Field(None, index=False)
-    total_supply: float = Field(None, index=False)
-
-    class Config:
-        extra = "ignore"
-
-    @declared_attr
-    def __tablename__(cls) -> str:  # noqa: N805
-        return "token_prices"

@@ -7,11 +7,11 @@ from datetime import datetime
 from balanced_backend.db import session_factory
 from balanced_backend.tables.dex import DexSwap
 from balanced_backend.tables.dividends import Dividend
-from balanced_backend.tables.utils import get_table
+from balanced_backend.tables.utils import get_pool_series_table
 from balanced_backend.config import settings
 from balanced_backend.utils.time_to_block import get_timestamp_from_block
 
-from balanced_backend.crud.dex import get_swaps_within_times
+from balanced_backend.crud.dex import get_dex_swaps
 from balanced_backend.crud.pools import get_pools
 
 if TYPE_CHECKING:
@@ -47,7 +47,7 @@ def run_pool_dividends(session: 'Session'):
     pools = get_pools(session=session)
 
     for p in pools:
-        swaps = get_swaps_within_times(
+        swaps = get_dex_swaps(
             session=session,
             start_time=current_timestamp - 86400 * 30,
             pool_id=p.pool_id

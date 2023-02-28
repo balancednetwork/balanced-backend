@@ -4,7 +4,7 @@ from balanced_backend.addresses import addresses
 from balanced_backend.config import settings
 from balanced_backend.tables.dex import DexSwap, DexAdd
 from balanced_backend.utils.api import get_logs_in_blocks
-from balanced_backend.utils.pools import get_cached_pool_decimals
+from balanced_backend.utils.pools import get_cached_pool_stats
 
 
 def get_swaps(
@@ -25,10 +25,10 @@ def get_swaps(
         indexed_data = json.loads(i['indexed'])[1:]
 
         pool_id = int(indexed_data[0], 16)
-        pool_decimals = get_cached_pool_decimals(pool_id=pool_id)
+        pool_stats = get_cached_pool_stats(pool_id=pool_id)
 
         base_token = indexed_data[1]
-        quote_token = pool_decimals['quote_address']
+        quote_token = pool_stats['quote_address']
 
         from_token = data[0]
         to_token = data[1]
@@ -37,9 +37,9 @@ def get_swaps(
         to_value = data[5]
 
         # Determine if from_value is base or quote
-        if from_token == pool_decimals['base_address']:
-            from_decimals = pool_decimals['base_decimals']
-            to_decimals = pool_decimals['quote_decimals']
+        if from_token == pool_stats['base_address']:
+            from_decimals = pool_stats['base_decimals']
+            to_decimals = pool_stats['quote_decimals']
             from_value_decimal = int(from_value, 16) / 10 ** from_decimals
             to_value_decimal = int(to_value, 16) / 10 ** to_decimals
             quote_token_value = to_value
@@ -47,8 +47,8 @@ def get_swaps(
             base_token_value = from_value
             base_token_value_decimal = from_value_decimal
         else:
-            from_decimals = pool_decimals['quote_decimals']
-            to_decimals = pool_decimals['base_decimals']
+            from_decimals = pool_stats['quote_decimals']
+            to_decimals = pool_stats['base_decimals']
             from_value_decimal = int(from_value, 16) / 10 ** from_decimals
             to_value_decimal = int(to_value, 16) / 10 ** to_decimals
             quote_token_value = from_value
@@ -65,13 +65,11 @@ def get_swaps(
 
         lp_fees_decimal = int(lp_fees, 16) / 1e18
         baln_fees_decimal = int(baln_fees, 16) / 1e18
-        pool_base_decimal = int(pool_base, 16) / 10 ** pool_decimals['base_decimals']
-        pool_quote_decimal = int(pool_quote, 16) / 10 ** pool_decimals[
-            'quote_decimals']
-        ending_price_decimal = int(ending_price, 16) / 10 ** pool_decimals[
-            'pool_decimals']
+        pool_base_decimal = int(pool_base, 16) / 10 ** pool_stats['base_decimals']
+        pool_quote_decimal = int(pool_quote, 16) / 10 ** pool_stats['quote_decimals']
+        ending_price_decimal = int(ending_price, 16) / 10 ** pool_stats['pool_decimals']
         effective_fill_price_decimal = int(effective_fill_price, 16) / 10 ** \
-                                       pool_decimals['pool_decimals']
+                                       pool_stats['pool_decimals']
 
         swap = DexSwap(
             transaction_hash=i['transaction_hash'],
@@ -131,7 +129,7 @@ def get_dex_adds(
         indexed_data = json.loads(i['indexed'])[1:]
 
         pool_id = int(indexed_data[0], 16)
-        pool_decimals = get_cached_pool_decimals(pool_id=pool_id)
+        pool_decimals = get_cached_pool_stats(pool_id=pool_id)
 
         owner = indexed_data[1]
         value = indexed_data[2]

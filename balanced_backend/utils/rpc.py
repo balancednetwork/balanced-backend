@@ -152,15 +152,26 @@ def get_pool_stats(pool_id: int, height: int = None) -> Optional[dict]:
     )
 
 
-def get_band_price(symbol: str) -> float:
+def get_band_price(symbol: str, height: int = None) -> float:
+    """Band contract was updated from python to java at the below block height."""
+    if height is None or height > 59878978:
+        address = addresses.BAND_REF_CONTRACT_ADDRESS
+        method = 'getRefData'
+        param_name = 'symbol'
+    else:
+        address = addresses.BAND_CONTRACT_ADDRESS_PYTHON
+        method = 'get_ref_data'
+        param_name = '_symbol'
+
     r = get_icx_call(
-        to_address=addresses.BAND_REF_CONTRACT_ADDRESS,
+        to_address=address,
         params={
-            'method': 'getRefData',
+            'method': method,
             'params': {
-                'symbol': symbol
+                param_name: symbol
             }
         },
+        height=height,
     )
     if r.status_code == 200:
         return int(r.json()['result']['rate'], 16) / 1e9
