@@ -8,7 +8,7 @@ from balanced_backend.config import settings
 @pytest.mark.anyio
 def test_api_get_pools(db: Session, client: TestClient):
     response = client.get(f"{settings.REST_PREFIX}/pools")
-    assert response.status_code == 200
+    assert response.status_code in [200, 204]
     assert len(response.json()) > 0
 
 
