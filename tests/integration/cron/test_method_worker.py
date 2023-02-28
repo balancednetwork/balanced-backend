@@ -7,7 +7,7 @@ from balanced_backend.tables.historical import DailyHistorical
 from balanced_backend.utils.methods import set_table_value_from_timestamp
 
 
-@pytest.mark.first
+@pytest.mark.order(1)
 def test_set_table_value_from_timestamp(db, loans_historical_context):
     """Check that we can idepotently update the DB with values at a given timestamp."""
     loans_historical_context.init_model()
@@ -21,6 +21,7 @@ def test_set_table_value_from_timestamp(db, loans_historical_context):
         assert loans[0].timestamp == loans_historical_context.timestamp
 
 
+@pytest.mark.order(1)
 @freeze_time("2021-04-26")
 def test_build_daily_historical(db):
     with db as session:
