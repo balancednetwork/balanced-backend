@@ -1,0 +1,315 @@
+[
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "type": "str"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "name",
+        "type": "str"
+      }
+    ],
+    "name": "updateAddress",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "name",
+        "type": "str"
+      }
+    ],
+    "name": "getAddress",
+    "outputs": [
+      {
+        "type": "Address"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "setSwapFeesAccruedDB",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "enable",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "disable",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isEnabled",
+    "outputs": [
+      {
+        "type": "bool"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_tokens",
+        "type": "[]Address"
+      }
+    ],
+    "name": "setAcceptedDividendTokens",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAcceptedDividendTokens",
+    "outputs": [
+      {
+        "type": "list"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_interval",
+        "type": "int"
+      }
+    ],
+    "name": "setFeeProcessingInterval",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeProcessingInterval",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token",
+        "type": "Address"
+      },
+      {
+        "name": "_path",
+        "type": "[]Address"
+      }
+    ],
+    "name": "setRoute",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "limit",
+        "type": "int"
+      }
+    ],
+    "name": "setBalnRouteLimit",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBalnRouteLimit",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token",
+        "type": "Address"
+      }
+    ],
+    "name": "addDefaultRoute",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token",
+        "type": "Address"
+      }
+    ],
+    "name": "calculateRouteLimit",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_fromToken",
+        "type": "Address"
+      }
+    ],
+    "name": "getRouteLimit",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token",
+        "type": "Address"
+      }
+    ],
+    "name": "deleteRoute",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "routeFees",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token",
+        "type": "Address"
+      },
+      {
+        "name": "path",
+        "type": "[]Address"
+      }
+    ],
+    "name": "routeToken",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_fromToken",
+        "type": "Address"
+      }
+    ],
+    "name": "getRoute",
+    "outputs": [
+      {
+        "type": "list"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRoutedTokens",
+    "outputs": [
+      {
+        "type": "list"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getNextAllowedAddressIndex",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_from",
+        "type": "Address"
+      },
+      {
+        "name": "_value",
+        "type": "int"
+      },
+      {
+        "name": "_data",
+        "type": "bytes"
+      }
+    ],
+    "name": "tokenFallback",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLoanFeesAccrued",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStabilityFundFeesAccrued",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token",
+        "type": "Address"
+      }
+    ],
+    "name": "getSwapFeesAccruedByToken",
+    "outputs": [
+      {
+        "type": "int"
+      }
+    ],
+    "readonly": "0x1",
+    "type": "function"
+  }
+]

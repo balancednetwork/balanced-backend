@@ -1,4 +1,4 @@
-from balanced_backend.utils.pools import get_cached_pool_id, get_cached_pool_decimals, POOL_IDS, POOL_DECIMALS
+from balanced_backend.utils.pools import get_cached_pool_id, get_cached_pool_stats, POOL_IDS, POOL_STATS
 
 
 def test_get_cached_pool_id():
@@ -24,6 +24,6 @@ def test_get_cached_pool_id():
 
 
 def test_get_cached_pool_decimals():
-    pool_decimals = get_cached_pool_decimals(2)
+    pool_decimals = get_cached_pool_stats(2)
 
     assert pool_decimals['base_decimals'] == 18

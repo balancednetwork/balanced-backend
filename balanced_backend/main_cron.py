@@ -6,15 +6,15 @@ from apscheduler.schedulers.background import BlockingScheduler
 from balanced_backend.config import settings
 from balanced_backend.db import session_factory
 from balanced_backend.cron import (
+    dividends,
     methods,
-    volumes,
-    token_lists,
     pool_lists,
     pool_prices,
-    token_pools,
-    token_prices,
     pool_series,
-    dividends,
+    token_lists,
+    token_price,
+    token_series,
+    volumes,
 )
 from balanced_backend.cron.contracts import dex_swaps, dex_adds
 
@@ -46,14 +46,6 @@ CRONS: list[Cron] = [
         'interval': 600,
     },
     {
-        'func': token_pools.run_token_pool_prices,
-        'interval': 600,
-    },
-    {
-        'func': token_prices.run_token_prices,
-        'interval': 600,
-    },
-    {
         'func': dex_swaps.run_dex_swaps,
         'interval': 60,
     },
@@ -63,6 +55,18 @@ CRONS: list[Cron] = [
     },
     {
         'func': pool_series.run_pool_volumes_series,
+        'interval': 600,
+    },
+    {
+        'func': token_lists.run_token_list,
+        'interval': 600,
+    },
+    {
+        'func': token_price.run_token_pool_prices,
+        'interval': 600,
+    },
+    {
+        'func': token_series.run_token_series,
         'interval': 600,
     },
     {

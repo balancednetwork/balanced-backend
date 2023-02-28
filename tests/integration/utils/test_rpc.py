@@ -9,6 +9,7 @@ from balanced_backend.utils.rpc import (
     get_contract_method_int,
     post_rpc,
     get_icx_total_supply,
+    get_band_price,
 )
 from balanced_backend.addresses import addresses
 
@@ -111,3 +112,13 @@ def test_get_tx_result():
 def test_get_icx_total_supply():
     total_supply = get_icx_total_supply()
     assert isinstance(total_supply, int)
+
+
+def test_get_band_price():
+    """Verified these prices against CMC roughly."""
+    price = get_band_price(symbol='ICX')
+    assert price
+    price = get_band_price(symbol='ICX', height=50000000)
+    assert price
+    price = get_band_price(symbol='ICX', height=33585760)
+    assert price

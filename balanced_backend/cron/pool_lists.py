@@ -5,6 +5,7 @@ from loguru import logger
 from balanced_backend.config import settings
 from balanced_backend.tables.pools import Pool
 from balanced_backend.tables.tokens import Token
+from balanced_backend.crud.tokens import get_tokens
 from balanced_backend.addresses import addresses
 from balanced_backend.utils.rpc import (
     get_contract_method_int,
@@ -18,7 +19,7 @@ if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
 
-def get_pools() -> list[dict]:
+def get_pools_from_stats() -> list[dict]:
     pool_nonce: int = get_contract_method_int(
         to_address=addresses.DEX_CONTRACT_ADDRESS,
         method='getNonce'
@@ -42,27 +43,17 @@ def get_pool_type(tokens: list[Token], quote_symbol: str, base_symbol: str):
     return 'balanced'
 
 
-def run_pool_list(
-        session: 'Session',
-):
+def run_pool_list(session: 'Session'):
     logger.info("Running pool lists cron...")
-    result = session.execute(select(Pool).where(Pool.chain_id == settings.CHAIN_ID))
-    pools = result.scalars().all()
-    pool_names_db = [i.name for i in pools]
-
     current_timestamp = int(datetime.now().timestamp())
 
-    result = session.execute(select(Token).where(Token.chain_id == settings.CHAIN_ID))
-    tokens = result.scalars().all()
+    # Get tokens so we can find out what type of token it is
+    tokens = get_tokens(session=session)
 
-    pool_stats = get_pools()
+    # Iterate up to the nonce to get all the pools
+    pool_stats = get_pools_from_stats()
 
     for ps in pool_stats:
-        if ps['name'] in pool_names_db:
-            # We already have pool in DB -> this assumes pool names don't change
-            # If they do / if the pool_id changes -> clear pools table and re-init
-            continue
-
         if ps['quote_token'] is not None:
             quote_name = get_contract_method_str(
                 to_address=ps['quote_token'],
@@ -95,6 +86,11 @@ def run_pool_list(
             base_symbol=base_symbol
         )
 
+        total_supply = int(ps['total_supply'], 16)
+        price = int(ps['price'], 16) / 10 ** (
+            18 + int(ps['quote_decimals'], 16) - int(ps['base_decimals'], 16)
+        )
+
         pool_db = Pool(
             base_address=base_address,
             quote_address=quote_address,
@@ -109,9 +105,11 @@ def run_pool_list(
             chain_id=settings.CHAIN_ID,
             type=pool_type,
             last_updated_timestamp=current_timestamp,
+            total_supply=total_supply,
+            price=price,
         )
         session.merge(pool_db)
-        session.commit()
+    session.commit()
     logger.info("Ending pool lists cron...")
 
 

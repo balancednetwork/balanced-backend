@@ -20,9 +20,18 @@ class Pool(SQLModel, table=True):
     type: str = Field(None)
 
     price: float = Field(None)
+    price_24h: float = Field(None)
+    price_7d: float = Field(None)
+    price_30d: float = Field(None)
+
     price_change_24h: float = Field(None)
     price_change_7d: float = Field(None)
     price_change_30d: float = Field(None)
+
+    price_24h_low: float = Field(None)
+    price_24h_high: float = Field(None)
+    base_volume_24h: float = Field(None)
+    quote_volume_24h: float = Field(None)
 
     base_price: float = Field(None)
     quote_price: float = Field(None)

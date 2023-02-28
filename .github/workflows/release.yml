@@ -29,8 +29,12 @@ jobs:
 
       - name: Install deps
         run: |
-          sudo apt-get install librdkafka-dev
-          pip3 install -r requirements-api.txt -r requirements-cron.txt -r requirements-streaming.txt -r requirements-dev.txt
+#          sudo apt-get install librdkafka-dev
+          pip3 install \
+            -r requirements-api.txt \
+            -r requirements-cron.txt \
+            -r requirements-dev.txt
+#            -r requirements-streaming.txt \
 
       - name: Bring up stack
         run: make up-dbs && sleep 30

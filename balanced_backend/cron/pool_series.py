@@ -2,58 +2,63 @@ from typing import TYPE_CHECKING
 from sqlmodel import select
 from loguru import logger
 from pydantic import BaseModel
+import asyncio
 
-from balanced_backend.crud.dex import get_swaps_within_times
+from balanced_backend.crud.dex import get_dex_swaps
 from balanced_backend.tables.dex import DexSwap
-from balanced_backend.tables.volumes import VolumeTableType
-from balanced_backend.tables.utils import get_table
+from balanced_backend.tables.series import PoolSeriesTableType
+from balanced_backend.tables.utils import get_pool_series_table
 from balanced_backend.config import settings
-from balanced_backend.utils.time_to_block import get_timestamp_from_block
+from balanced_backend.utils.time_to_block import (
+    get_timestamp_from_block,
+    get_block_from_timestamp,
+)
+from balanced_backend.utils.rpc_async import get_total_supply_async
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
 
-class PoolVolume(BaseModel):
+class SeriesTable(BaseModel):
     table_suffix: str
     delta: int
     pool_ids: set[int] = set()
     pool_close: dict[int, float] = {}
 
 
-TIME_SERIES_TABLES: list[PoolVolume] = [
-    PoolVolume(
+TIME_SERIES_TABLES: list[SeriesTable] = [
+    SeriesTable(
         table_suffix="5Min",
         delta=60 * 5,
     ),
-    PoolVolume(
+    SeriesTable(
         table_suffix="15Min",
         delta=60 * 15,
     ),
-    PoolVolume(
+    SeriesTable(
         table_suffix="1Hour",
         delta=60 * 60,
     ),
-    PoolVolume(
+    SeriesTable(
         table_suffix="4Hour",
         delta=60 * 60 * 4,
     ),
-    PoolVolume(
+    SeriesTable(
         table_suffix="1Day",
         delta=60 * 60 * 24,
     ),
-    PoolVolume(
+    SeriesTable(
         table_suffix="1Week",
         delta=60 * 60 * 24 * 7,
     ),
-    PoolVolume(
+    SeriesTable(
         table_suffix="1Month",
         delta=60 * 60 * 24 * 30,
     ),
 ]
 
 
-def get_last_volume_time(session: 'Session', table: VolumeTableType) -> int:
+def get_last_volume_time(session: 'Session', table: PoolSeriesTableType) -> int:
     result = session.execute(select(table).where(
         table.chain_id == settings.CHAIN_ID
     ).order_by(table.timestamp.desc()).limit(1).limit(1))
@@ -67,9 +72,9 @@ def get_last_volume_time(session: 'Session', table: VolumeTableType) -> int:
 
 def get_last_volume_timeseries(
         session: 'Session',
-        table: VolumeTableType,
+        table: PoolSeriesTableType,
         timestamp: int,
-) -> list[VolumeTableType]:
+) -> list[PoolSeriesTableType]:
     result = session.execute(select(table).where(
         table.chain_id == settings.CHAIN_ID,
         table.timestamp == timestamp,
@@ -85,9 +90,9 @@ def get_last_swap_time(session: 'Session') -> DexSwap:
     return last_swap
 
 
-def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
+def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     # Get the table we want to be building the series dynamically since there are many
-    Table = get_table(table_suffix=pool_volume.table_suffix)
+    Table = get_pool_series_table(table_suffix=pool_volume.table_suffix)
 
     # Get the last swap in the dex swap table so we know where to iterate up to
     last_swap = get_last_swap_time(session=session)
@@ -118,11 +123,24 @@ def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
         pool_volume.pool_close[p] = pool_series.close
 
     while volume_time < last_swap_time:
-        swaps = get_swaps_within_times(
+        swaps = get_dex_swaps(
             session=session,
             start_time=volume_time,
             end_time=volume_time + pool_volume.delta
         )
+
+        # TODO: Remove -> Only for quicker testing
+        if len(swaps) == 0 and len(pool_volume.pool_ids) == 0:
+            volume_time = volume_time + pool_volume.delta
+            continue
+
+        # Need extra call here because there may be no swaps in a period. This is needed
+        # because we need to enrich this series with pool stats data to later be able to
+        # calculate the token prices.
+        block_height = get_block_from_timestamp(int((volume_time + pool_volume.delta / 2) * 1e6))
+        # TODO: To make this faster we can check if there are no swaps and if there
+        #  aren't, then estimate the BH, skip the total supply call by carrying over the
+        #  last total supply. This is definitely slow but might be faster in cluster.
 
         # Add any new pool IDs that need to be tracked
         new_pool_ids = set([
@@ -133,7 +151,16 @@ def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
             pool_volume.pool_ids.add(np)
             pool_volume.pool_close[np] = 0
 
+        total_supplies = asyncio.run(
+            get_total_supply_async(
+                pool_ids=list(pool_volume.pool_ids),
+                height=block_height,
+            )
+        )
+
         for p in pool_volume.pool_ids:
+            total_supply = [i for i in total_supplies if i['pool_id'] == p][0]['total_supply']
+
             pool_swaps = [i for i in swaps if i.pool_id == p]
             swap_prices = [i.ending_price_decimal for i in pool_swaps]
             if len(swap_prices) != 0:
@@ -160,6 +187,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
                 chain_id=settings.CHAIN_ID,
                 pool_id=p,
                 timestamp=volume_time,
+                block_height=block_height,
                 high=high,
                 low=low,
                 open=open,
@@ -168,11 +196,11 @@ def get_time_series_for_interval(session: 'Session', pool_volume: PoolVolume):
                 quote_volume=quote_volume,
                 lp_fees=lp_fees,
                 baln_fees=baln_fees,
-
+                total_supply=total_supply,
             )
             session.merge(t)
 
-            session.commit()
+        session.commit()
         volume_time = volume_time + pool_volume.delta
 
 
