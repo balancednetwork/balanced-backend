@@ -10,3 +10,4 @@ brotli-asgi==1.1.0
 sqlmodel==0.0.8
 asyncpg==0.24.0
 psycopg2-binary
+APScheduler==3.9.1

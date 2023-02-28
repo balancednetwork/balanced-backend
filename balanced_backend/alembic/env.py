@@ -9,17 +9,22 @@ from sqlmodel import SQLModel
 from balanced_backend.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABASE_URL
 
 from balanced_backend.tables.historical import DailyHistorical
-from balanced_backend.tables.volumes import (
-    ContractMethodVolume,
-    VolumeSeries5Min,
-    VolumeSeries15Min,
-    VolumeSeries1Hour,
-    VolumeSeries4Hour,
-    VolumeSeries1Day,
-    VolumeSeries1Month,
+from balanced_backend.tables.volumes import ContractMethodVolume
+from balanced_backend.tables.series import (
+    TokenSeries5Min,
+    TokenSeries15Min,
+    TokenSeries1Hour,
+    TokenSeries4Hour,
+    TokenSeries1Day,
+    TokenSeries1Month,
+    PoolSeries5Min,
+    PoolSeries15Min,
+    PoolSeries1Hour,
+    PoolSeries4Hour,
+    PoolSeries1Day,
+    PoolSeries1Month,
 )
-from balanced_backend.tables.tokens import Token, TokenPool
-# from balanced_backend.tables.prices import TokenPrice
+from balanced_backend.tables.tokens import Token
 from balanced_backend.tables.pools import Pool
 from balanced_backend.tables.dex import DexSwap, DexAdd
 from balanced_backend.tables.dividends import Dividend
@@ -81,5 +86,6 @@ async def run_migrations_online():
 
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
+
 
 asyncio.run(run_migrations_online())
