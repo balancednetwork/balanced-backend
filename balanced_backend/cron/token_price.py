@@ -63,6 +63,7 @@ def run_token_pool_prices(session: 'Session'):
     token_prices = get_token_prices(pools=pool_prices, tokens=token_prices)
     for t in tokens:
         t.price = [i.price for i in token_prices if i.address == t.address][0]
+        t.path = [i.path for i in token_prices if i.address == t.address][0]
         session.merge(t)
     session.commit()
 
