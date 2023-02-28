@@ -1,9 +1,11 @@
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from balanced_backend.config import settings
 
 
+@pytest.mark.anyio
 def test_api_get_volumes(db: Session, client: TestClient):
     """Test endpoint - must be run after one of the worker tests."""
     response = client.get(
@@ -12,6 +14,7 @@ def test_api_get_volumes(db: Session, client: TestClient):
     assert len(response.json()) > 0
 
 
+@pytest.mark.anyio
 def test_api_get_volumes_error(db: Session, client: TestClient):
     response = client.get(f"{settings.REST_PREFIX}/contract-volumes")
     assert response.status_code == 400
