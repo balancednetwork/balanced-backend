@@ -18,19 +18,18 @@ class Token(SQLModel, table=True):
     price_24h: float = Field(None, index=False)
     price_7d: float = Field(None, index=False)
     price_30d: float = Field(None, index=False)
-    holders: int = Field(None, index=False)
-    total_supply: float = Field(None, index=False)
-
-    volume: str = Field(None)
-    volume_decimal: str = Field(None)
-
-    lp_fees: str = Field(None)
-    lp_fees_decimal: float = Field(None)
-    baln_fees: str = Field(None)
-    baln_fees_decimal: float = Field(None)
 
     path: dict = Field(None, sa_column=Column(JSON))
     pools: dict = Field(None, sa_column=Column(JSON))
+
+    # volume: str = Field(None)
+    # volume_decimal: str = Field(None)
+    # lp_fees: str = Field(None)
+    # lp_fees_decimal: float = Field(None)
+    # baln_fees: str = Field(None)
+    # baln_fees_decimal: float = Field(None)
+    # holders: int = Field(None, index=False)
+    # total_supply: float = Field(None, index=False)
 
     class Config:
         extra = "ignore"
