@@ -41,8 +41,10 @@ def get_pool_series_table_by_timestamp(
 ) -> list[PoolSeriesTableType]:
     result = session.execute(select(table).where(
         table.chain_id == settings.CHAIN_ID,
+    ).where(
         table.timestamp == timestamp,
-    ).order_by(table.timestamp.desc()))
+    ))
+
     return result.scalars().all()
 
 

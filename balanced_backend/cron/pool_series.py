@@ -4,8 +4,8 @@ from loguru import logger
 from pydantic import BaseModel
 import asyncio
 
-from balanced_backend.crud.dex import get_dex_swaps
-from balanced_backend.tables.dex import DexSwap
+from balanced_backend.crud.dex import get_dex_swaps, get_last_swap_time
+from balanced_backend.crud.series import get_pool_series_table_by_timestamp
 from balanced_backend.tables.series import PoolSeriesTableType
 from balanced_backend.tables.utils import get_pool_series_table
 from balanced_backend.config import settings
@@ -70,26 +70,6 @@ def get_last_volume_time(session: 'Session', table: PoolSeriesTableType) -> int:
     return volume_time
 
 
-def get_last_volume_timeseries(
-        session: 'Session',
-        table: PoolSeriesTableType,
-        timestamp: int,
-) -> list[PoolSeriesTableType]:
-    result = session.execute(select(table).where(
-        table.chain_id == settings.CHAIN_ID,
-        table.timestamp == timestamp,
-    ))
-    return result.scalars().all()
-
-
-def get_last_swap_time(session: 'Session') -> DexSwap:
-    result = session.execute(select(DexSwap).where(
-        DexSwap.chain_id == settings.CHAIN_ID
-    ).order_by(DexSwap.timestamp.desc()).limit(1))
-    last_swap = result.scalars().first()
-    return last_swap
-
-
 def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     # Get the table we want to be building the series dynamically since there are many
     Table = get_pool_series_table(table_suffix=pool_volume.table_suffix)
@@ -109,7 +89,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     ) - pool_volume.delta
 
     # Get the last time series so we know when to index from
-    last_volume_timeseries = get_last_volume_timeseries(
+    last_volume_timeseries = get_pool_series_table_by_timestamp(
         session=session,
         table=Table,
         timestamp=int(volume_time),
@@ -137,7 +117,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         # Need extra call here because there may be no swaps in a period. This is needed
         # because we need to enrich this series with pool stats data to later be able to
         # calculate the token prices.
-        block_height = get_block_from_timestamp(int((volume_time + pool_volume.delta / 2) * 1e6))
+        block_height = get_block_from_timestamp(
+            int((volume_time + pool_volume.delta / 2) * 1e6))
         # TODO: To make this faster we can check if there are no swaps and if there
         #  aren't, then estimate the BH, skip the total supply call by carrying over the
         #  last total supply. This is definitely slow but might be faster in cluster.
@@ -151,6 +132,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
             pool_volume.pool_ids.add(np)
             pool_volume.pool_close[np] = 0
 
+        # TODO: To make this faster, we can update the total supplies every X number of
+        #  iterations as this is only used to do the price path search
         total_supplies = asyncio.run(
             get_total_supply_async(
                 pool_ids=list(pool_volume.pool_ids),
@@ -159,7 +142,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         )
 
         for p in pool_volume.pool_ids:
-            total_supply = [i for i in total_supplies if i['pool_id'] == p][0]['total_supply']
+            total_supply = [i for i in total_supplies if i['pool_id'] == p][0][
+                'total_supply']
 
             pool_swaps = [i for i in swaps if i.pool_id == p]
             swap_prices = [i.ending_price_decimal for i in pool_swaps]
