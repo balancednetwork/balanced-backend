@@ -1,3 +1,4 @@
+from loguru import logger
 import asyncio
 import aiohttp
 import json
@@ -70,12 +71,17 @@ async def get_total_supply_async_resp(
     if height is not None:
         data['params']['height'] = hex(height)
 
-    async with session.post(
-            url=settings.ICON_NODE_URL, data=json.dumps(data)
-    ) as response:
-        resp = await response.read()
+    try:
+        async with session.post(
+            url=settings.ICON_NODE_URL, data=json.dumps(data), timeout=2,
+        ) as response:
+            resp = await response.read()
+            total_supply = int(json.loads(resp)['result'], 0)
+    except asyncio.exceptions.TimeoutError:
+        logger.info(f"Timed out for total supply request for pool {pool_id} and block "
+                    f"height {height}...")
+        total_supply = 0
 
-    total_supply = int(json.loads(resp)['result'], 0)
     return {'pool_id': pool_id, 'total_supply': total_supply}
 
 
