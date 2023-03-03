@@ -123,6 +123,9 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         #  aren't, then estimate the BH, skip the total supply call by carrying over the
         #  last total supply. This is definitely slow but might be faster in cluster.
 
+        #TODO: RM this?
+        logger.info(f"Summarizing num swaps: {len(swaps)} at bh: {block_height}...")
+
         # Add any new pool IDs that need to be tracked
         new_pool_ids = set([
             i.pool_id for i in swaps if i.pool_id not in pool_volume.pool_ids
