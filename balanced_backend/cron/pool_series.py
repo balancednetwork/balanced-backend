@@ -51,10 +51,10 @@ TIME_SERIES_TABLES: list[SeriesTable] = [
         table_suffix="1Week",
         delta=60 * 60 * 24 * 7,
     ),
-    SeriesTable(
-        table_suffix="1Month",
-        delta=60 * 60 * 24 * 30,
-    ),
+    # SeriesTable(
+    #     table_suffix="1Month",
+    #     delta=60 * 60 * 24 * 30,
+    # ),
 ]
 
 
