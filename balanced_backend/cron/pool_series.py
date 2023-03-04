@@ -103,6 +103,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         pool_volume.pool_close[p] = pool_series.close
 
     while volume_time < last_swap_time:
+        logger.info(f"Summarizing at volume_time: {volume_time}...")
+
         swaps = get_dex_swaps(
             session=session,
             start_time=volume_time,
