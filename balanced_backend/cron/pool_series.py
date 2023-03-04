@@ -108,7 +108,15 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         swaps = get_dex_swaps(
             session=session,
             start_time=volume_time,
-            end_time=volume_time + pool_volume.delta
+            end_time=volume_time + pool_volume.delta,
+            columns=[
+                "pool_id",
+                "ending_price_decimal",
+                "base_token_value_decimal",
+                "quote_token_value_decimal",
+                "lp_fees_decimal",
+                "baln_fees_decimal",
+            ]
         )
 
         # TODO: Remove -> Only for quicker testing

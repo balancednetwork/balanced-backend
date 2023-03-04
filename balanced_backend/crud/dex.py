@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from sqlmodel import select
+from sqlalchemy.orm import load_only
 
 from balanced_backend.config import settings
 from balanced_backend.tables.dex import DexSwap
@@ -13,7 +14,8 @@ def get_dex_swaps(
         start_time: int = None,
         end_time: int = None,
         pool_id: int = None,
-        limit: int = None
+        limit: int = None,
+        columns: list[str] = None,
 ) -> list[DexSwap]:
     query = select(DexSwap).where(DexSwap.chain_id == settings.CHAIN_ID)
 
@@ -28,6 +30,9 @@ def get_dex_swaps(
 
     if limit is not None and (start_time is None and end_time is None):
         query = query.order_by(DexSwap.timestamp.desc())
+
+    if columns is not None:
+        query = query.options(load_only(*columns))
 
     result = session.execute(query)
     return result.scalars().all()
