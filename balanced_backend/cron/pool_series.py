@@ -74,6 +74,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     # Get the table we want to be building the series dynamically since there are many
     Table = get_pool_series_table(table_suffix=pool_volume.table_suffix)
 
+    logger.info(f"Running series {pool_volume.table_suffix}...")
+
     # Get the last swap in the dex swap table so we know where to iterate up to
     last_swap = get_last_swap_time(session=session)
     if last_swap is None:
@@ -119,11 +121,6 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
             ]
         )
 
-        # TODO: Remove -> Only for quicker testing
-        if len(swaps) == 0 and len(pool_volume.pool_ids) == 0:
-            volume_time = volume_time + pool_volume.delta
-            continue
-
         # Need extra call here because there may be no swaps in a period. This is needed
         # because we need to enrich this series with pool stats data to later be able to
         # calculate the token prices.
@@ -140,6 +137,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         new_pool_ids = set([
             i.pool_id for i in swaps if i.pool_id not in pool_volume.pool_ids
         ])
+
+        logger.info(f"Got pool ids: {new_pool_ids}...")
 
         for np in new_pool_ids:
             pool_volume.pool_ids.add(np)
@@ -158,6 +157,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
             total_supply = [i for i in total_supplies if i['pool_id'] == p][0][
                 'total_supply']
 
+            logger.info(f"Summarizing num swaps: {len(swaps)} at bh: {block_height}...")
+
             pool_swaps = [i for i in swaps if i.pool_id == p]
             swap_prices = [i.ending_price_decimal for i in pool_swaps]
             if len(swap_prices) != 0:
@@ -168,6 +169,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 high = pool_volume.pool_close[p]
                 low = pool_volume.pool_close[p]
                 close = pool_volume.pool_close[p]
+
+            logger.info(f"Calculated open close data...")
 
             open = pool_volume.pool_close[p]
             pool_volume.pool_close[p] = close
@@ -196,8 +199,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 total_supply=total_supply,
             )
             session.merge(t)
-
-        session.commit()
+            session.commit()
         volume_time = volume_time + pool_volume.delta
 
 
