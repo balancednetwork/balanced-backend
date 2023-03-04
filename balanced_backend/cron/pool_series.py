@@ -118,6 +118,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 "baln_fees_decimal",
             ]
         )
+        num_swaps = len(swaps)
 
         # Need extra call here because there may be no swaps in a period. This is needed
         # because we need to enrich this series with pool stats data to later be able to
@@ -190,7 +191,12 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 baln_fees=baln_fees,
                 total_supply=total_supply,
             )
+
             session.merge(t)
+            # We have a memory issue that this seemed to fix
+            if num_swaps > 10000:
+                session.commit()
+        if num_swaps <= 10000:
             session.commit()
         volume_time = volume_time + pool_volume.delta
 
