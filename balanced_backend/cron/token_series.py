@@ -34,6 +34,9 @@ def calculate_token_prices(
         quote_address = get_cached_pool_stats(pool_id=p.pool_id)['quote_address']
         base_address = get_cached_pool_stats(pool_id=p.pool_id)['base_address']
 
+        if quote_address is None and base_address == addresses.SICX_CONTRACT_ADDRESS:
+            quote_address = 'ICX'
+
         pools.append(PoolPrice(
             pool_id=p.pool_id,
             total_supply=p.total_supply,
@@ -41,6 +44,7 @@ def calculate_token_prices(
             base_address=base_address,
             price=getattr(p, pool_price_type),
         ))
+
         tokens.append(TokenPrice(address=quote_address))
         tokens.append(TokenPrice(address=base_address))
 
