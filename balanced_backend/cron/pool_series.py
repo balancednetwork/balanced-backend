@@ -105,8 +105,6 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         pool_volume.pool_close[p] = pool_series.close
 
     while volume_time < last_swap_time:
-        logger.info(f"Summarizing at volume_time: {volume_time}...")
-
         swaps = get_dex_swaps(
             session=session,
             start_time=volume_time,
@@ -130,15 +128,13 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         #  aren't, then estimate the BH, skip the total supply call by carrying over the
         #  last total supply. This is definitely slow but might be faster in cluster.
 
-        #TODO: RM this?
-        logger.info(f"Summarizing num swaps: {len(swaps)} at bh: {block_height}...")
+        logger.info(f"Summarizing num swaps: {len(swaps)} at bh: {block_height} in "
+                    f"segment: {pool_volume.table_suffix}...")
 
         # Add any new pool IDs that need to be tracked
         new_pool_ids = set([
             i.pool_id for i in swaps if i.pool_id not in pool_volume.pool_ids
         ])
-
-        logger.info(f"Got pool ids: {new_pool_ids}...")
 
         for np in new_pool_ids:
             pool_volume.pool_ids.add(np)
@@ -157,8 +153,6 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
             total_supply = [i for i in total_supplies if i['pool_id'] == p][0][
                 'total_supply']
 
-            logger.info(f"Summarizing num swaps: {len(swaps)} at bh: {block_height}...")
-
             pool_swaps = [i for i in swaps if i.pool_id == p]
             swap_prices = [i.ending_price_decimal for i in pool_swaps]
             if len(swap_prices) != 0:
@@ -169,8 +163,6 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 high = pool_volume.pool_close[p]
                 low = pool_volume.pool_close[p]
                 close = pool_volume.pool_close[p]
-
-            logger.info(f"Calculated open close data...")
 
             open = pool_volume.pool_close[p]
             pool_volume.pool_close[p] = close
