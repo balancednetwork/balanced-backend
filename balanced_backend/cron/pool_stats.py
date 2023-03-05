@@ -19,7 +19,7 @@ def run_pool_stats(
     tokens = get_tokens(session=session)
 
     time_24h_ago = int(datetime.now().timestamp() - 86400)
-    time_30d_ago = int(datetime.now().timestamp() - 86400)
+    time_30d_ago = int(datetime.now().timestamp() - 86400 * 30)
 
     for p in pools:
         swaps = get_dex_swaps(
