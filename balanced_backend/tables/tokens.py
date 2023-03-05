@@ -7,8 +7,8 @@ from sqlmodel import Field, SQLModel, JSON
 class Token(SQLModel, table=True):
     address: Optional[str] = Field(primary_key=True, index=True)
     chain_id: int = Field(primary_key=True, index=True)
-    name: str = Field(None, index=False)
-    symbol: str = Field(None, index=False)
+    name: str = Field(None, index=True)
+    symbol: str = Field(None, index=True)
     decimals: int = Field(None, index=False)
     logo_uri: str = Field(None, index=False)
 
@@ -22,14 +22,15 @@ class Token(SQLModel, table=True):
     path: dict = Field(None, sa_column=Column(JSON))
     pools: dict = Field(None, sa_column=Column(JSON))
 
+    holders: int = Field(None, index=False)
+    total_supply: float = Field(None, index=False)
+
     # volume: str = Field(None)
     # volume_decimal: str = Field(None)
     # lp_fees: str = Field(None)
     # lp_fees_decimal: float = Field(None)
     # baln_fees: str = Field(None)
     # baln_fees_decimal: float = Field(None)
-    # holders: int = Field(None, index=False)
-    # total_supply: float = Field(None, index=False)
 
     class Config:
         extra = "ignore"
