@@ -182,3 +182,11 @@ def get_token_holders(address: str):
             return int(dict(r.headers)['X-Total-Count'])
     logger.info(f"Making call to {endpoint} resulted in status {r.status_code}...")
     logger.info("API endpoint down for holders...")
+
+
+def get_icx_stats():
+    endpoint = settings.COMMUNITY_API_ENDPOINT + '/api/v1/stats'
+    r = requests.head(endpoint)
+    if r.status_code == 200:
+        r.json()
+    logger.info("API endpoint down for stats...")

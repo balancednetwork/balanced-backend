@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from loguru import logger
 
-from balanced_backend.utils.api import get_token_holders
+from balanced_backend.utils.api import get_token_holders, get_icx_stats
 from balanced_backend.utils.rpc import get_contract_method_str
 from balanced_backend.crud.tokens import get_tokens
 
@@ -17,11 +17,16 @@ def run_token_stats(
     tokens = get_tokens(session=session)
     for t in tokens:
         t.holders = get_token_holders(t.address)
-        total_supply = get_contract_method_str(
-            to_address=t.address,
-            method="totalSupply",
-        )
-        t.total_supply = int(total_supply, 16) / 10 ** t.decimals
+
+        if t.address == 'ICX':
+            t.total_supply = get_icx_stats()['circulating-supply']
+        else:
+            total_supply = get_contract_method_str(
+                to_address=t.address,
+                method="totalSupply",
+            )
+            t.total_supply = int(total_supply, 16) / 10 ** t.decimals
+
         session.merge(t)
     session.commit()
 
