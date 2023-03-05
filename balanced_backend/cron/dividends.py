@@ -41,7 +41,7 @@ def run_pool_dividends(session: 'Session'):
      events. Can't do this until all the swaps have been updated in the DB through the
      contracts/dex_swaps.py cron job.
     """
-    logger.info("Running toke cron...")
+    logger.info("Running pool dividends cron cron...")
 
     current_timestamp = int(datetime.now().timestamp())
     pools = get_pools(session=session)
