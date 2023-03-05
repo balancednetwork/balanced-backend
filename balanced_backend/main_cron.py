@@ -11,6 +11,7 @@ from balanced_backend.cron import (
     pool_lists,
     pool_prices,
     pool_series,
+    pool_stats,
     token_lists,
     token_price,
     token_series,
@@ -60,6 +61,10 @@ CRONS: list[Cron] = [
     # },
     {
         'func': token_stats.run_token_stats,
+        'interval': 600,
+    },
+    {
+        'func': pool_stats.run_pool_stats,
         'interval': 600,
     },
     {
