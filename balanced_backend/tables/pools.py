@@ -9,15 +9,15 @@ class Pool(SQLModel, table=True):
 
     chain_id: int = Field(None, index=True)
     pool_id: int = Field(None, index=True)
-    name: str = Field(None)
-    base_name: str = Field(None)
-    quote_name: str = Field(None)
-    base_symbol: str = Field(None)
-    quote_symbol: str = Field(None)
+    name: str = Field(None, index=True)
+    base_name: str = Field(None, index=True)
+    quote_name: str = Field(None, index=True)
+    base_symbol: str = Field(None, index=True)
+    quote_symbol: str = Field(None, index=True)
     base_decimals: int = Field(None)
     quote_decimals: int = Field(None)
 
-    type: str = Field(None)
+    type: str = Field(None, index=True)
 
     price: float = Field(None)
     price_24h: float = Field(None)
