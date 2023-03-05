@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from loguru import logger
 
 from balanced_backend.crud.pools import get_pools
+from balanced_backend.crud.tokens import get_tokens
 from balanced_backend.crud.dex import get_dex_swaps
 
 if TYPE_CHECKING:
@@ -15,6 +16,7 @@ def run_pool_stats(
     logger.info("Running pool stats cron...")
 
     pools = get_pools(session=session)
+    tokens = get_tokens(session=session)
 
     time_24h_ago = int(datetime.now().timestamp() - 86400)
 
@@ -48,6 +50,10 @@ def run_pool_stats(
             [i.baln_fees_decimal for i in swaps if
              i.timestamp > time_24h_ago and i.from_token == p.quote_address]
         )
+
+        p.base_price = [i.price for i in tokens if i.address == p.base_address][0]
+        p.quote_price = [i.price for i in tokens if i.address == p.quote_address][0]
+
         session.merge(p)
 
     session.commit()
