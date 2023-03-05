@@ -14,6 +14,7 @@ from balanced_backend.cron import (
     token_lists,
     token_price,
     token_series,
+    token_stats,
     volumes,
 )
 from balanced_backend.cron.contracts import dex_swaps, dex_adds
@@ -57,6 +58,10 @@ CRONS: list[Cron] = [
     #     'func': pool_series.run_pool_volumes_series,
     #     'interval': 600,
     # },
+    {
+        'func': token_stats.run_token_stats,
+        'interval': 600,
+    },
     {
         'func': token_price.run_token_pool_prices,
         'interval': 600,
