@@ -186,7 +186,7 @@ def get_token_holders(address: str):
 
 def get_icx_stats():
     endpoint = settings.COMMUNITY_API_ENDPOINT + '/api/v1/stats'
-    r = requests.head(endpoint)
+    r = requests.get(endpoint)
     if r.status_code == 200:
-        r.json()
+        return r.json()
     logger.info("API endpoint down for stats...")

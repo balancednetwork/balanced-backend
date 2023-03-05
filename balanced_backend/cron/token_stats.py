@@ -16,11 +16,13 @@ def run_token_stats(
 
     tokens = get_tokens(session=session)
     for t in tokens:
-        t.holders = get_token_holders(t.address)
 
         if t.address == 'ICX':
+            # Not really useful info unless we want to get all the in the tracker
+            t.holders = 0
             t.total_supply = get_icx_stats()['circulating-supply']
         else:
+            t.holders = get_token_holders(t.address)
             total_supply = get_contract_method_str(
                 to_address=t.address,
                 method="totalSupply",

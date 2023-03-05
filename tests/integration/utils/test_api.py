@@ -1,4 +1,9 @@
-from balanced_backend.utils.api import get_logs_in_blocks, get_token_holders, get_token_transfers_in_blocks
+from balanced_backend.utils.api import (
+    get_logs_in_blocks,
+    get_token_holders,
+    get_token_transfers_in_blocks,
+    get_icx_stats,
+)
 
 
 def test_get_logs_in_blocks():
@@ -46,3 +51,8 @@ def test_get_token_transfers_in_blocks2():
     )
     assert isinstance(token_transfers, list)
     assert len(token_transfers) == 7
+
+
+def test_get_icx_stats():
+    stats = get_icx_stats()
+    assert stats['circulating-supply']
