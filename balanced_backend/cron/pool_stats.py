@@ -19,6 +19,7 @@ def run_pool_stats(
     tokens = get_tokens(session=session)
 
     time_24h_ago = int(datetime.now().timestamp() - 86400)
+    time_30d_ago = int(datetime.now().timestamp() - 86400)
 
     for p in pools:
         swaps = get_dex_swaps(
@@ -26,6 +27,9 @@ def run_pool_stats(
             start_time=time_24h_ago,
             pool_id=p.pool_id,
         )
+
+        # 24h
+
         p.base_volume_24h = sum(
             [i.base_token_value_decimal for i in swaps if
              i.timestamp > time_24h_ago and i.base_token == p.base_address]
@@ -49,6 +53,39 @@ def run_pool_stats(
         p.quote_baln_fees_24h = sum(
             [i.baln_fees_decimal for i in swaps if
              i.timestamp > time_24h_ago and i.from_token == p.quote_address]
+        )
+
+        # 30d
+
+        swaps = get_dex_swaps(
+            session=session,
+            start_time=time_30d_ago,
+            pool_id=p.pool_id,
+        )
+
+        p.base_volume_30d = sum(
+            [i.base_token_value_decimal for i in swaps if
+             i.timestamp > time_30d_ago and i.base_token == p.base_address]
+        )
+        p.quote_volume_30d = sum(
+            [i.quote_token_value_decimal for i in swaps if
+             i.timestamp > time_30d_ago and i.base_token == p.quote_address]
+        )
+        p.base_lp_fees_30d = sum(
+            [i.lp_fees_decimal for i in swaps if
+             i.timestamp > time_30d_ago and i.from_token == p.base_address]
+        )
+        p.quote_lp_fees_30d = sum(
+            [i.lp_fees_decimal for i in swaps if
+             i.timestamp > time_30d_ago and i.from_token == p.quote_address]
+        )
+        p.base_baln_fees_30d = sum(
+            [i.baln_fees_decimal for i in swaps if
+             i.timestamp > time_30d_ago and i.from_token == p.base_address]
+        )
+        p.quote_baln_fees_30d = sum(
+            [i.baln_fees_decimal for i in swaps if
+             i.timestamp > time_30d_ago and i.from_token == p.quote_address]
         )
 
         p.base_price = [i.price for i in tokens if i.address == p.base_address][0]

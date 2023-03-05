@@ -38,6 +38,13 @@ class Pool(SQLModel, table=True):
     base_baln_fees_24h: float = Field(None)
     quote_baln_fees_24h: float = Field(None)
 
+    base_volume_30d: float = Field(None)
+    quote_volume_30d: float = Field(None)
+    base_lp_fees_30d: float = Field(None)
+    quote_lp_fees_30d: float = Field(None)
+    base_baln_fees_30d: float = Field(None)
+    quote_baln_fees_30d: float = Field(None)
+
     base_price: float = Field(None)
     quote_price: float = Field(None)
     base_supply: float = Field(None)
