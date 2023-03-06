@@ -18,7 +18,13 @@ SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2" + SQLALCHEMY_DATABASE_URL_STUB
 
 logger.info(f"Connecting to server: {settings.POSTGRES_SERVER} and {settings.POSTGRES_DATABASE}")
 
-async_engine = create_async_engine(ASYNC_SQLALCHEMY_DATABASE_URL, echo=True, future=True)
+async_engine = create_async_engine(
+    ASYNC_SQLALCHEMY_DATABASE_URL,
+    echo=True,
+    future=True,
+    pool_size=20,
+    max_overflow=10,
+)
 
 
 # Run onetime if we want to init with a prebuilt table of attributes
