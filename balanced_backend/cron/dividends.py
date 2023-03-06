@@ -1,16 +1,10 @@
 from typing import TYPE_CHECKING
-from sqlmodel import select
 from loguru import logger
 from pydantic import BaseModel
 from datetime import datetime
 
-from balanced_backend.db import session_factory
-from balanced_backend.tables.dex import DexSwap
 from balanced_backend.tables.dividends import Dividend
-from balanced_backend.tables.utils import get_pool_series_table
 from balanced_backend.config import settings
-from balanced_backend.utils.time_to_block import get_timestamp_from_block
-
 from balanced_backend.crud.dex import get_dex_swaps
 from balanced_backend.crud.pools import get_pools
 
@@ -47,11 +41,18 @@ def run_pool_dividends(session: 'Session'):
     pools = get_pools(session=session)
 
     for p in pools:
-        swaps = get_dex_swaps(
+        swaps_30d = get_dex_swaps(
             session=session,
             start_time=current_timestamp - 86400 * 30,
             pool_id=p.pool_id
         )
+
+        swaps_24h = get_dex_swaps(
+            session=session,
+            start_time=current_timestamp - 86400,
+            pool_id=p.pool_id
+        )
+
         dividend = Dividend(
             chain_id=settings.CHAIN_ID,
             pool_id=p.pool_id,
@@ -61,48 +62,48 @@ def run_pool_dividends(session: 'Session'):
         time_24h_ago = current_timestamp - 86400
 
         dividend.base_volume_24h = sum(
-            [i.base_token_value_decimal for i in swaps if
+            [i.base_token_value_decimal for i in swaps_24h if
              i.timestamp > time_24h_ago and i.base_token == p.base_address]
         )
         dividend.quote_volume_24h = sum(
-            [i.quote_token_value_decimal for i in swaps if
-             i.timestamp > time_24h_ago and i.base_token == p.quote_address]
+            [i.quote_token_value_decimal for i in swaps_24h if
+             i.timestamp > time_24h_ago and i.quote_token == p.quote_address]
         )
         dividend.base_volume_30d = sum(
-            [i.base_token_value_decimal for i in swaps if
+            [i.base_token_value_decimal for i in swaps_30d if
              i.base_token == p.base_address]
         )
         dividend.quote_volume_30d = sum(
-            [i.quote_token_value_decimal for i in swaps if
-             i.base_token == p.quote_address]
+            [i.quote_token_value_decimal for i in swaps_30d if
+             i.quote_token == p.quote_address]
         )
         dividend.base_lp_fees_24h = sum(
-            [i.lp_fees_decimal for i in swaps if
+            [i.lp_fees_decimal for i in swaps_24h if
              i.timestamp > time_24h_ago and i.from_token == p.base_address]
         )
         dividend.quote_lp_fees_24h = sum(
-            [i.lp_fees_decimal for i in swaps if
+            [i.lp_fees_decimal for i in swaps_24h if
              i.timestamp > time_24h_ago and i.from_token == p.quote_address]
         )
         dividend.base_lp_fees_30d = sum(
-            [i.lp_fees_decimal for i in swaps if i.from_token == p.base_address]
+            [i.lp_fees_decimal for i in swaps_30d if i.from_token == p.base_address]
         )
         dividend.quote_lp_fees_30d = sum(
-            [i.lp_fees_decimal for i in swaps if i.from_token == p.quote_address]
+            [i.lp_fees_decimal for i in swaps_30d if i.from_token == p.quote_address]
         )
         dividend.base_baln_fees_24h = sum(
-            [i.baln_fees_decimal for i in swaps if
+            [i.baln_fees_decimal for i in swaps_24h if
              i.timestamp > time_24h_ago and i.from_token == p.base_address]
         )
         dividend.quote_baln_fees_24h = sum(
-            [i.baln_fees_decimal for i in swaps if
+            [i.baln_fees_decimal for i in swaps_24h if
              i.timestamp > time_24h_ago and i.from_token == p.quote_address]
         )
         dividend.base_baln_fees_30d = sum(
-            [i.baln_fees_decimal for i in swaps if i.from_token == p.base_address]
+            [i.baln_fees_decimal for i in swaps_30d if i.from_token == p.base_address]
         )
         dividend.quote_baln_fees_30d = sum(
-            [i.baln_fees_decimal for i in swaps if i.from_token == p.quote_address]
+            [i.baln_fees_decimal for i in swaps_30d if i.from_token == p.quote_address]
         )
 
         session.merge(dividend)
