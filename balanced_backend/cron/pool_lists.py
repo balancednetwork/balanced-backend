@@ -96,7 +96,7 @@ def run_pool_list(session: 'Session'):
             18 + int(ps['quote_decimals'], 16) - int(ps['base_decimals'], 16)
         )
 
-        if ps['pool_id'] not in pool_ids:
+        if ps['poolId'] not in pool_ids:
             pool_db = Pool(
                 base_address=base_address,
                 quote_address=quote_address,
