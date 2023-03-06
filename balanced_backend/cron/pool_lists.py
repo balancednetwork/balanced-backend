@@ -6,6 +6,7 @@ from balanced_backend.config import settings
 from balanced_backend.tables.pools import Pool
 from balanced_backend.tables.tokens import Token
 from balanced_backend.crud.tokens import get_tokens
+from balanced_backend.crud.pools import get_pools
 from balanced_backend.addresses import addresses
 from balanced_backend.utils.rpc import (
     get_contract_method_int,
@@ -53,6 +54,10 @@ def run_pool_list(session: 'Session'):
     # Iterate up to the nonce to get all the pools
     pool_stats = get_pools_from_stats()
 
+    # Get pools so that if it exists we just update the record
+    pools = get_pools(session=session)
+    pool_ids = [i.pool_id for i in pools]
+
     for ps in pool_stats:
         if ps['quote_token'] is not None:
             quote_name = get_contract_method_str(
@@ -91,23 +96,41 @@ def run_pool_list(session: 'Session'):
             18 + int(ps['quote_decimals'], 16) - int(ps['base_decimals'], 16)
         )
 
-        pool_db = Pool(
-            base_address=base_address,
-            quote_address=quote_address,
-            pool_id=ps['poolId'],
-            name=f"{base_symbol}/{quote_symbol}",
-            base_name=base_name,
-            quote_name=quote_name,
-            base_symbol=base_symbol,
-            quote_symbol=quote_symbol,
-            base_decimals=int(ps['base_decimals'], 16),
-            quote_decimals=int(ps['quote_decimals'], 16),
-            chain_id=settings.CHAIN_ID,
-            type=pool_type,
-            last_updated_timestamp=current_timestamp,
-            total_supply=total_supply,
-            price=price,
-        )
+        if ps['pool_id'] not in pool_ids:
+            pool_db = Pool(
+                base_address=base_address,
+                quote_address=quote_address,
+                pool_id=ps['poolId'],
+                name=f"{base_symbol}/{quote_symbol}",
+                base_name=base_name,
+                quote_name=quote_name,
+                base_symbol=base_symbol,
+                quote_symbol=quote_symbol,
+                base_decimals=int(ps['base_decimals'], 16),
+                quote_decimals=int(ps['quote_decimals'], 16),
+                chain_id=settings.CHAIN_ID,
+                type=pool_type,
+                last_updated_timestamp=current_timestamp,
+                total_supply=total_supply,
+                price=price,
+            )
+        else:
+            pool_db = [i for i in pools if i.pool_id == ps['pool_id']][0]
+            pool_db.base_address = base_address
+            pool_db.quote_address = quote_address
+            pool_db.pool_id = ps['poolId']
+            pool_db.name = f"{base_symbol}/{quote_symbol}"
+            pool_db.base_name = base_name
+            pool_db.quote_name = quote_name
+            pool_db.base_symbol = base_symbol
+            pool_db.quote_symbol = quote_symbol
+            pool_db.base_decimals = int(ps['base_decimals'], 16)
+            pool_db.quote_decimals = int(ps['quote_decimals'], 16)
+            pool_db.chain_id = settings.CHAIN_ID
+            pool_db.type = pool_type
+            pool_db.last_updated_timestamp = current_timestamp
+            pool_db.total_supply = total_supply
+            pool_db.price = price
         session.merge(pool_db)
     session.commit()
     logger.info("Ending pool lists cron...")
