@@ -9,6 +9,7 @@ from balanced_backend.crud.series import get_pool_series_table_by_timestamp
 from balanced_backend.tables.series import PoolSeriesTableType
 from balanced_backend.tables.utils import get_pool_series_table
 from balanced_backend.config import settings
+from balanced_backend.utils.pools import get_cached_pool_stats
 from balanced_backend.utils.time_to_block import (
     get_timestamp_from_block,
     get_block_from_timestamp,
@@ -173,8 +174,22 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
             quote_volume = sum([i.quote_token_value_decimal for i in pool_swaps])
 
             # Fees
-            lp_fees = sum([i.lp_fees_decimal for i in pool_swaps])
-            baln_fees = sum([i.baln_fees_decimal for i in pool_swaps])
+            quote_lp_fees = sum([
+                i.lp_fees_decimal for i in pool_swaps
+                if i.from_token == get_cached_pool_stats(pool_id=p)['quote_address']
+            ])
+            quote_baln_fees = sum([
+                i.baln_fees_decimal for i in pool_swaps
+                if i.from_token == get_cached_pool_stats(pool_id=p)['quote_address']
+            ])
+            base_lp_fees = sum([
+                i.lp_fees_decimal for i in pool_swaps
+                if i.from_token == get_cached_pool_stats(pool_id=p)['base_address']
+            ])
+            bases_baln_fees = sum([
+                i.baln_fees_decimal for i in pool_swaps
+                if i.from_token == get_cached_pool_stats(pool_id=p)['base_address']
+            ])
 
             t = Table(
                 chain_id=settings.CHAIN_ID,
@@ -187,8 +202,10 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 close=close,
                 base_volume=base_volume,
                 quote_volume=quote_volume,
-                lp_fees=lp_fees,
-                baln_fees=baln_fees,
+                quote_lp_fees=quote_lp_fees,
+                quote_baln_fees=quote_baln_fees,
+                base_lp_fees=base_lp_fees,
+                base_baln_fees=bases_baln_fees,
                 total_supply=total_supply,
             )
 

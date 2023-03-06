@@ -88,8 +88,10 @@ class PoolSeriesBase(SQLModel):
     block_height: int = Field(None)
     total_supply: float = Field(None)
 
-    lp_fees: float = Field(None)
-    baln_fees: float = Field(None)
+    quote_lp_fees: float = Field(None)
+    quote_baln_fees: float = Field(None)
+    base_lp_fees: float = Field(None)
+    base_baln_fees: float = Field(None)
 
     class Config:
         extra = "ignore"
