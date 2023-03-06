@@ -36,7 +36,7 @@ def run_pool_stats(
         )
         p.quote_volume_24h = sum(
             [i.quote_token_value_decimal for i in swaps if
-             i.timestamp > time_24h_ago and i.base_token == p.quote_address]
+             i.timestamp > time_24h_ago and i.quote_token == p.quote_address]
         )
         p.base_lp_fees_24h = sum(
             [i.lp_fees_decimal for i in swaps if
@@ -69,7 +69,7 @@ def run_pool_stats(
         )
         p.quote_volume_30d = sum(
             [i.quote_token_value_decimal for i in swaps if
-             i.timestamp > time_30d_ago and i.base_token == p.quote_address]
+             i.timestamp > time_30d_ago and i.quote_token == p.quote_address]
         )
         p.base_lp_fees_30d = sum(
             [i.lp_fees_decimal for i in swaps if
