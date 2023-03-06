@@ -4,6 +4,7 @@ from loguru import logger
 from balanced_backend.utils.api import get_token_holders, get_icx_stats
 from balanced_backend.utils.rpc import get_contract_method_str
 from balanced_backend.crud.tokens import get_tokens
+from balanced_backend.crud.pools import get_pools
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -15,6 +16,8 @@ def run_token_stats(
     logger.info("Running token stats cron...")
 
     tokens = get_tokens(session=session)
+    pools = get_pools(session=session)
+
     for t in tokens:
 
         if t.address == 'ICX':
@@ -29,6 +32,13 @@ def run_token_stats(
             )
             t.total_supply = int(total_supply, 16) / 10 ** t.decimals
 
+        t.liquidity = sum([
+            i.base_supply * i.base_price for i in pools
+            if i.base_address == t.address
+        ]) + sum([
+            i.quote_supply * i.quote_price for i in pools
+            if i.quote_address == t.address
+        ])
         session.merge(t)
     session.commit()
 

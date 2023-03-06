@@ -24,13 +24,7 @@ class Token(SQLModel, table=True):
 
     holders: int = Field(None, index=False)
     total_supply: float = Field(None, index=False)
-
-    # volume: str = Field(None)
-    # volume_decimal: str = Field(None)
-    # lp_fees: str = Field(None)
-    # lp_fees_decimal: float = Field(None)
-    # baln_fees: str = Field(None)
-    # baln_fees_decimal: float = Field(None)
+    liquidity: float = Field(None)
 
     class Config:
         extra = "ignore"
