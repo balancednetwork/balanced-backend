@@ -115,7 +115,7 @@ def run_pool_list(session: 'Session'):
                 price=price,
             )
         else:
-            pool_db = [i for i in pools if i.pool_id == ps['pool_id']][0]
+            pool_db = [i for i in pools if i.pool_id == ps['poolId']][0]
             pool_db.base_address = base_address
             pool_db.quote_address = quote_address
             pool_db.pool_id = ps['poolId']
