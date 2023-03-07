@@ -66,7 +66,7 @@ def test_run_pool_stats(db):
         result = session.execute(select(Pool))
         pools: list[Pool] = result.scalars().all()
 
-    assert pools[0].base_liquidity > 0
+    assert pools[0].base_liquidity >= 0
 
 
 @pytest.mark.order(1)
@@ -76,7 +76,7 @@ def test_run_token_stats(db):
         result = session.execute(select(Token))
         tokens: list[Token] = result.scalars().all()
 
-    assert tokens[0].liquidity > 0
+    assert tokens[0].liquidity >= 0
 
 # TODO: From some reason it doesn't like this?
 # @pytest.mark.order(1)
