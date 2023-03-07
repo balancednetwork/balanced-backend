@@ -28,6 +28,7 @@ from balanced_backend.tables.tokens import Token
 from balanced_backend.tables.pools import Pool
 from balanced_backend.tables.dex import DexSwap, DexAdd
 from balanced_backend.tables.dividends import Dividend
+from balanced_backend.tables.stats import Stats
 
 # Other versions imported each object
 config = context.config
