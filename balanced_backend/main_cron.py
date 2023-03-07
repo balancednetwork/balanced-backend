@@ -56,10 +56,10 @@ CRONS: list[Cron] = [
         'func': dex_adds.run_dex_adds,
         'interval': 60 * 60 * 4,
     },
-    # {
-    #     'func': pool_series.run_pool_volumes_series,
-    #     'interval': 600,
-    # },
+    {
+        'func': pool_series.run_pool_volumes_series,
+        'interval': 600,
+    },
     {
         'func': pool_stats.run_pool_stats,
         'interval': 600,
