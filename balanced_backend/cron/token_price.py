@@ -52,8 +52,8 @@ def set_previous_prices(
     session.commit()
 
 
-def run_token_pool_prices(session: 'Session'):
-    logger.info("Running token pool prices cron...")
+def run_token_prices(session: 'Session'):
+    logger.info("Running token prices cron...")
     pools = get_pools(session=session)
     tokens = get_tokens(session=session)
 
@@ -70,11 +70,11 @@ def run_token_pool_prices(session: 'Session'):
     for period in ['24h', '7d', '30d']:
         set_previous_prices(session=session, pools=pools, period=period)
 
-    logger.info("Ending token pool prices cron...")
+    logger.info("Ending token prices cron...")
 
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
 
     with session_factory() as session:
-        run_token_pool_prices(session=session)
+        run_token_prices(session=session)

@@ -69,7 +69,7 @@ CRONS: list[Cron] = [
         'interval': 600,
     },
     {
-        'func': token_price.run_token_pool_prices,
+        'func': token_price.run_token_prices,
         'interval': 600,
     },
     {
