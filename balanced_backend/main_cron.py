@@ -61,11 +61,11 @@ CRONS: list[Cron] = [
     #     'interval': 600,
     # },
     {
-        'func': token_stats.run_token_stats,
+        'func': pool_stats.run_pool_stats,
         'interval': 600,
     },
     {
-        'func': pool_stats.run_pool_stats,
+        'func': token_stats.run_token_stats,
         'interval': 600,
     },
     {
