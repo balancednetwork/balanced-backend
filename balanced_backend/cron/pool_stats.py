@@ -91,6 +91,9 @@ def run_pool_stats(
         p.base_price = [i.price for i in tokens if i.address == p.base_address][0]
         p.quote_price = [i.price for i in tokens if i.address == p.quote_address][0]
 
+        p.base_liquidity = p.base_price * p.base_supply
+        p.quote_liquidity = p.quote_price * p.quote_supply
+
         session.merge(p)
 
     session.commit()
