@@ -55,19 +55,13 @@ def update_pool_with_swap_data(session: 'Session', pool: 'Pool'):
     if len(fill_prices) == 0:
         pool.price_24h_low = pool.price
         pool.price_24h_high = pool.price
-        pool.base_volume_24h = 0
-        pool.quote_volume_24h = 0
 
     else:
         lowest = min(fill_prices)
         highest = max(fill_prices)
-        base_volume = sum([i.base_token_value_decimal for i in swaps_24h])
-        quote_volume = sum([i.quote_token_value_decimal for i in swaps_24h])
 
         pool.price_24h_low = lowest
         pool.price_24h_high = highest
-        pool.base_volume_24h = base_volume
-        pool.quote_volume_24h = quote_volume
 
 
 def run_pool_prices(session: 'Session'):
