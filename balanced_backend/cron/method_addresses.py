@@ -1,6 +1,9 @@
-from balanced_backend.addresses import addresses
+from loguru import logger
 
-contract_methods = [
+from balanced_backend.addresses import addresses
+from balanced_backend.utils.rpc import get_icx_call, get_contract_method_str
+
+contract_methods: list[dict] = [
     {
         'contract_name': 'loans',
         'params': {
@@ -29,3 +32,55 @@ contract_methods = [
         'init_chart_block': 47751328,
     },
 ]
+
+
+def update_contract_methods():
+    r = get_icx_call(
+        to_address=addresses.LOANS_CONTRACT_ADDRESS,
+        params={"method": "getCollateralTokens"}
+    )
+    if r.status_code == 200:
+        loans_collatoral_tokens = r.json()['result']
+        for _, v in loans_collatoral_tokens.items():
+            symbol = get_contract_method_str(to_address=v, method="symbol")
+            contract_methods.append({
+                'contract_name': f'loans_{symbol}_balance',
+                'params': {
+                    "to": v,
+                    "dataType": "call",
+                    "data": {
+                        "method": "balanceOf",
+                        "params": {
+                            "_owner": addresses.LOANS_CONTRACT_ADDRESS
+                        }
+                    }
+                },
+                'init_chart_block': 47751328,
+            })
+    else:
+        logger.info("Failed to get loans_collatoral_tokens...")
+
+    r = get_icx_call(
+        to_address=addresses.STABILITY_FUND_CONTRACT_ADDRESS,
+        params={"method": "getAcceptedTokens"}
+    )
+    if r.status_code == 200:
+        stability_accepted_tokens = r.json()['result']
+        for c in stability_accepted_tokens:
+            symbol = get_contract_method_str(to_address=c, method="symbol")
+            contract_methods.append({
+                'contract_name': f'stability_{symbol}_balance',
+                'params': {
+                    "to": c,
+                    "dataType": "call",
+                    "data": {
+                        "method": "balanceOf",
+                        "params": {
+                            "_owner": addresses.STABILITY_FUND_CONTRACT_ADDRESS
+                        }
+                    }
+                },
+                'init_chart_block': 47751328,
+            })
+    else:
+        logger.info("Failed to get stability_accepted_tokens...")

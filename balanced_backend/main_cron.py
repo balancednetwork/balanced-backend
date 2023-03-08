@@ -20,7 +20,8 @@ from balanced_backend.cron import (
     volumes,
 )
 from balanced_backend.cron.contracts import dex_swaps, dex_adds
-from balanced_backend.cron.methods import update_contract_methods
+from balanced_backend.cron.method_addresses import update_contract_methods
+
 
 class Cron(TypedDict):
     func: Callable
