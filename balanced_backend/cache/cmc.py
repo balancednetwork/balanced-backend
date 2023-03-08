@@ -70,8 +70,12 @@ def update_cmc_order_book(session: 'Session'):
 
         order_book_dict[market_pair] = OrderBookCMC(
             timestamp=int(datetime.now().timestamp() * 1e6),
-            bids=[],
-            asks=[],
+            bids=[
+                [p.price * .997, 1]
+            ],
+            asks=[
+                [p.price * 1.003, 1]
+            ],
         )
     cache.cmc_order_book = order_book_dict
 
