@@ -85,7 +85,7 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - cluster: prod-sng
+          - cluster: prod-ams
             network_name: mainnet
 
     steps:
