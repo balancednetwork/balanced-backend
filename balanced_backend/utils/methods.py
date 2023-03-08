@@ -56,7 +56,7 @@ def init_time_series(
     Iterate through timestamps from start time every day.
     Start time: Loans contract started April 25, 2021 -> 1619308800
     """
-    now = datetime.now().timestamp()
+    now = datetime.now().timestamp() * 1e6
     context.timestamp = context.init_chart_time
     while now > context.timestamp:
         set_table_value_from_timestamp(
