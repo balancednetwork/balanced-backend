@@ -23,6 +23,7 @@ class Addresses(BaseSettings):
     BAND_CONTRACT_ADDRESS_PYTHON: str = "cx087b4164a87fdfb7b714f3bafe9dfb050fd6b132"  # Pre 59878978
     BAND_REF_CONTRACT_ADDRESS: str = "cxca5faa5a71d986a2e84dd7e6f5ff791d29901ebe"
     REBALANCING_CONTRACT_ADDRESS: str = "cx40d59439571299bca40362db2a7d8cae5b0b30b0"
+    STABILITY_FUND_CONTRACT_ADDRESS: str = "cxa09dbb60dcb62fffbd232b6eae132d730a2aafa6"
 
     class Config:
         case_sensitive = True

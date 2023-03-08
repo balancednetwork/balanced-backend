@@ -20,7 +20,7 @@ from balanced_backend.cron import (
     volumes,
 )
 from balanced_backend.cron.contracts import dex_swaps, dex_adds
-
+from balanced_backend.cron.methods import update_contract_methods
 
 class Cron(TypedDict):
     func: Callable
@@ -95,6 +95,9 @@ def run_cron_with_session(cron: Callable):
 def main():
     logger.info("Starting metrics server.")
     start_http_server(settings.METRICS_PORT, settings.METRICS_ADDRESS)
+
+    logger.info("Updating method addresses...")
+    update_contract_methods()
 
     sched = BlockingScheduler()
 
