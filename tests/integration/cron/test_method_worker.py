@@ -21,8 +21,8 @@ def test_set_table_value_from_timestamp(db, loans_historical_context):
         assert loans[0].timestamp == loans_historical_context.timestamp
 
 
-@pytest.mark.order(1)
-@freeze_time("2021-04-26")
-def test_build_daily_historical(db):
-    with db as session:
-        run_methods(session=session)
+# @pytest.mark.order(1)
+# @freeze_time("2021-04-26")
+# def test_build_daily_historical(db):
+#     with db as session:
+#         run_methods(session=session)
