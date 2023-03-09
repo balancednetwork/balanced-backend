@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/balancednetwork/balanced-backend/compare/v0.1.0...v0.1.1) (2023-03-09)
+
+
+### Bug Fixes
+
+* ci make command: ([e1b5198](https://github.com/balancednetwork/balanced-backend/commit/e1b5198dd86ddbe98e66c06d7e8c947b154e645b))
+* timestamp for initializing the method series ([a8a7f5d](https://github.com/balancednetwork/balanced-backend/commit/a8a7f5df4db47ebe0de30e9cecd52d5b19d72891))
+
 ## [0.1.0](https://github.com/balancednetwork/balanced-backend/compare/v0.0.1...v0.1.0) (2023-03-07)
 
 
