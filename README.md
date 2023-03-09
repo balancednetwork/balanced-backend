@@ -1,4 +1,5 @@
 # balanced-backend
+[![loopchain](https://img.shields.io/badge/ICON-API-blue?logoColor=white&logo=icon&labelColor=31B8BB)](https://shields.io) [![GitHub Release](https://img.shields.io/github/release/balancednetwork/balanced-backend.svg?style=flat)]() ![](https://github.com/balancednetwork/balanced-backend/workflows/push-main/badge.svg?branch=main) ![](https://img.shields.io/github/license/balancednetwork/balanced-backend)
 
 Backend service for Balanced Network. 
 
