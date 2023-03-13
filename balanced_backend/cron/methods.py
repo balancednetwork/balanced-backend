@@ -26,6 +26,8 @@ def run_methods(
 
 if __name__ == "__main__":
     from balanced_backend.db import session_factory
+    from balanced_backend.cron.method_addresses import update_contract_methods
 
+    update_contract_methods()
     with session_factory() as session:
         run_methods(session=session)

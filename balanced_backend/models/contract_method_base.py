@@ -47,4 +47,6 @@ class ContractMethodBase(BaseModel):
         self.address = self.params.to
 
         if self.init_chart_time is None and self.init_chart_block:
-            self.init_chart_time = get_timestamp_from_block(self.init_chart_block)
+            self.init_chart_time = int(
+                get_timestamp_from_block(self.init_chart_block) / 1e6
+            )

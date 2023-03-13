@@ -25,9 +25,9 @@ contract_methods: list[dict] = [
     {
         'contract_name': 'staked_icx',
         'params': {
-            "to": addresses.STAKING_CONTRACT_ADDRESS,
+            "to": addresses.SICX_CONTRACT_ADDRESS,
             "dataType": "call",
-            "data": {"method": "getTotalSupply"}
+            "data": {"method": "totalSupply"}
         },
         'init_chart_block': 47751328,
     },
