@@ -1,5 +1,4 @@
 import requests
-from time import sleep
 
 from balanced_backend.config import settings
 from balanced_backend.log import logger
