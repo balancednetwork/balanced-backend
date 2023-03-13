@@ -82,7 +82,7 @@ def get_token_prices(
                 continue
 
             if pool.base_address == token_0.address:
-                token_1.price = pool.price / token_0.price
+                token_1.price = token_0.price / pool.price
             else:
                 token_1.price = pool.price * token_0.price
     return tokens
