@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/balancednetwork/balanced-backend/compare/v0.1.1...v0.1.2) (2023-03-13)
+
+
+### Bug Fixes
+
+* pricing algorithm with inverse for path step ([72574a6](https://github.com/balancednetwork/balanced-backend/commit/72574a6dfde719749ab4807e0ed75a0a38711653))
+* timestamp for method_addresses cron for start block init ([9436d3b](https://github.com/balancednetwork/balanced-backend/commit/9436d3bbe785a97f405f9977e644502450eba280))
+
 ## [0.1.1](https://github.com/balancednetwork/balanced-backend/compare/v0.1.0...v0.1.1) (2023-03-09)
 
 
