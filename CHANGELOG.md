@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/balancednetwork/balanced-backend/compare/v0.1.2...v0.1.3) (2023-03-14)
+
+
+### Bug Fixes
+
+* build ([6467cc7](https://github.com/balancednetwork/balanced-backend/commit/6467cc773d774635225a5bbee000bb15abd1e4ec))
+
 ## [0.1.2](https://github.com/balancednetwork/balanced-backend/compare/v0.1.1...v0.1.2) (2023-03-13)
 
 
