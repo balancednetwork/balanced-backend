@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/balancednetwork/balanced-backend/compare/v0.1.3...v0.1.4) (2023-03-14)
+
+
+### Bug Fixes
+
+* ci issue ([8679f8b](https://github.com/balancednetwork/balanced-backend/commit/8679f8bc4fa12c4b3cf1cd7df047b3a61cd36dcc))
+
 ## [0.1.3](https://github.com/balancednetwork/balanced-backend/compare/v0.1.2...v0.1.3) (2023-03-14)
 
 
