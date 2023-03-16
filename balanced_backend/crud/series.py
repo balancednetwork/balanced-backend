@@ -48,6 +48,24 @@ def get_pool_series_table_by_timestamp(
     return result.scalars().all()
 
 
+def get_pool_series_table_between_timestamps(
+        session: 'Session',
+        table: PoolSeriesTableType,
+        start: int,
+        end: int = None,
+) -> list[PoolSeriesTableType]:
+    query = select(table).where(
+        table.chain_id == settings.CHAIN_ID,
+    ).where(table.timestamp >= start)
+
+    if end is not None:
+        query = query.where(table.timestamp <= end)
+
+    result = session.execute(query)
+    return result.scalars().all()
+
+
+
 def get_token_series_table_by_timestamp(
         session: 'Session',
         table: TokenSeriesTableType,
