@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/balancednetwork/balanced-backend/compare/v0.1.4...v0.2.0) (2023-03-16)
+
+
+### Features
+
+* add coingecko endpoints ([354f1ab](https://github.com/balancednetwork/balanced-backend/commit/354f1abbf9ff4550d49fed0fea99ef07f114e571))
+
+
+### Bug Fixes
+
+* decimals in contract methods cron ([04d9ba4](https://github.com/balancednetwork/balanced-backend/commit/04d9ba47a8bb6028ba58a64109e8be5ac6c86a1a))
+
 ## [0.1.4](https://github.com/balancednetwork/balanced-backend/compare/v0.1.3...v0.1.4) (2023-03-14)
 
 
