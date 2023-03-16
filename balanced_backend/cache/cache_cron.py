@@ -2,7 +2,7 @@ from loguru import logger
 from typing import TypedDict, Callable
 from apscheduler.schedulers.background import BlockingScheduler
 
-from balanced_backend.cache import cmc
+from balanced_backend.cache import cmc, coingecko
 from balanced_backend.db import session_factory
 
 
@@ -26,6 +26,22 @@ CRONS: list[Cron] = [
     },
     {
         'func': cmc.update_cmc_trades,
+        'interval': 60 * 60,
+    },
+    {
+        'func': coingecko.update_coingecko_pairs,
+        'interval': 60 * 60,
+    },
+    {
+        'func': coingecko.update_coingecko_orderbook,
+        'interval': 60 * 60,
+    },
+    {
+        'func': coingecko.update_coingecko_tickers,
+        'interval': 60 * 60,
+    },
+    {
+        'func': coingecko.update_coingecko_historical,
         'interval': 60 * 60,
     },
 ]
