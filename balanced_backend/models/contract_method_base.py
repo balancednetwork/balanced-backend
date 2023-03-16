@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Field
 from sqlmodel import SQLModel
 
 from balanced_backend.utils.time_to_block import get_timestamp_from_block
@@ -36,6 +36,7 @@ class ContractMethodBase(BaseModel):
     contract_name: str = None
 
     model: SQLModel = None
+    decimals: int = Field(18)
 
     def update_time(self):
         self.date = datetime.fromtimestamp(self.timestamp)

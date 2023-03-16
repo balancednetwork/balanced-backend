@@ -1,7 +1,8 @@
 from loguru import logger
 
 from balanced_backend.addresses import addresses
-from balanced_backend.utils.rpc import get_icx_call, get_contract_method_str
+from balanced_backend.utils.rpc import get_icx_call, get_contract_method_str, \
+    get_contract_method_int
 
 contract_methods: list[dict] = [
     {
@@ -41,12 +42,13 @@ def update_contract_methods():
     )
     if r.status_code == 200:
         loans_collatoral_tokens = r.json()['result']
-        for _, v in loans_collatoral_tokens.items():
-            symbol = get_contract_method_str(to_address=v, method="symbol")
+        for _, c in loans_collatoral_tokens.items():
+            symbol = get_contract_method_str(to_address=c, method="symbol")
+            decimals = get_contract_method_int(to_address=c, method="decimals")
             contract_methods.append({
                 'contract_name': f'loans_{symbol}_balance',
                 'params': {
-                    "to": v,
+                    "to": c,
                     "dataType": "call",
                     "data": {
                         "method": "balanceOf",
@@ -55,6 +57,7 @@ def update_contract_methods():
                         }
                     }
                 },
+                'decimals': decimals,
                 'init_chart_block': 47751328,
             })
     else:
@@ -68,6 +71,7 @@ def update_contract_methods():
         stability_accepted_tokens = r.json()['result']
         for c in stability_accepted_tokens:
             symbol = get_contract_method_str(to_address=c, method="symbol")
+            decimals = get_contract_method_int(to_address=c, method="decimals")
             contract_methods.append({
                 'contract_name': f'stability_{symbol}_balance',
                 'params': {
@@ -81,6 +85,7 @@ def update_contract_methods():
                     }
                 },
                 'init_chart_block': 47751328,
+                'decimals': decimals,
             })
     else:
         logger.info("Failed to get stability_accepted_tokens...")

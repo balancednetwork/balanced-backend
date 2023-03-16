@@ -25,7 +25,7 @@ def get_value_from_timestamp(
     r = get_icx_call_block_height(params=context.params.dict(), height=height)
     if r.status_code == 200:
         loans_amount = r.json()['result']
-        return convert_hex_int(loans_amount) / 1e18
+        return convert_hex_int(loans_amount) / context.decimals
     else:
         logger.info("Invalid response to get_loans_amount. Contract may not have "
                     "method then.")
