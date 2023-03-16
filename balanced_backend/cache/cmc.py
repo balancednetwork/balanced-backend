@@ -56,7 +56,7 @@ def update_cmc_tickers(session: 'Session'):
             quote_volume=p.quote_volume_24h,
             isFrozen=0,
         )
-    cache.cmc_ticker = tickers
+    cache.cmc_tickers = tickers
 
 
 def update_cmc_order_book(session: 'Session'):
@@ -77,11 +77,11 @@ def update_cmc_order_book(session: 'Session'):
                 [p.price * 1.003, 1]
             ],
         )
-    cache.cmc_order_book = order_book_dict
+    cache.cmc_orderbook = order_book_dict
 
 
 def update_cmc_trades(session: 'Session'):
-    logger.info("Updating cmc cmc trades cache...")
+    logger.info("Updating cmc trades cache...")
     pools = get_pools(session=session)
 
     trades = {}

@@ -28,11 +28,11 @@ async def get_cmc_summary() -> list['SummaryCMC']:
 
 @router.get("/ticker")
 async def get_cmc_ticker() -> dict[str, 'TickerCMC']:
-    output = cache.cmc_ticker
+    output = cache.cmc_tickers
     if len(output) == 0:
         with session_factory() as session:
             cmc.update_cmc_tickers(session=session)
-        output = cache.cmc_ticker
+        output = cache.cmc_tickers
     return output
 
 
@@ -41,11 +41,11 @@ async def get_cmc_orderbook(
         market_pair: str,
 ) -> dict[str, 'OrderBookCMC']:
     try:
-        output = cache.cmc_order_book[market_pair]
+        output = cache.cmc_orderbook[market_pair]
     except KeyError:
         with session_factory() as session:
             cmc.update_cmc_order_book(session=session)
-        output = cache.cmc_order_book[market_pair]
+        output = cache.cmc_orderbook[market_pair]
     return output
 
 
