@@ -79,6 +79,7 @@ def build_interval_time_series(
     time_series = session.execute(
         select(DailyHistorical)
             .where(DailyHistorical.address == context.address)
+            .where(DailyHistorical.contract_name == context.contract_name)
             .where(DailyHistorical.method == context.method)
             .order_by(DailyHistorical.timestamp.desc())
     ).scalars().all()
