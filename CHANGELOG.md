@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/balancednetwork/balanced-backend/compare/v0.2.0...v0.3.0) (2023-03-20)
+
+
+### Features
+
+* add more method collectors for getTotalCollateralDebt ([62e7ca1](https://github.com/balancednetwork/balanced-backend/commit/62e7ca1fdb4686b2fd69a5852a95d89e15274775))
+
+
+### Bug Fixes
+
+* add additional where condition in method utils ([e369a0d](https://github.com/balancednetwork/balanced-backend/commit/e369a0df4d00b7abf1eeb959e404c09eef6d2680))
+
 ## [0.2.0](https://github.com/balancednetwork/balanced-backend/compare/v0.1.4...v0.2.0) (2023-03-16)
 
 
