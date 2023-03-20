@@ -36,6 +36,7 @@ contract_methods: list[dict] = [
 
 
 def update_contract_methods():
+    # Loans balance of tokens
     r = get_icx_call(
         to_address=addresses.LOANS_CONTRACT_ADDRESS,
         params={"method": "getCollateralTokens"}
@@ -63,6 +64,46 @@ def update_contract_methods():
     else:
         logger.info("Failed to get loans_collatoral_tokens...")
 
+    # Loans `getTotalCollateralDebt` method
+    loans_collateral_debt = [
+        {
+            'address': 'cx5b5a03cb525a1845d0af3a872d525b18a810acb0',
+            'collateral': 'BTCB',
+            'assetSymbol': 'bnUSD',
+        },
+        {
+            'address': 'cx288d13e1b63563459a2ac6179f237711f6851cb5',
+            'collateral': 'ETH',
+            'assetSymbol': 'bnUSD',
+        },
+        {
+            'address': 'cx2609b924e33ef00b648a409245c7ea394c467824',
+            'collateral': 'sICX',
+            'assetSymbol': 'bnUSD',
+        },
+    ]
+
+    for c in loans_collateral_debt:
+        symbol = get_contract_method_str(to_address=c['address'], method="symbol")
+        decimals = get_contract_method_int(to_address=c['address'], method="decimals")
+        contract_methods.append({
+            'contract_name': f'loans_collateral_debt_{symbol}_bnusd',
+            'params': {
+                "to": addresses.LOANS_CONTRACT_ADDRESS,
+                "dataType": "call",
+                "data": {
+                    "method": "getTotalCollateralDebt",
+                    "params": {
+                        "collateral": c['collateral'],
+                        "assetSymbol": c['assetSymbol'],
+                    }
+                }
+            },
+            'decimals': decimals,
+            'init_chart_block': 47751328,
+        })
+
+    # Stability fund balance of tokens
     r = get_icx_call(
         to_address=addresses.STABILITY_FUND_CONTRACT_ADDRESS,
         params={"method": "getAcceptedTokens"}
