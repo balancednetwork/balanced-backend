@@ -52,7 +52,7 @@ async def get_coingecko_orderbook(
     return output
 
 
-@router.get("/historical")
+@router.get("/historical_trades")
 async def get_coingecko_trades(
         ticker_id: str = None,
 ) -> dict[str, 'HistoricalCoinGecko']:
