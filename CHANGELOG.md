@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/balancednetwork/balanced-backend/compare/v0.3.0...v0.3.1) (2023-03-21)
+
+
+### Bug Fixes
+
+* coingecko endpoint name: ([eae6372](https://github.com/balancednetwork/balanced-backend/commit/eae6372eb7fb456bec87811ff4e0129ed4a5d41e))
+
 ## [0.3.0](https://github.com/balancednetwork/balanced-backend/compare/v0.2.0...v0.3.0) (2023-03-20)
 
 
