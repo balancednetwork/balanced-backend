@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/balancednetwork/balanced-backend/compare/v0.3.1...v0.3.2) (2023-03-22)
+
+
+### Bug Fixes
+
+* sorting of method endpoint ([56cec88](https://github.com/balancednetwork/balanced-backend/commit/56cec88807f4cb5154b950bf87507eae5e2fa257))
+
 ## [0.3.1](https://github.com/balancednetwork/balanced-backend/compare/v0.3.0...v0.3.1) (2023-03-21)
 
 
