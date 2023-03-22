@@ -26,7 +26,7 @@ async def contract_methods(
 ) -> Union[List[DailyHistorical], Response]:
     """Return list of contract methods over time."""
 
-    query = select(DailyHistorical).offset(skip).limit(limit).order_by(DailyHistorical.timestamp.desc())
+    query = select(DailyHistorical).offset(skip).limit(limit).order_by(DailyHistorical.timestamp)
 
     if address is not None:
         query = query.where(DailyHistorical.address == address)
@@ -84,7 +84,7 @@ async def historical(
     start_timestamp: int = None,
     end_timestamp: int = None,
 ) -> Union[List[DailyHistorical], Response]:
-    query = select(DailyHistorical).offset(skip).limit(limit).order_by(DailyHistorical.timestamp.desc())
+    query = select(DailyHistorical).offset(skip).limit(limit).order_by(DailyHistorical.timestamp)
 
     if address is not None:
         query = query.where(DailyHistorical.address == address)
