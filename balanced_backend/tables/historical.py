@@ -13,7 +13,7 @@ class DailyHistorical(SQLModel, table=True):
 
     address: Optional[str] = Field(primary_key=True, index=True)
 
-    contract_name: Optional[str] = Field(None, index=True)
+    contract_name: Optional[str] = Field(primary_key=True, index=True)
     method: Optional[str] = Field(primary_key=True, index=True)
     value: Optional[float] = Field(None, index=True)
 
