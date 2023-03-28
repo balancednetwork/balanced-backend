@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/balancednetwork/balanced-backend/compare/v0.3.2...v0.3.3) (2023-03-24)
+
+
+### Bug Fixes
+
+* pkeys in daily historicals deleting records ([3c6434d](https://github.com/balancednetwork/balanced-backend/commit/3c6434da750db62dbbc40d814d144b7f3d630227))
+
 ## [0.3.2](https://github.com/balancednetwork/balanced-backend/compare/v0.3.1...v0.3.2) (2023-03-22)
 
 
