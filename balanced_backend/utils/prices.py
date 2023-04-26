@@ -1,8 +1,10 @@
+import logging
+
 import networkx as nx
 from pydantic import BaseModel
 
 from balanced_backend.utils.rpc import get_band_price
-
+from balanced_backend.log import logger
 
 class PoolPrice(BaseModel):
     """
@@ -82,7 +84,10 @@ def get_token_prices(
                 continue
 
             if pool.base_address == token_0.address:
-                token_1.price = token_0.price / pool.price
+                try:
+                    token_1.price = token_0.price / pool.price
+                except ZeroDivisionError as e:
+                    logger.info(f"error - zero division \npool={pool}\ntoken_0={token_0}\ntoken_1={token_1}")
             else:
                 token_1.price = pool.price * token_0.price
     return tokens
