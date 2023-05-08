@@ -31,9 +31,9 @@ class ContractMethodBase(BaseModel):
     date: datetime = None
 
     # Update once at beginning of enrichment
-    method: str = None
-    address: str = None
-    contract_name: str = None
+    method: str
+    address: str
+    contract_name: str
 
     model: SQLModel = None
     decimals: int = Field(18)
