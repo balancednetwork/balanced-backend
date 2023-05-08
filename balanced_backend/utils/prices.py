@@ -86,11 +86,11 @@ def get_token_prices(
             if pool.base_address == token_0.address:
                 try:
                     token_1.price = token_0.price / pool.price
-                except ZeroDivisionError as e:
+                except ZeroDivisionError:
                     logger.info(f"error - zero division \npool={pool}\ntoken_0={token_0}\ntoken_1={token_1}")
             else:
                 try:
                     token_1.price = pool.price * token_0.price
-                except TypeError:
+                except TypeError as e:
                     logger.info(f"Encountered error={e} \npool={pool}\ntoken_0={token_0}\ntoken_1={token_1}")
     return tokens
