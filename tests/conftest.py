@@ -45,6 +45,9 @@ def loans_historical_context():
         }),
         init_chart_time=1619308800,
         update_interval=1000000000,
+        address="",
+        method="",
+        contract_name="",
     )
     return context
 
