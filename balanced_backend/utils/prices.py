@@ -89,5 +89,8 @@ def get_token_prices(
                 except ZeroDivisionError as e:
                     logger.info(f"error - zero division \npool={pool}\ntoken_0={token_0}\ntoken_1={token_1}")
             else:
-                token_1.price = pool.price * token_0.price
+                try:
+                    token_1.price = pool.price * token_0.price
+                except TypeError:
+                    logger.info(f"Encountered error={e} \npool={pool}\ntoken_0={token_0}\ntoken_1={token_1}")
     return tokens
