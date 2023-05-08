@@ -14,7 +14,11 @@ def run_methods(
 ):
     logger.info("Running methods cron...")
     for i in contract_methods:
-        historical_method_interval = ContractMethodBase(**i)
+        historical_method_interval = ContractMethodBase(
+            **i,
+            method=i['params']['data']['method'],
+            address=i['params']['to'],
+        )
         historical_method_interval.init_model()
         historical_method_interval.update_interval = 24 * 60 * 60
         build_interval_time_series(
