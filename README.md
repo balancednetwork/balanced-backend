@@ -26,3 +26,4 @@ If you are running in prod, be sure to change the DB password with an `.env` fil
 ### License 
 
 Apache 2.0
+
