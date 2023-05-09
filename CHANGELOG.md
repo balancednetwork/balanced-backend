@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/balancednetwork/balanced-backend/compare/v0.3.3...v0.3.4) (2023-05-09)
+
+
+### Bug Fixes
+
+* issue with method series not showing ([5e31d8c](https://github.com/balancednetwork/balanced-backend/commit/5e31d8c6e80a884547aeae0c8e6da9bff0a311dd))
+
 ## [0.3.3](https://github.com/balancednetwork/balanced-backend/compare/v0.3.2...v0.3.3) (2023-03-24)
 
 
