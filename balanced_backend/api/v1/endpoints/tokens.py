@@ -102,7 +102,7 @@ async def get_pools_series(
     if symbol is not None:
         query = query.where(table.symbol == symbol)
 
-    query = query.order_by(table.timestamp.desc())
+    query = query.order_by(table.timestamp.asc())
 
     result = await session.execute(query)
     timeseries: list[table] = result.scalars().all()
