@@ -144,6 +144,8 @@ async def get_pools_series(
         table.pool_id == pool_id,
     )
 
+    query = query.order_by(table.timestamp.desc())
+
     result = await session.execute(query)
     timeseries: list[table] = result.scalars().all()
 
