@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.5](https://github.com/balancednetwork/balanced-backend/compare/v0.3.4...v0.3.5) (2023-05-09)
+
+
+### Bug Fixes
+
+* switch order of series to newest to oldest ([851d726](https://github.com/balancednetwork/balanced-backend/commit/851d726fb37b280b77e8f96906993ee0f45fbadc))
+* switch order of series to oldest to newest ([c13374c](https://github.com/balancednetwork/balanced-backend/commit/c13374c5ed6d0919e8ca766880b0428ba301c33b))
+
 ## [0.3.4](https://github.com/balancednetwork/balanced-backend/compare/v0.3.3...v0.3.4) (2023-05-09)
 
 
