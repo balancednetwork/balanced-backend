@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 from http import HTTPStatus
 from typing import List, Union
 from fastapi import APIRouter, Depends, Response, HTTPException
+from sqlalchemy.exc import NoResultFound, DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
@@ -58,8 +59,7 @@ async def tokens(
     return tokens
 
 
-@router.get("/tokens/series/{interval}/{start}/{end}")
-async def get_pools_series(
+async def get_token_series_interval(
         response: Response,
         session: AsyncSession = Depends(get_session),
         interval: str = None,
@@ -67,8 +67,7 @@ async def get_pools_series(
         end: int = None,
         address: str = None,
         symbol: str = None,
-) -> Union[List['TokenSeriesTableType'], Response]:
-    """Return list of pools price/volumes time series."""
+):
     if address is None and symbol is None:
         raise HTTPException(
             status_code=400,
@@ -116,3 +115,211 @@ async def get_pools_series(
     response.headers["x-total-count"] = total_count
 
     return timeseries
+
+
+@router.get("/tokens/series/{interval}/{start}/{end}")
+async def get_tokens_series(
+        response: Response,
+        session: AsyncSession = Depends(get_session),
+        interval: str = None,
+        start: int = None,
+        end: int = None,
+        address: str = None,
+        symbol: str = None,
+) -> Union[List['TokenSeriesTableType'], Response]:
+    """Return list of pools price/volumes time series."""
+    return await get_token_series_interval(
+        response=response,
+        session=session,
+        interval=interval,
+        start=start,
+        end=end,
+        address=address,
+        symbol=symbol,
+    )
+
+async def get_token_price_latest(
+        *,
+        table: 'TokenSeriesTableType',
+        session: AsyncSession,
+        response: Response,
+        address: str = None,
+        symbol: str = None,
+) -> Union[List['TokenSeriesTableType'], Response]:
+    # This happens when the block height / timestamp is above the last record
+    query = select(table).where(
+        table.chain_id == settings.CHAIN_ID,
+    ).order_by(table.timestamp.desc()).limit(1)
+
+    if address is not None:
+        query = query.where(
+            table.address == address
+        )
+    else:
+        query = query.where(
+            table.symbol == symbol
+        )
+
+    result = await session.execute(query)
+
+    prices = result.scalars().all()
+    if len(prices) == 0:
+        raise HTTPException(
+            status_code=204,
+            detail=f"No result found with that symbol / address"
+        )
+
+    # Return the count in header
+    response.headers["x-total-count"] = "1"
+
+    return [prices[0]]
+
+async def get_token_price(
+        *,
+        interval: str,
+        response: Response,
+        session: AsyncSession,
+        height: int,
+        timestamp: int,
+        address: str,
+        symbol: str,
+        head: bool,
+    ) -> Union[List['TokenSeriesTableType'], Response]:
+    if address is None and symbol is None:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Must supply either a token address or symbol as query parameter."
+        )
+    if height is not None and timestamp is not None:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Can't supply both height and timestamp as query param."
+        )
+
+    table = get_token_series_table(table_suffix=INTERVAL_MAP[interval]['table_name'])
+
+    if head:
+        return await get_token_price_latest(
+            table=table,
+            session=session,
+            response=response,
+            address=address,
+            symbol=symbol,
+        )
+
+    query = select(table).where(
+        table.chain_id == settings.CHAIN_ID,
+    ).limit(1)
+
+    if address is not None:
+        query = query.where(
+            table.address == address
+        )
+    elif symbol is not None:
+        query = query.where(
+            table.symbol == symbol
+        )
+    else:
+        raise Exception("Should never happen.")
+
+    if timestamp is not None:
+        query = query.where(
+        table.timestamp <= timestamp,
+    ).order_by(
+        table.timestamp.desc()
+    )
+    elif height is not None:
+        query = query.where(
+        table.block_height <= height,
+    ).order_by(
+        table.block_height.desc()
+    )
+    else:
+        raise Exception("Should never happen")
+
+    try:
+        result = await session.execute(query)
+    except DBAPIError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"One of your parameters is out of scale"
+        )
+
+    try:
+        prices = result.scalars().all()
+        if len(prices) == 0:
+            raise HTTPException(
+                status_code=204,
+                detail=f"No result found..."
+            )
+    except NoResultFound:
+        return await get_token_price_latest(
+            table=table,
+            session=session,
+            response=response,
+            address=address,
+            symbol=symbol,
+        )
+
+    # Return the count in header
+    response.headers["x-total-count"] = "1"
+
+    return [prices[0]]
+
+
+@router.get("/tokens/prices")
+async def get_tokens_prices(
+        response: Response,
+        session: AsyncSession = Depends(get_session),
+        height: int = None,
+        timestamp: int = None,
+        interval: str = None,
+        start: int = None,
+        end: int = None,
+        address: str = None,
+        symbol: str = None,
+        head: bool = False,
+) -> Union[List['TokenSeriesTableType'], Response]:
+    """Return list of pools price/volumes time series."""
+    if timestamp is not None and timestamp < 1619404096:
+        raise HTTPException(
+            status_code=400,
+            detail=f"timestamp must be above 1619404096."
+        )
+
+    if height is not None and height < 33585760:
+        raise HTTPException(
+            status_code=400,
+            detail=f"height must be above 33585760."
+        )
+
+    if start is not None or end is not None:
+        return await get_token_series_interval(
+            response=response,
+            session=session,
+            interval=interval,
+            start=start,
+            end=end,
+            address=address,
+            symbol=symbol,
+        )
+    elif height is not None or timestamp is not None:
+        if interval is None:
+            interval = '5m'
+
+        return await get_token_price(
+            interval=interval,
+            response=response,
+            session=session,
+            height=height,
+            timestamp=timestamp,
+            address=address,
+            symbol=symbol,
+            head=head,
+        )
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Must supply either a start/end or height/timestamp as query "
+                   f"parameters."
+        )
