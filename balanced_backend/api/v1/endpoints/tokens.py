@@ -280,7 +280,10 @@ async def get_tokens_prices(
         symbol: str = None,
         head: bool = False,
 ) -> Union[List['TokenSeriesTableType'], Response]:
-    """Return list of pools price/volumes time series."""
+    """
+    Return list of token prices/volumes over an interval with `start`/`end` timestamps
+    or the closest price when given the `height`/`timestamp` value.
+    """
     if timestamp is not None and timestamp < 1619404096:
         raise HTTPException(
             status_code=400,
