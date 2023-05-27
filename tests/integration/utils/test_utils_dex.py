@@ -10,25 +10,25 @@ SWAP_CASES = [
 ]
 
 
-@pytest.mark.parametrize("block,index,checks", SWAP_CASES)
-def test_get_swaps(block, index, checks):
-    # Need to fix this as the backend randomly shuffles the order of the log depending
-    # on location. Related to fix putting composite index on tx index / log index
-    settings.COMMUNITY_API_ENDPOINT = "https://tracker.v2.mainnet.sng.vultr.icon.community"
-
-    swaps = get_swaps(
-        block_start=block,
-        block_end=block,
-    )
-
-    for k, v in checks.items():
-        expected_value = v
-        if isinstance(v, int):
-            outcome = int(getattr(swaps[index], k))
-        else:
-            outcome = getattr(swaps[index], k)
-
-        assert outcome == expected_value
+# @pytest.mark.parametrize("block,index,checks", SWAP_CASES)
+# def test_get_swaps(block, index, checks):
+#     # Need to fix this as the backend randomly shuffles the order of the log depending
+#     # on location. Related to fix putting composite index on tx index / log index
+#     settings.COMMUNITY_API_ENDPOINT = "https://tracker.v2.mainnet.sng.vultr.icon.community"
+#
+#     swaps = get_swaps(
+#         block_start=block,
+#         block_end=block,
+#     )
+#
+#     for k, v in checks.items():
+#         expected_value = v
+#         if isinstance(v, int):
+#             outcome = int(getattr(swaps[index], k))
+#         else:
+#             outcome = getattr(swaps[index], k)
+#
+#         assert outcome == expected_value
 
 
 
