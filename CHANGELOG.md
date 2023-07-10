@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0](https://github.com/balancednetwork/balanced-backend/compare/v0.3.5...v0.4.0) (2023-07-10)
+
+
+### Features
+
+* add token/circulating-supply endpoints ([2db9be0](https://github.com/balancednetwork/balanced-backend/commit/2db9be075ee06d5d50acb7b7c785d2474bf7d41b))
+* add tokens/prices endpoint ([43f71d7](https://github.com/balancednetwork/balanced-backend/commit/43f71d7dfb4a25d9f37698a1bf4aa411f47ad036))
+
 ## [0.3.5](https://github.com/balancednetwork/balanced-backend/compare/v0.3.4...v0.3.5) (2023-05-09)
 
 
