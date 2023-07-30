@@ -110,13 +110,13 @@ def build_interval_time_series(
                 raise Exception(
                     "Could not get value amount, endpoint not reachable most likely.")
 
-            # Metrics
-            prom_metrics.crons_last_timestamp = datetime.now().timestamp()
-            prom_metrics.crons_ran.inc()
-
             model = DailyHistorical(**context.dict(), value=value)
             session.merge(model)
             session.commit()
+
+            # Metrics
+            prom_metrics.crons_last_timestamp = datetime.now().timestamp()
+            prom_metrics.crons_ran.inc()
     else:
         logger.info(f"Last updated {datetime.fromtimestamp(last_updated_time)}, next "
                     f"update in {diff_last_updated_time} seconds.")
