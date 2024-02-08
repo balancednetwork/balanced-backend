@@ -8,7 +8,7 @@ class DexSwap(SQLModel, table=True):
     log_index: int = Field(None, primary_key=True)
     timestamp: int = Field(None, index=True)
     block_number: int = Field(None, index=True)
-    pool_id: int = Field(None)
+    pool_id: int = Field(None, index=True)
 
     from_token: str = Field(None)
     to_token: str = Field(None)
