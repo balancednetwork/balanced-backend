@@ -93,4 +93,4 @@ if os.environ.get("ENV_FILE", False):
 elif os.path.isfile(test_env):
     load_env_to_variables(test_env)
 
-config = Settings()
+settings = Settings()
