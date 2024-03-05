@@ -1,4 +1,6 @@
 import os
+
+from dotenv import dotenv_values
 from pydantic import BaseSettings
 
 
@@ -66,7 +68,29 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 
+def load_env_to_variables(env_file_path):
+    """
+    Load environment variables from a .env file and export them to the actual environment variables.
+
+    Args:
+    - env_file_path (str): Path to the .env file
+
+    Returns:
+    - None
+    """
+    # Load environment variables from the .env file
+    env_vars = dotenv_values(env_file_path)
+
+    # Export variables to the actual environment
+    for key, value in env_vars.items():
+        os.environ[key] = value
+
+
+# Ignored by default
+test_env = os.path.join(os.path.dirname(__file__), "..", ".env.test")
 if os.environ.get("ENV_FILE", False):
-    settings = Settings(_env_file=os.environ.get("ENV_FILE"))
-else:
-    settings = Settings()
+    load_env_to_variables(os.environ.get("ENV_FILE"))
+elif os.path.isfile(test_env):
+    load_env_to_variables(test_env)
+
+config = Settings()
