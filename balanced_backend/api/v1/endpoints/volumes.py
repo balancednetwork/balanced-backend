@@ -29,7 +29,9 @@ async def contract_volumes(
 ) -> Union[List[ContractMethodVolume], Response]:
     """Return list of delegations."""
 
-    query = select(ContractMethodVolume).offset(skip).limit(limit)
+    query = select(ContractMethodVolume).offset(skip).limit(limit).order_by(
+        ContractMethodVolume.end_timestamp.desc()
+    )
 
     if address is not None:
         query = query.where(ContractMethodVolume.address == address)
@@ -96,7 +98,9 @@ async def contract_volumes(
 ) -> Union[List[ContractMethodVolume], Response]:
     """Return list of delegations."""
 
-    query = select(ContractMethodVolume).offset(skip).limit(limit)
+    query = select(ContractMethodVolume).offset(skip).limit(limit).order_by(
+        ContractMethodVolume.end_timestamp.desc()
+    )
 
     if address is not None:
         query = query.where(ContractMethodVolume.address == address)
