@@ -62,14 +62,6 @@ CRONS: list[Cron] = [
         'interval': 600,
     },
     {
-        'func': pool_stats.run_pool_stats,
-        'interval': 600,
-    },
-    {
-        'func': token_stats.run_token_stats,
-        'interval': 600,
-    },
-    {
         'func': token_price.run_token_prices,
         'interval': 600,
     },
@@ -80,6 +72,14 @@ CRONS: list[Cron] = [
     {
         'func': dividends.run_pool_dividends,
         'interval': 60 * 60,
+    },
+    {
+        'func': pool_stats.run_pool_stats,
+        'interval': 600,
+    },
+    {
+        'func': token_stats.run_token_stats,
+        'interval': 600,
     },
     {
         'func': stats.run_balanced_stats,
