@@ -11,3 +11,14 @@ if TYPE_CHECKING:
 def get_tokens(session: 'Session') -> list[Token]:
     result = session.execute(select(Token).where(Token.chain_id == settings.CHAIN_ID))
     return result.scalars().all()
+
+
+def get_token_price(session: 'Session', address: str, timestamp: int = None) -> float:
+    query = select(Token.price).where(
+        Token.chain_id == settings.CHAIN_ID).where(
+        Token.address == address,
+    )
+    if timestamp is not None:
+        query = query.where(Token.timestamp == timestamp)
+    result = session.execute(query)
+    return result.scalars().first()

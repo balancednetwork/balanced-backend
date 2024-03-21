@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 def run_methods(
         session: 'Session',
 ):
-    logger.info("Running methods cron...")
+    logger.info(f"Starting {__name__} cron")
     for i in contract_methods:
         historical_method_interval = ContractMethodBase(
             **i,
@@ -25,7 +25,7 @@ def run_methods(
             session=session,
             context=historical_method_interval,
         )
-    logger.info("Ending methods cron...")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

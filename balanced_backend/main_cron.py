@@ -12,6 +12,7 @@ from balanced_backend.cron import (
     pool_prices,
     pool_series,
     pool_stats,
+    stability_sum,
     stats,
     token_lists,
     token_price,
@@ -84,6 +85,14 @@ CRONS: list[Cron] = [
     {
         'func': stats.run_balanced_stats,
         'interval': 60 * 60,
+    },
+    {
+        'func': stability_sum.build_stability_sum,
+        'interval': 86400,
+    },
+    {
+        'func': stability_sum.run_stability_sum,
+        'interval': 86400 / 2,
     },
 ]
 

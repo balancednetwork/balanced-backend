@@ -11,6 +11,7 @@ from balanced_backend.api.v1.endpoints import (
     stats,
     contract_methods,
     dex,
+    stability,
 )
 
 api_router = APIRouter()
@@ -25,3 +26,4 @@ api_router.include_router(coingecko.router, prefix='/coingecko', tags=["coingeck
 api_router.include_router(stats.router)
 api_router.include_router(supply.router)
 api_router.include_router(dex.router)
+api_router.include_router(stability.router)
