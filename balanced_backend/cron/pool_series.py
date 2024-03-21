@@ -103,7 +103,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     # Initialize with the last known pool price. Otherwise this is done in the loop
     for p in pool_volume.pool_ids:
         pool_series = [i for i in last_volume_timeseries if i.pool_id == p][0]
-        pool_volume.pool_close[p] = pool_series.close
+        pool_volume.pool_close[p] = pool_series.open
 
     while volume_time < last_swap_time:
         swaps = get_dex_swaps(
