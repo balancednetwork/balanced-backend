@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.0](https://github.com/balancednetwork/balanced-backend/compare/v0.4.0...v0.5.0) (2024-03-21)
+
+
+### Features
+
+* add stability fund time series [#34](https://github.com/balancednetwork/balanced-backend/issues/34) ([0bc4ac3](https://github.com/balancednetwork/balanced-backend/commit/0bc4ac3a76678a93508e031c44eae691e4499a10))
+
+
+### Bug Fixes
+
+* add dex swaps endpoint ([c9f8e66](https://github.com/balancednetwork/balanced-backend/commit/c9f8e66904060af8893cd5143cde43a1c3ff1138))
+* add sort to endpoints limitted to 1k records which are now missing data ([714a2b5](https://github.com/balancednetwork/balanced-backend/commit/714a2b5bddfdc7985014eec4d1b40ffc62fbbc0e))
+* change order of cron - stats last ([b14cd51](https://github.com/balancednetwork/balanced-backend/commit/b14cd51adb8b96d7583795fa9dd5126a5e1bec10))
+* pool series mismatch [#31](https://github.com/balancednetwork/balanced-backend/issues/31) [#29](https://github.com/balancednetwork/balanced-backend/issues/29) ([571fb9b](https://github.com/balancednetwork/balanced-backend/commit/571fb9b2c379bb29a0f769048d5982f05457db09))
+* rm daily historical indexes and add ellipses to pks ([86be747](https://github.com/balancednetwork/balanced-backend/commit/86be7473221752980b008d07dc795bfd20fb3b07))
+
 ## [0.4.0](https://github.com/balancednetwork/balanced-backend/compare/v0.3.5...v0.4.0) (2023-07-10)
 
 
