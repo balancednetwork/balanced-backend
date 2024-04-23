@@ -5,4 +5,3 @@ pytest-order
 freezegun
 
 grpcio-tools==1.40.0
-docker-compose

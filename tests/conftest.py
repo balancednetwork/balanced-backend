@@ -18,6 +18,26 @@ def db():
     yield session
 
 
+@pytest.fixture()
+def db_migration():
+    import alembic.config
+
+    cur_dir = os.path.abspath(os.path.dirname(__file__))
+    alembic_dir = os.path.join(cur_dir, "../../balanced_backend")
+    os.chdir(alembic_dir)
+
+    alembicArgs = [
+        "--raiseerr",
+        "upgrade",
+        "head",
+    ]
+    alembic.config.main(argv=alembicArgs)
+    yield
+
+    # from balanced_backend.alembic.env import run_migrations_offline
+    # run_migrations_offline()
+
+
 @pytest.fixture(scope="module")
 def client() -> Generator:
     from balanced_backend.main_api import app
