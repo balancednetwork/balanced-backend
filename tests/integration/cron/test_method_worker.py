@@ -9,7 +9,7 @@ from balanced_backend.utils.methods import set_table_value_from_timestamp
 
 @pytest.mark.order(1)
 def test_set_table_value_from_timestamp(db, loans_historical_context):
-    """Check that we can idepotently update the DB with values at a given timestamp."""
+    """Check that we can idempotently update the DB with values at a given timestamp."""
     loans_historical_context.init_model()
 
     set_table_value_from_timestamp(db, context=loans_historical_context)
