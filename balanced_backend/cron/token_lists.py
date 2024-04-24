@@ -136,7 +136,7 @@ def run_token_list(
 ):
     logger.info("Running token lists cron...")
 
-    community_tokens_uri = "https://github.com/balancednetwork/balanced-network-interface/blob/master/apps/web/src/store/lists/communitylist.json"
+    community_tokens_uri = "https://raw.githubusercontent.com/balancednetwork/balanced-network-interface/master/apps/web/src/store/lists/communitylist.json"
     token_list_uri = "https://raw.githubusercontent.com/balancednetwork/balanced-network-interface/master/apps/web/src/store/lists/tokenlist.json"
 
     # ICX is a special case and needs to be manually added
