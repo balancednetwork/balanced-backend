@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.1](https://github.com/balancednetwork/balanced-backend/compare/v0.5.0...v0.5.1) (2024-04-25)
+
+
+### Bug Fixes
+
+* deadlock issue in pools list ([d948039](https://github.com/balancednetwork/balanced-backend/commit/d9480398f115f1bc8be1fad4178eb18a3cbbba9a))
+* token list source ([216c52e](https://github.com/balancednetwork/balanced-backend/commit/216c52ecb5e3bb078a1ad34176a73c7c99603632))
+* token list source raw ([c3af180](https://github.com/balancednetwork/balanced-backend/commit/c3af180d73998b965643318a09e43d3811fec2e1))
+
 ## [0.5.0](https://github.com/balancednetwork/balanced-backend/compare/v0.4.0...v0.5.0) (2024-03-21)
 
 
