@@ -12,7 +12,7 @@ from balanced_backend.models.volumes_base import VolumeIntervalBase
 
 @pytest.fixture(scope="session")
 def db():
-    SessionMade = sessionmaker(bind=engine)
+    SessionMade = sessionmaker(bind=engine, autoflush=False)
     session = SessionMade()
 
     yield session
