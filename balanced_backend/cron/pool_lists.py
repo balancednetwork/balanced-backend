@@ -132,7 +132,7 @@ def run_pool_list(session: 'Session'):
             pool_db.total_supply = total_supply
             pool_db.price = price
         session.merge(pool_db)
-    session.commit()
+        session.commit()
     logger.info("Ending pool lists cron...")
 
 
