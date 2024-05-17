@@ -107,7 +107,7 @@ def update_coingecko_orderbook(session: 'Session'):
 
 def update_coingecko_historical(session: 'Session'):
     logger.info("Updating coingecko historical cache...")
-    pools = get_pools(session=session)
+    pools = clean_pools_for_coingecko(get_pools(session=session))
 
     trades = {}
     for p in pools:
