@@ -6,7 +6,7 @@ from prometheus_client import start_http_server
 from starlette.middleware.cors import CORSMiddleware
 from brotli_asgi import BrotliMiddleware
 
-from balanced_backend.api.health import is_database_online
+from balanced_backend.api.health import is_database_online, is_cache_updated
 from balanced_backend.api.v1.router import api_router
 from balanced_backend.config import settings
 from balanced_backend.log import logger
@@ -60,7 +60,9 @@ async def setup():
 
 logger.info("Starting application...")
 app.include_router(api_router, prefix=settings.REST_PREFIX)
-app.add_api_route(settings.HEALTH_PREFIX, health([is_database_online]))
+app.add_api_route(settings.HEALTH_PREFIX, health([
+    is_database_online, is_cache_updated
+]))
 
 if __name__ == "__main__":
     uvicorn.run(
