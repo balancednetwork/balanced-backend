@@ -1,11 +1,9 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 from loguru import logger
 from datetime import datetime
 
 from balanced_backend.crud.pools import get_pools
 from balanced_backend.crud.dex import get_dex_swaps
-# from balanced_backend.crud.series import get_pool_series_table_between_timestamps
-# from balanced_backend.tables.utils import get_pool_series_table
 from balanced_backend.cache.cache import cache
 from balanced_backend.models.coingecko import (
     PairsCoinGecko,
@@ -13,6 +11,7 @@ from balanced_backend.models.coingecko import (
     OrderBookCoinGecko,
     HistoricalCoinGecko,
 )
+from balanced_backend.tables.pools import Pool
 from balanced_backend.utils.pools import get_cached_pool_stats
 from balanced_backend.config import settings
 
@@ -20,16 +19,35 @@ if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
 
-def update_coingecko_pairs(session: 'Session'):
-    logger.info("Updating coingecko pairs cache...")
-    pools = get_pools(session=session)
-
-    summaries = []
+def clean_pools_for_coingecko(pools: list[Pool]) -> list[Pool]:
+    """
+    Coingecko calculates their prices with a blackbox thingamajig that is wrong due to
+     issues (we think) in how the use low liquidity / depleted pools in price resolution
+     and / or they think sicx is icx. Regardless, they are a nightmare to deal with
+     managing to send one message every 6 months without reading the prior response.
+     Anyways, we are filtering out low liquidity pools and making icx the same as sicx.
+    """
+    output = []
     for p in pools:
         if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
             # Skip low pools
             continue
+        if p.name == 'sICX_ICX':
+            p.price = 1
+            p.price_24h = 1
+            p.price_24h_high = 1
+            p.price_24h_low = 1
 
+        output.append(p)
+    return output
+
+
+def update_coingecko_pairs(session: 'Session'):
+    logger.info("Updating coingecko pairs cache...")
+    pools = clean_pools_for_coingecko(get_pools(session=session))
+
+    summaries = []
+    for p in pools:
         names = p.name.split('/')
         summaries.append(PairsCoinGecko(
             ticker_id='_'.join(names),
@@ -42,13 +60,10 @@ def update_coingecko_pairs(session: 'Session'):
 
 def update_coingecko_tickers(session: 'Session'):
     logger.info("Updating coingecko tickers cache...")
-    pools = get_pools(session=session)
+    pools = clean_pools_for_coingecko(get_pools(session=session))
 
     tickers = []
     for p in pools:
-        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
-            # Skip low pools
-            continue
         names = p.name.split('/')
         tickers.append(TickerCoinGecko(
             ticker_id='_'.join(names),
@@ -69,14 +84,10 @@ def update_coingecko_tickers(session: 'Session'):
 
 def update_coingecko_orderbook(session: 'Session'):
     logger.info("Updating coingecko orderbook cache...")
-    pools = get_pools(session=session)
+    pools = clean_pools_for_coingecko(get_pools(session=session))
 
     order_book_dict = {}
     for p in pools:
-        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
-            # Skip low pools
-            continue
-
         names = p.name.split('/')
         market_pair = '_'.join(names)
 
@@ -100,10 +111,6 @@ def update_coingecko_historical(session: 'Session'):
 
     trades = {}
     for p in pools:
-        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
-            # Skip low pools
-            continue
-
         names = p.name.split('/')
         market_pair = '_'.join(names)
         trades[market_pair] = {
