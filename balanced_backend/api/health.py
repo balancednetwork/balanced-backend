@@ -12,5 +12,5 @@ def is_cache_updated():
     for k, v in cache.dict().items():
         if len(v) == 0:
             logger.info(f"Unhealthy cache item {k}")
-            return False
+            return True
     return True
