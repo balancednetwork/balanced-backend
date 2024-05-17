@@ -10,7 +10,7 @@ def is_database_online(session: bool = Depends(get_session)):
 
 def is_cache_updated():
     for k, v in cache.dict().items():
-        if len(v) == 0:
+        if not v:
             logger.info(f"Unhealthy cache item {k}")
             return True
     return True

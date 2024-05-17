@@ -63,10 +63,12 @@ def cache_cron():
     logger.info("Starting metrics server.")
     sched = BlockingScheduler()
 
-    # Run the jobs immediately in parallel
-    asyncio.run(run_all_crons())
+    # # Run the jobs immediately in parallel
+    # asyncio.run(run_all_crons())
 
     for i in CRONS:
+        # Run right away
+        run_cron_with_session(i['func'])
         # Then run them in the scheduler
         sched.add_job(
             func=run_cron_with_session,
