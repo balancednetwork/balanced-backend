@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 from loguru import logger
 from datetime import datetime
 
+from balanced_backend.config import settings
 from balanced_backend.crud.pools import get_pools
 from balanced_backend.crud.dex import get_dex_swaps
 from balanced_backend.cache.cache import cache
@@ -18,6 +19,9 @@ def update_cmc_summary(session: 'Session'):
 
     summaries = []
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
         if p.price != 0:
             price_change_percent_24h = (p.price - p.price_24h) / p.price * 100
         else:
@@ -47,6 +51,9 @@ def update_cmc_tickers(session: 'Session'):
 
     tickers = {}
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
         names = p.name.split('/')
         market_pair = '_'.join(names)
 
@@ -65,6 +72,9 @@ def update_cmc_order_book(session: 'Session'):
 
     order_book_dict = {}
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
         names = p.name.split('/')
         market_pair = '_'.join(names)
 
@@ -86,6 +96,9 @@ def update_cmc_trades(session: 'Session'):
 
     trades = {}
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
         names = p.name.split('/')
         market_pair = '_'.join(names)
         trades[market_pair] = []

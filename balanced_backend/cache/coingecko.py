@@ -14,6 +14,7 @@ from balanced_backend.models.coingecko import (
     HistoricalCoinGecko,
 )
 from balanced_backend.utils.pools import get_cached_pool_stats
+from balanced_backend.config import settings
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -25,6 +26,10 @@ def update_coingecko_pairs(session: 'Session'):
 
     summaries = []
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
+
         names = p.name.split('/')
         summaries.append(PairsCoinGecko(
             ticker_id='_'.join(names),
@@ -41,6 +46,9 @@ def update_coingecko_tickers(session: 'Session'):
 
     tickers = []
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
         names = p.name.split('/')
         tickers.append(TickerCoinGecko(
             ticker_id='_'.join(names),
@@ -65,6 +73,10 @@ def update_coingecko_orderbook(session: 'Session'):
 
     order_book_dict = {}
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
+
         names = p.name.split('/')
         market_pair = '_'.join(names)
 
@@ -88,6 +100,10 @@ def update_coingecko_historical(session: 'Session'):
 
     trades = {}
     for p in pools:
+        if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
+            # Skip low pools
+            continue
+
         names = p.name.split('/')
         market_pair = '_'.join(names)
         trades[market_pair] = {
