@@ -1,9 +1,8 @@
 from typing import TYPE_CHECKING
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
-from balanced_backend.db import session_factory
+from balanced_backend.api.v1.endpoints._utils import sleep_while_empty_cache
 from balanced_backend.cache.cache import cache
-from balanced_backend.cache import cmc
 
 if TYPE_CHECKING:
     from balanced_backend.models.cmc import (
@@ -18,45 +17,39 @@ router = APIRouter()
 
 @router.get("/summary")
 async def get_cmc_summary() -> list['SummaryCMC']:
-    output = cache.cmc_summary
-    if len(output) == 0:
-        with session_factory() as session:
-            cmc.update_cmc_summary(session=session)
-        output = cache.cmc_summary
-    return output
+    await sleep_while_empty_cache('cmc_summary')
+    return cache.cmc_summary
 
 
 @router.get("/ticker")
 async def get_cmc_ticker() -> dict[str, 'TickerCMC']:
-    output = cache.cmc_tickers
-    if len(output) == 0:
-        with session_factory() as session:
-            cmc.update_cmc_tickers(session=session)
-        output = cache.cmc_tickers
-    return output
+    await sleep_while_empty_cache('cmc_tickers')
+    return cache.cmc_tickers
 
 
 @router.get("/orderbook/{market_pair}")
 async def get_cmc_orderbook(
         market_pair: str,
 ) -> dict[str, 'OrderBookCMC']:
+    await sleep_while_empty_cache('cmc_orderbook')
     try:
-        output = cache.cmc_orderbook[market_pair]
+        return cache.cmc_orderbook[market_pair]
     except KeyError:
-        with session_factory() as session:
-            cmc.update_cmc_order_book(session=session)
-        output = cache.cmc_orderbook[market_pair]
-    return output
+        raise HTTPException(
+            status_code=204,
+            detail=f"market_pair not found - check /summary for available pairs."
+        )
 
 
 @router.get("/trades/{market_pair}")
 async def get_cmc_trades(
         market_pair: str,
 ) -> dict[str, 'TradeCMC']:
+    await sleep_while_empty_cache('cmc_trades')
     try:
-        output = cache.cmc_trades[market_pair]
+        return cache.cmc_trades[market_pair]
     except KeyError:
-        with session_factory() as session:
-            cmc.update_cmc_trades(session=session)
-        output = cache.cmc_trades[market_pair]
-    return output
+        raise HTTPException(
+            status_code=204,
+            detail=f"market_pair not found - check /summary for available pairs."
+        )
