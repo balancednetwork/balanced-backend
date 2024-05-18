@@ -28,7 +28,7 @@ CRONS: list[Cron] = [
     },
     {
         'func': cmc.update_cmc_trades,
-        'interval': 60,
+        'interval': 60 * 10,
     },
     {
         'func': coingecko.update_coingecko_pairs,
@@ -44,7 +44,7 @@ CRONS: list[Cron] = [
     },
     {
         'func': coingecko.update_coingecko_historical,
-        'interval': 60 * 5,
+        'interval': 60 * 10,
     },
 ]
 
