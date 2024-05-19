@@ -13,25 +13,22 @@ class Settings(BaseSettings):
 
     # Ports
     PORT: int = 8000
-    HEALTH_PORT: int = 8180
     METRICS_PORT: int = 9400
-
     METRICS_ADDRESS: str = "localhost"
 
     # Prefix
     REST_PREFIX: str = "/api/v1"
-    HEALTH_PREFIX: str = "/heath"
+    HEALTH_PREFIX: str = "/health"
+    READINESS_PREFIX: str = "/ready"
     METRICS_PREFIX: str = "/metrics"
     DOCS_PREFIX: str = "/api/v1/docs"
+    # HEALTH_POLLING_INTERVAL: int = 60
 
     CORS_ALLOW_ORIGINS: str = "*"
     CORS_ALLOW_CREDENTIALS: bool = False
     CORS_ALLOW_METHODS: str = "GET,POST,HEAD,OPTIONS"
     CORS_ALLOW_HEADERS: str = ""
     CORS_EXPOSE_HEADERS: str = "x-total-count"
-
-    # Monitoring
-    HEALTH_POLLING_INTERVAL: int = 60
 
     # ICON Nodes
     ICON_NODE_URL: str = "https://api.icon.community/api/v3"

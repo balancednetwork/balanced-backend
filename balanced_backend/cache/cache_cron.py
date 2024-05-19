@@ -51,7 +51,9 @@ CRONS: list[Cron] = [
 
 def run_cron_with_session(cron: Callable):
     with session_factory() as session:
+        logger.info(f"Running {cron.__name__}...")
         cron(session=session)
+        logger.info(f"Finished {cron.__name__}...")
 
 
 async def run_all_crons():

@@ -59,10 +59,16 @@ async def setup():
 
 
 logger.info("Starting application...")
-app.include_router(api_router, prefix=settings.REST_PREFIX)
+# /health
 app.add_api_route(settings.HEALTH_PREFIX, health([
-    is_database_online, is_cache_updated
+    is_database_online,
 ]))
+# /ready
+app.add_api_route(settings.READINESS_PREFIX, health([
+    is_cache_updated,
+]))
+# /api/v1
+app.include_router(api_router, prefix=settings.REST_PREFIX)
 
 if __name__ == "__main__":
     uvicorn.run(
