@@ -61,7 +61,7 @@ class Settings(BaseSettings):
     BLOCK_SYNC_CHUNK: int = 10000  # For 20M blocks this is 2000 gets
     MAX_TS_RECORDS: int = 5000
 
-    COINGECKO_LIQUIDITY_CUTOFF: int = 100
+    COINGECKO_LIQUIDITY_CUTOFF: int = 1000
 
     class Config:
         case_sensitive = True
