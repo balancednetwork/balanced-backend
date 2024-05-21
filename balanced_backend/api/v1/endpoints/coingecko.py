@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from fastapi import APIRouter, HTTPException
+from starlette.responses import Response
 
 from balanced_backend.api.v1.endpoints._utils import sleep_while_empty_cache
 from balanced_backend.cache.cache import cache
@@ -46,10 +47,12 @@ async def get_coingecko_orderbook(
 
 @router.get("/historical_trades")
 async def get_coingecko_trades(
+        response: Response,
         ticker_id: str = None,
 ) -> dict[str, 'HistoricalCoinGecko']:
     await sleep_while_empty_cache('coingecko_historical')
     if ticker_id is None:
+        response.headers["x-total-count"] = str(len(cache.coingecko_historical))
         return cache.coingecko_historical
     try:
         return cache.coingecko_historical[ticker_id]
