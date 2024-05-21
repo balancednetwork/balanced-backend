@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.2](https://github.com/balancednetwork/balanced-backend/compare/v0.5.1...v0.5.2) (2024-05-21)
+
+
+### Bug Fixes
+
+* add better health check for cache ([d5179ce](https://github.com/balancednetwork/balanced-backend/commit/d5179ce4b6b0e58a761b830e26f656d336c3f4b0))
+* bump gecko cuttoff to 1000 ([c028c31](https://github.com/balancednetwork/balanced-backend/commit/c028c31fa91042b5b2612c6cb336c366574ff780))
+* make sicx the same as icx for coingecko -&gt; wtf... ([b664283](https://github.com/balancednetwork/balanced-backend/commit/b664283d243de1fa79628c847176990b24933f13))
+* remove low liquidity pools from coingecko and cmc endpoints ([d3147e3](https://github.com/balancednetwork/balanced-backend/commit/d3147e38e080a64e68a0f7de63f8f1be0f24a287))
+* sleep in cache for early requests ([88b3777](https://github.com/balancednetwork/balanced-backend/commit/88b3777de015108f8434a4e6cf24fa44a9691626))
+
 ## [0.5.1](https://github.com/balancednetwork/balanced-backend/compare/v0.5.0...v0.5.1) (2024-04-25)
 
 
