@@ -32,11 +32,13 @@ def clean_pools_for_coingecko(pools: list[Pool]) -> list[Pool]:
         if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
             # Skip low pools
             continue
-        if p.name == 'sICX_ICX':
+        if p.name == 'sICX/ICX':
             p.price = 1
             p.price_24h = 1
             p.price_24h_high = 1
             p.price_24h_low = 1
+            p.quote_volume_24h = p.base_volume_24h
+            p.quote_volume_30d = p.base_volume_30d
 
         output.append(p)
     return output
@@ -131,11 +133,18 @@ def update_coingecko_historical(session: 'Session'):
             else:
                 swap_type = "buy"
 
+            if p.name == "sICX/ICX":
+                price = 1
+                target_volume = s.base_token_value_decimal
+            else:
+                price = s.effective_fill_price_decimal
+                target_volume = s.quote_token_value_decimal
+
             trades[market_pair][swap_type].append(HistoricalCoinGecko(
                 trade_id=s.transaction_hash,
-                price=s.effective_fill_price_decimal,
+                price=price,
                 base_volume=s.base_token_value_decimal,
-                target_volume=s.quote_token_value_decimal,
+                target_volume=target_volume,
                 # Note they ask for milliseconds
                 trade_timestamp=int(s.timestamp * 1e3),
                 type=swap_type,
