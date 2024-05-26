@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/balancednetwork/balanced-backend/compare/v0.5.2...v0.5.3) (2024-05-26)
+
+
+### Bug Fixes
+
+* gecko hack ([a92a6a7](https://github.com/balancednetwork/balanced-backend/commit/a92a6a7910dd42d2343ed9e5a51f6e193aaf5e6f))
+
 ## [0.5.2](https://github.com/balancednetwork/balanced-backend/compare/v0.5.1...v0.5.2) (2024-05-21)
 
 
