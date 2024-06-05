@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.5](https://github.com/balancednetwork/balanced-backend/compare/v0.5.4...v0.5.5) (2024-06-05)
+
+
+### Bug Fixes
+
+* disable coingecko altogether ([54295be](https://github.com/balancednetwork/balanced-backend/commit/54295bee6bfcf283f893d21cac56122181c9eb78))
+
 ## [0.5.4](https://github.com/balancednetwork/balanced-backend/compare/v0.5.3...v0.5.4) (2024-06-05)
 
 
