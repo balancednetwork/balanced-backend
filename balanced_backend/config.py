@@ -62,6 +62,7 @@ class Settings(BaseSettings):
     MAX_TS_RECORDS: int = 5000
 
     COINGECKO_LIQUIDITY_CUTOFF: int = 1000
+    COINGECKO_DISABLE: bool = True
 
     class Config:
         case_sensitive = True
