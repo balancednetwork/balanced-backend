@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/balancednetwork/balanced-backend/compare/v0.5.3...v0.5.4) (2024-06-05)
+
+
+### Bug Fixes
+
+* release ([fbe404c](https://github.com/balancednetwork/balanced-backend/commit/fbe404c200bb22da6024827271f389da8708e058))
+
 ## [0.5.3](https://github.com/balancednetwork/balanced-backend/compare/v0.5.2...v0.5.3) (2024-05-26)
 
 
