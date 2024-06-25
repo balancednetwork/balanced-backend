@@ -152,3 +152,23 @@ def update_contract_methods():
             )
     else:
         logger.info("Failed to get stability_accepted_tokens...")
+
+    contract_methods.append(
+        {
+            "contract_name": f"bnusd_balance_of_balanced_savings",
+            "params": {
+                "to": addresses.BNUSD_CONTRACT_ADDRESS,
+                "dataType": "call",
+                "data": {
+                    "method": "balanceOf",
+                    "params": {
+                        "_owner": "cxd82fb5d3effecd8c9071a4bba3856ad7222c4b91",
+                    },
+                },
+            },
+            "decimals": 18,
+            # First Tx
+            # https://tracker.icon.community/transaction/0x458f301142d9d21a601ebf426c1d19bc9d4e97dddc608aa3b39d56895e9920c1
+            "init_chart_block": 77723450,
+        }
+    )
