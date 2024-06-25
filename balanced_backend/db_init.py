@@ -31,7 +31,7 @@ def mark_tokens_as_stable(session):
         token = result.scalars().first()
         if token is not None:
             token.is_stable = t["stable"]
-            token.in_stability = t["stability"]
+            token.in_stability_fund = t["stability"]
             session.merge(token)
         else:
             logger.info("Token not in DB")
