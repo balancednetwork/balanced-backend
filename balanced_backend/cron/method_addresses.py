@@ -69,21 +69,21 @@ def update_contract_methods():
 
     # Loans `getTotalCollateralDebt` method
     loans_collateral_debt = [
-        # {
-        #     "address": "cx5b5a03cb525a1845d0af3a872d525b18a810acb0",
-        #     "collateral": "BTCB",
-        #     "assetSymbol": "bnUSD",
-        # },
-        # {
-        #     "address": "cx288d13e1b63563459a2ac6179f237711f6851cb5",
-        #     "collateral": "ETH",
-        #     "assetSymbol": "bnUSD",
-        # },
-        # {
-        #     "address": "cx2609b924e33ef00b648a409245c7ea394c467824",
-        #     "collateral": "sICX",
-        #     "assetSymbol": "bnUSD",
-        # },
+        {
+            "address": "cx5b5a03cb525a1845d0af3a872d525b18a810acb0",
+            "collateral": "BTCB",
+            "assetSymbol": "bnUSD",
+        },
+        {
+            "address": "cx288d13e1b63563459a2ac6179f237711f6851cb5",
+            "collateral": "ETH",
+            "assetSymbol": "bnUSD",
+        },
+        {
+            "address": "cx2609b924e33ef00b648a409245c7ea394c467824",
+            "collateral": "sICX",
+            "assetSymbol": "bnUSD",
+        },
         {
             "address": "cx4297f4b63262507623b6ad575d0d8dd2db980e4e",
             "collateral": "INJ",
