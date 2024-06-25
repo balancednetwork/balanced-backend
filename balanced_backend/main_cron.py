@@ -121,10 +121,6 @@ def main():
         # Run the jobs immediately in order
         run_cron_with_session(i["func"])
 
-        logger.info("Initialization jobs...")
-        for i in INITS:
-            run_cron_with_session(i)
-
         # Then run them in the scheduler
         sched.add_job(
             func=run_cron_with_session,
@@ -133,6 +129,10 @@ def main():
             seconds=i["interval"],
             id=i["func"].__name__,
         )
+
+    logger.info("Initialization jobs...")
+    for init in INITS:
+        run_cron_with_session(init)
 
     sched.start()
 
