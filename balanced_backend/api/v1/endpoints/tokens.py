@@ -138,6 +138,7 @@ async def get_tokens_series(
         symbol=symbol,
     )
 
+
 async def get_token_price_latest(
         *,
         table: 'TokenSeriesTableType',
@@ -174,6 +175,7 @@ async def get_token_price_latest(
 
     return [prices[0]]
 
+
 async def get_token_price(
         *,
         interval: str,
@@ -184,7 +186,7 @@ async def get_token_price(
         address: str,
         symbol: str,
         head: bool,
-    ) -> Union[List['TokenSeriesTableType'], Response]:
+) -> Union[List['TokenSeriesTableType'], Response]:
     if address is None and symbol is None:
         raise HTTPException(
             status_code=400,
@@ -224,16 +226,16 @@ async def get_token_price(
 
     if timestamp is not None:
         query = query.where(
-        table.timestamp <= timestamp,
-    ).order_by(
-        table.timestamp.desc()
-    )
+            table.timestamp <= timestamp,
+        ).order_by(
+            table.timestamp.desc()
+        )
     elif height is not None:
         query = query.where(
-        table.block_height <= height,
-    ).order_by(
-        table.block_height.desc()
-    )
+            table.block_height <= height,
+        ).order_by(
+            table.block_height.desc()
+        )
     else:
         raise Exception("Should never happen")
 
