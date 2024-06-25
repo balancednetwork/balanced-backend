@@ -13,6 +13,8 @@ class Token(SQLModel, table=True):
     logo_uri: str = Field(None, index=False)
 
     type: str = Field(None, index=False)
+    is_stable: bool = Field(None, index=False)
+    in_stability_fund: bool = Field(None, index=False)
 
     price: Optional[float] = Field(None, index=False)
     price_24h: float = Field(None, index=False)
