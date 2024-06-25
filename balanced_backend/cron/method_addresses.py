@@ -153,6 +153,7 @@ def update_contract_methods():
     else:
         logger.info("Failed to get stability_accepted_tokens...")
 
+    # https://github.com/balancednetwork/balanced-backend/issues/45
     contract_methods.append(
         {
             "contract_name": f"bnusd_balance_of_balanced_savings",
@@ -170,5 +171,23 @@ def update_contract_methods():
             # First Tx
             # https://tracker.icon.community/transaction/0x458f301142d9d21a601ebf426c1d19bc9d4e97dddc608aa3b39d56895e9920c1
             "init_chart_block": 77723450,
+        }
+    )
+
+    # https://github.com/balancednetwork/balanced-backend/issues/44
+    contract_methods.append(
+        {
+            "contract_name": f"balanced_icon_burner_icx_burned",
+            "params": {
+                "to": "cxdc30a0d3a1f131565c071272a20bc0b06fd4c17b",
+                "dataType": "call",
+                "data": {
+                    "method": "getBurnedAmount",
+                },
+            },
+            "decimals": 18,
+            # First Tx
+            # https://tracker.icon.community/transaction/0x58098a0dbbdf1d25b8d4fdb41bf8662324dfa312c6967010c493731f8abdf79a
+            "init_chart_block": 77246123,
         }
     )
