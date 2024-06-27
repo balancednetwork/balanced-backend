@@ -7,7 +7,7 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     NAME: str = "balanced-backend"
     NETWORK_NAME: str = "mainnet"  # Not used?
-    VERSION: str = "v0.5.5"  # x-release-please-version
+    VERSION: str = "v0.6.0"  # x-release-please-version
 
     CHAIN_ID: int = 1  # 1 mainnet, 2 sejong, 7 lisbon
 

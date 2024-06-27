@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.6.0](https://github.com/balancednetwork/balanced-backend/compare/v0.5.5...v0.6.0) (2024-06-25)
+
+
+### Features
+
+* add icx burned series [#44](https://github.com/balancednetwork/balanced-backend/issues/44) ([c2ec78b](https://github.com/balancednetwork/balanced-backend/commit/c2ec78b92d3dafce53549eb53e52fd530c6a336e))
+* add implied pool prices chart ([7a2c735](https://github.com/balancednetwork/balanced-backend/commit/7a2c735f9d2976edd21c6c0c7b1ac134705c6428))
+* add new collateral tokens ([ce9bab4](https://github.com/balancednetwork/balanced-backend/commit/ce9bab4017ca8c93da213077a215f4891a25a8c4))
+* add savings rate deposit series [#45](https://github.com/balancednetwork/balanced-backend/issues/45) ([10d77d1](https://github.com/balancednetwork/balanced-backend/commit/10d77d1e2490a57834ed9f7fbcfdc04bd6c41eee))
+* mark tokens as stable [#47](https://github.com/balancednetwork/balanced-backend/issues/47) ([2efad23](https://github.com/balancednetwork/balanced-backend/commit/2efad23c8385fba629b56992171ae2e13c27c175))
+
+
+### Bug Fixes
+
+* add back the collateral method addresses ([1594877](https://github.com/balancednetwork/balanced-backend/commit/1594877e99a138a5cd3428484207d2409d497a9c))
+* db init function ([e7d9cbe](https://github.com/balancednetwork/balanced-backend/commit/e7d9cbeb950ab69075ded4c639416e0eed9b11c0))
+* enable coingecko ([69a0c33](https://github.com/balancednetwork/balanced-backend/commit/69a0c3366e538f81513de31b5bd15f6570535852))
+
 ## [0.5.5](https://github.com/balancednetwork/balanced-backend/compare/v0.5.4...v0.5.5) (2024-06-05)
 
 
