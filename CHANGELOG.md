@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/balancednetwork/balanced-backend/compare/v0.6.0...v0.6.1) (2024-06-28)
+
+
+### Bug Fixes
+
+* add another CG hack - rm iusdc ([46c74a2](https://github.com/balancednetwork/balanced-backend/commit/46c74a2796b61d8309d148f2750c2eaab22e94ce))
+
 ## [0.6.0](https://github.com/balancednetwork/balanced-backend/compare/v0.5.5...v0.6.0) (2024-06-25)
 
 
