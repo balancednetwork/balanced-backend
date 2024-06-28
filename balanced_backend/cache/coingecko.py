@@ -32,7 +32,11 @@ def clean_pools_for_coingecko(pools: list[Pool]) -> list[Pool]:
         if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
             # Skip low pools
             continue
-        if p.name == 'sICX/ICX':
+        # TODO: RM this later
+        if 'IUSDC' in p.name:
+            continue
+
+        if p.name == 'sICX/ICX' and settings.COINGECKO_HACK:
             p.price = 1
             p.price_24h = 1
             p.price_24h_high = 1
@@ -133,7 +137,8 @@ def update_coingecko_historical(session: 'Session'):
             else:
                 swap_type = "buy"
 
-            if p.name == "sICX/ICX":
+            if p.name == "sICX/ICX" and settings.COINGECKO_HACK:
+                # This is insanely dumb - but we tried...
                 price = 1
                 target_volume = s.base_token_value_decimal
             else:

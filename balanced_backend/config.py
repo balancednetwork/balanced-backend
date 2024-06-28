@@ -63,6 +63,7 @@ class Settings(BaseSettings):
 
     COINGECKO_LIQUIDITY_CUTOFF: int = 1000
     COINGECKO_DISABLE: bool = False
+    COINGECKO_HACK: bool = False
 
     class Config:
         case_sensitive = True
