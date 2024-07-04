@@ -32,13 +32,17 @@ def run_token_stats(
             )
             t.total_supply = int(total_supply, 16) / 10 ** t.decimals
 
-        t.liquidity = sum([
-            i.base_supply * i.base_price for i in pools
-            if i.base_address == t.address
-        ]) + sum([
-            i.quote_supply * i.quote_price for i in pools
-            if i.quote_address == t.address
-        ])
+        try:
+            t.liquidity = sum([
+                i.base_supply * i.base_price for i in pools
+                if i.base_address == t.address
+            ]) + sum([
+                i.quote_supply * i.quote_price for i in pools
+                if i.quote_address == t.address
+            ])
+        except TypeError:
+            logger.info(f"No pool found for {t.name} - {t.address}")
+
         session.merge(t)
     session.commit()
 
