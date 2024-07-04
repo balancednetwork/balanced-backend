@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/balancednetwork/balanced-backend/compare/v0.6.1...v0.6.2) (2024-07-04)
+
+
+### Bug Fixes
+
+* add better logging handler from potentially changed pools [#58](https://github.com/balancednetwork/balanced-backend/issues/58) ([746c7c3](https://github.com/balancednetwork/balanced-backend/commit/746c7c33892265d2a0c19d0d6c0f825da014315d))
+
 ## [0.6.1](https://github.com/balancednetwork/balanced-backend/compare/v0.6.0...v0.6.1) (2024-06-28)
 
 
