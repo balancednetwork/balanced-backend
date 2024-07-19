@@ -1,4 +1,5 @@
 from loguru import logger
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine
@@ -16,7 +17,9 @@ SQLALCHEMY_DATABASE_URL_STUB = "://{user}:{password}@{server}:{port}/{db}".forma
 ASYNC_SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg" + SQLALCHEMY_DATABASE_URL_STUB
 SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2" + SQLALCHEMY_DATABASE_URL_STUB
 
-logger.info(f"Connecting to server: {settings.POSTGRES_SERVER} and {settings.POSTGRES_DATABASE}")
+logger.info(
+    f"Connecting to server: {settings.POSTGRES_SERVER} and {settings.POSTGRES_DATABASE}"
+)
 
 async_engine = create_async_engine(
     ASYNC_SQLALCHEMY_DATABASE_URL,
@@ -34,9 +37,15 @@ async def init_db():
 
 
 async def get_session() -> AsyncSession:
-    async_session = sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
-    async with async_session() as session:
-        yield session
+    async_session = sessionmaker(
+        async_engine, class_=AsyncSession, expire_on_commit=False
+    )
+    try:
+        async with async_session() as session:
+            yield session
+    except SQLAlchemyError as e:
+        logger.error(f"Failed to get a database session: {e}")
+        raise SystemExit(e)
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
