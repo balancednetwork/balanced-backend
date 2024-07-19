@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://github.com/balancednetwork/balanced-backend/compare/v0.6.2...v0.6.3) (2024-07-19)
+
+
+### Bug Fixes
+
+* add another exception handler to make sure it crashes if there is any connection issue on session creation ([7b8f5a3](https://github.com/balancednetwork/balanced-backend/commit/7b8f5a37ecd3ea63eeb7302916ee158a5cbf2209))
+
 ## [0.6.2](https://github.com/balancednetwork/balanced-backend/compare/v0.6.1...v0.6.2) (2024-07-04)
 
 
