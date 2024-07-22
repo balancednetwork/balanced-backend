@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/balancednetwork/balanced-backend/compare/v0.6.3...v0.6.4) (2024-07-22)
+
+
+### Bug Fixes
+
+* add exception handler for new tokens that have no swaps [#62](https://github.com/balancednetwork/balanced-backend/issues/62) ([c85e744](https://github.com/balancednetwork/balanced-backend/commit/c85e744e49b24b94cb2d21e089f3efa4599ebb93))
+
 ## [0.6.3](https://github.com/balancednetwork/balanced-backend/compare/v0.6.2...v0.6.3) (2024-07-19)
 
 
