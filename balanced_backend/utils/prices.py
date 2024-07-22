@@ -68,7 +68,13 @@ def get_token_prices(
     # node if it has already been calculated.
     for t in tokens:
         # Get the shortest weighted path to the target token
-        path = nx.dijkstra_path(G, source=root_address, target=t.address)
+        try:
+            path = nx.dijkstra_path(G, source=root_address, target=t.address)
+        except nx.exception.NetworkXNoPath:
+            # Sometimes no swaps (ie just deployed)
+            # https://github.com/balancednetwork/balanced-backend/issues/62
+            logger.info(f"Missing data for {t.address}")
+            continue
 
         # Store the path in the DB
         t.path = path
