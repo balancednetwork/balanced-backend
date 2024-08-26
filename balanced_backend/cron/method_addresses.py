@@ -99,6 +99,11 @@ def update_contract_methods():
             "collateral": "AVAX",
             "assetSymbol": "bnUSD",
         },
+        {
+            "address": "cx07b184a37f03c6ab681fcbd0b45aec6dc3eafbeb",
+            "collateral": "BTC",
+            "assetSymbol": "bnUSD",
+        },
     ]
 
     for c in loans_collateral_debt:
