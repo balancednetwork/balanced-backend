@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/balancednetwork/balanced-backend/compare/v0.6.4...v0.7.0) (2024-09-03)
+
+
+### Features
+
+* add btc collateral time series [#64](https://github.com/balancednetwork/balanced-backend/issues/64) ([7bc0632](https://github.com/balancednetwork/balanced-backend/commit/7bc06327b301b6bdb35b14ee57ff80786c22e27d))
+
 ## [0.6.4](https://github.com/balancednetwork/balanced-backend/compare/v0.6.3...v0.6.4) (2024-07-22)
 
 
