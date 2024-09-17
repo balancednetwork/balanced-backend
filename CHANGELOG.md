@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/balancednetwork/balanced-backend/compare/v0.7.0...v0.8.0) (2024-09-17)
+
+
+### Features
+
+* add stability fund balances [#66](https://github.com/balancednetwork/balanced-backend/issues/66) ([fd1fa64](https://github.com/balancednetwork/balanced-backend/commit/fd1fa645c9367645d649292b009351dc6dc6c13c))
+
 ## [0.7.0](https://github.com/balancednetwork/balanced-backend/compare/v0.6.4...v0.7.0) (2024-09-03)
 
 
