@@ -95,8 +95,8 @@ async def get_token_series_interval(
         table.timestamp >= start,
     )
 
-    # If end is not None, add it to the query
-    if end is not None:
+    # If end is not 0, add it to the query
+    if end != 0:
         query = query.where(table.timestamp <= end)
 
     if address is not None:
@@ -126,13 +126,13 @@ async def get_tokens_series(
         session: AsyncSession = Depends(get_session),
         interval: str = None,
         start: int = None,
-        end: Optional[int] = None,
+        end: int = None,
         address: str = None,
         symbol: str = None,
 ) -> Union[List['TokenSeriesTableType'], Response]:
     """
-    Return list of tokens price/volumes time series. To get the most up to data, leave
-     the `end` parameter empty. Either symbol or address must be supplied.
+    Return list of tokens price/volumes time series. Either symbol or address must be
+     supplied. To get the most up to date data, use 0 for the `end` parameter.
     """
     return await get_token_series_interval(
         response=response,

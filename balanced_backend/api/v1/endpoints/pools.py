@@ -1,10 +1,8 @@
-from datetime import datetime
 from http import HTTPStatus
 from typing import List, Union, Optional
 
 from fastapi import APIRouter, Depends, Response, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import query_expression
 from sqlmodel import select
 
 from balanced_backend.db import get_session
@@ -120,7 +118,10 @@ async def get_pools_series(
     start: int = None,
     end: int = None,
 ) -> Union[List[PoolSeriesTableType], Response]:
-    """Return list of pools price/volumes time series."""
+    """
+    Return list of pools price/volumes time series. To get the most up to data, use 0
+     for the `end` parameter.
+    """
 
     if interval not in INTERVALS:
         raise HTTPException(
@@ -141,9 +142,11 @@ async def get_pools_series(
     query = select(table).where(
         table.chain_id == settings.CHAIN_ID,
         table.timestamp >= start,
-        table.timestamp <= end,
         table.pool_id == pool_id,
     )
+
+    if end != 0:
+        query = query.where(table.timestamp <= end)
 
     query = query.order_by(table.timestamp.asc())
 
@@ -168,12 +171,13 @@ async def get_pools_series_implied(
     token_b: str,
     interval: str,
     start: int,
-    end: Optional[int] = None,
+    end: int,
     session: AsyncSession = Depends(get_session),
 ) -> Union[List[PoolSeriesTableType], Response]:
     """
-    Return list of pools price/volumes time series. To get the most up to data, leave
-     the `end` parameter empty.
+    Return list of implied pool price/volumes time series, implied meaning there may not
+     actually be a pool connecting the two tokens but we infer the price. To get the
+     most up to data, use 0 for the `end` parameter.
     """
     if interval not in INTERVALS:
         raise HTTPException(
@@ -207,7 +211,7 @@ async def get_pools_series_implied(
         .order_by(table.timestamp.asc())
     )
 
-    if end is not None:
+    if end != 0:
         token_a_query = token_a_query.where(table.timestamp <= end)
 
     token_b_query = (
@@ -220,7 +224,7 @@ async def get_pools_series_implied(
         .order_by(table.timestamp.asc())
     )
 
-    if end is not None:
+    if end != 0:
         token_b_query = token_b_query.where(table.timestamp <= end)
 
     result_token_a = await session.execute(token_a_query)
