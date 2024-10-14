@@ -87,6 +87,10 @@ def get_token_series_min_interval(session: 'Session', pool_series: 'SeriesTable'
             table=pool_table,
             timestamp=token_time,
         )
+        if len(pool_records) == 0:
+            token_time += pool_series.delta
+            continue
+
         block_height = pool_records[0].block_height
 
         pool_ids = set([i.pool_id for i in pool_records])
