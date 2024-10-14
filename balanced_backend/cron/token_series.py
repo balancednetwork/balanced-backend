@@ -81,7 +81,7 @@ def get_token_series_min_interval(session: 'Session', pool_series: 'SeriesTable'
         # Redo the last interval
         token_time = last_token_series.timestamp - pool_series.delta
 
-    while token_time <= last_pool_series.timestamp:
+    while token_time <= last_pool_series.timestamp + pool_series.delta:
         pool_records = get_pool_series_table_by_timestamp(
             session=session,
             table=pool_table,

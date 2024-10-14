@@ -1,9 +1,10 @@
 from datetime import datetime
 from http import HTTPStatus
-from typing import List, Union
+from typing import List, Union, Optional
 
 from fastapi import APIRouter, Depends, Response, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import query_expression
 from sqlmodel import select
 
 from balanced_backend.db import get_session
@@ -167,10 +168,13 @@ async def get_pools_series_implied(
     token_b: str,
     interval: str,
     start: int,
-    end: int,
+    end: Optional[int] = None,
     session: AsyncSession = Depends(get_session),
 ) -> Union[List[PoolSeriesTableType], Response]:
-    """Return list of pools price/volumes time series."""
+    """
+    Return list of pools price/volumes time series. To get the most up to data, leave
+     the `end` parameter empty.
+    """
     if interval not in INTERVALS:
         raise HTTPException(
             status_code=400,
@@ -198,22 +202,26 @@ async def get_pools_series_implied(
         .where(
             table.chain_id == settings.CHAIN_ID,
             table.timestamp >= adjusted_start,
-            table.timestamp <= end,
             table.address == token_a,
         )
         .order_by(table.timestamp.asc())
     )
+
+    if end is not None:
+        token_a_query = token_a_query.where(table.timestamp <= end)
 
     token_b_query = (
         select(table)
         .where(
             table.chain_id == settings.CHAIN_ID,
             table.timestamp >= adjusted_start,
-            table.timestamp <= end,
             table.address == token_b,
         )
         .order_by(table.timestamp.asc())
     )
+
+    if end is not None:
+        token_b_query = token_b_query.where(table.timestamp <= end)
 
     result_token_a = await session.execute(token_a_query)
     result_token_b = await session.execute(token_b_query)

@@ -85,7 +85,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     else:
         last_swap_time = last_swap.timestamp
 
-    # Get the last time in the volume table minus delta to we rebuild the last period
+    # Get the last time in the volume table minus delta so we rebuild the last period
     volume_time = get_last_volume_time(
         session=session,
         table=Table,
@@ -105,7 +105,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         pool_series = [i for i in last_volume_timeseries if i.pool_id == p][0]
         pool_volume.pool_close[p] = pool_series.open
 
-    while volume_time < last_swap_time:
+    while volume_time < last_swap_time + pool_volume.delta:
         swaps = get_dex_swaps(
             session=session,
             start_time=volume_time,

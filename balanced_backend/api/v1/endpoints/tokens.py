@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from http import HTTPStatus
 from typing import List, Union
 from fastapi import APIRouter, Depends, Response, HTTPException
@@ -27,7 +27,7 @@ async def tokens(
         symbol: str = None,
         type: str = None,
 ) -> Union[List[Token], Response]:
-    """Return list of delegations."""
+    """Return list of tokens."""
 
     query = select(Token)
 
@@ -93,8 +93,11 @@ async def get_token_series_interval(
     query = select(table).where(
         table.chain_id == settings.CHAIN_ID,
         table.timestamp >= start,
-        table.timestamp <= end,
     )
+
+    # If end is not None, add it to the query
+    if end is not None:
+        query = query.where(table.timestamp <= end)
 
     if address is not None:
         query = query.where(table.address == address)
@@ -123,11 +126,14 @@ async def get_tokens_series(
         session: AsyncSession = Depends(get_session),
         interval: str = None,
         start: int = None,
-        end: int = None,
+        end: Optional[int] = None,
         address: str = None,
         symbol: str = None,
 ) -> Union[List['TokenSeriesTableType'], Response]:
-    """Return list of pools price/volumes time series."""
+    """
+    Return list of tokens price/volumes time series. To get the most up to data, leave
+     the `end` parameter empty. Either symbol or address must be supplied.
+    """
     return await get_token_series_interval(
         response=response,
         session=session,
