@@ -2,11 +2,9 @@ from typing import TYPE_CHECKING
 from loguru import logger
 
 from balanced_backend.addresses import addresses
-from balanced_backend.crud.tokens import get_token_price
 from balanced_backend.utils.rpc import (
     get_icx_call,
     get_contract_method_str,
-    get_contract_method_int,
 )
 
 if TYPE_CHECKING:
@@ -17,7 +15,9 @@ from sqlalchemy.orm import Session
 
 def create_replace_stability_fund_balance(session: Session, contract_names: list[str]):
     sql_query = f"""
-    CREATE MATERIALIZED VIEW IF NOT EXISTS stability_fund_balance AS
+    DROP MATERIALIZED VIEW IF EXISTS stability_fund_balance;
+
+    CREATE MATERIALIZED VIEW stability_fund_balance AS
     SELECT timestamp,
            date,
            update_interval,
