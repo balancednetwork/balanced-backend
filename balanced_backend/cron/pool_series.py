@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 from sqlmodel import select
 from loguru import logger
@@ -190,7 +191,8 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 i.baln_fees_decimal for i in pool_swaps
                 if i.from_token == get_cached_pool_stats(pool_id=p)['base_address']
             ])
-
+            if volume_time > datetime.now().timestamp():
+                volume_time = datetime.now().timestamp()
             t = Table(
                 chain_id=settings.CHAIN_ID,
                 pool_id=p,
@@ -211,10 +213,10 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
 
             session.merge(t)
             # We have a memory issue that this seemed to fix
-            if num_swaps > 10000:
-                session.commit()
-        if num_swaps <= 10000:
+            # if num_swaps > 10000:
             session.commit()
+        # if num_swaps <= 10000:
+        #     session.commit()
         volume_time = volume_time + pool_volume.delta
 
 
