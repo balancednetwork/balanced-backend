@@ -39,7 +39,7 @@ def set_previous_prices(
     icx_price = get_band_price(symbol='ICX', height=block_height)
 
     tokens = get_tokens(session=session)
-    token_prices = [TokenPrice(**i.dict()) for i in tokens]
+    token_prices = [TokenPrice(**i.model_dump()) for i in tokens]
     token_prices = get_token_prices(
         pools=pool_prices,
         tokens=token_prices,
@@ -58,14 +58,18 @@ def run_token_prices(session: 'Session'):
     tokens = get_tokens(session=session)
 
     # Current
-    pool_prices = [PoolPrice(**i.dict()) for i in pools]
-    token_prices = [TokenPrice(**i.dict()) for i in tokens]
+    pool_prices = [PoolPrice(**i.model_dump()) for i in pools]
+    token_prices = [TokenPrice(**i.model_dump()) for i in tokens]
     token_prices = get_token_prices(pools=pool_prices, tokens=token_prices)
     for t in tokens:
         t.price = [i.price for i in token_prices if i.address == t.address][0]
         t.path = [i.path for i in token_prices if i.address == t.address][0]
+
+        if t.price is None:
+            continue
+
         session.merge(t)
-    session.commit()
+        session.commit()
 
     for period in ['24h', '7d', '30d']:
         set_previous_prices(session=session, pools=pools, period=period)
