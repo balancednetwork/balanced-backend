@@ -3,5 +3,5 @@ pytest-mock
 pytest-cov
 pytest-order
 freezegun
-
+httpx
 grpcio-tools==1.40.0

@@ -5,7 +5,7 @@ from confluent_kafka import Consumer, KafkaError, Message
 from confluent_kafka.admin import AdminClient
 
 from loguru import logger
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from balanced_backend.config import settings
 
@@ -27,8 +27,9 @@ class Worker(BaseModel):
     msg: Message = None
     check_topics: bool = True
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+    )
 
     def __init__(self, **data: Any):
         super().__init__(**data)

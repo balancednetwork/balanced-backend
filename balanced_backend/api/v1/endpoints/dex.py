@@ -9,7 +9,7 @@ from balanced_backend.tables.dex import DexSwap
 router = APIRouter()
 
 
-@router.get("/dex/swaps")
+@router.get("/dex/swaps", response_model=list[DexSwap])
 async def swaps(
         response: Response,
         session: AsyncSession = Depends(get_session),

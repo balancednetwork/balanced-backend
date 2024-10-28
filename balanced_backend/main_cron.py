@@ -115,7 +115,7 @@ def main():
     logger.info("Updating method addresses...")
     update_contract_methods()
 
-    sched = BlockingScheduler()
+    sched = BlockingScheduler(job_defaults={'max_instances': 4}, timezone='utc')
 
     for i in CRONS:
         # Run the jobs immediately in order

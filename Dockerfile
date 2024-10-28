@@ -10,8 +10,8 @@ ENV PYTHONPATH="/opt:${PYTHONPATH}"
 WORKDIR /opt
 
 RUN pip install --upgrade pip
-COPY ./requirements-$SERVICE_NAME.txt .
-RUN pip install -r ./requirements-$SERVICE_NAME.txt
+COPY ./requirements-$SERVICE_NAME.txt ./requirements-common.txt ./
+RUN pip install -r ./requirements-$SERVICE_NAME.txt -r ./requirements-common.txt
 
 COPY balanced_backend ./balanced_backend
 

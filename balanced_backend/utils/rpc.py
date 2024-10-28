@@ -18,7 +18,10 @@ def post_rpc_json(response):
 
 
 def post_rpc(payload: dict):
-    r = requests.post(settings.ICON_NODE_URL, data=json.dumps(payload))
+    try:
+        r = requests.post(settings.ICON_NODE_URL, data=json.dumps(payload))
+    except requests.exceptions.ConnectionError:
+        pass
 
     # TODO: Remove?
     if r.status_code != 200:

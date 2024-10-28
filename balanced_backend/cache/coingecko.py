@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 from loguru import logger
 from datetime import datetime
 
@@ -19,6 +19,10 @@ if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
 
+# Per this guide
+# https://docs.google.com/document/d/1v27QFoQq1SKT3Priq3aqPgB70Xd_PnDzbOCiuoCyixw/edit
+
+
 def clean_pools_for_coingecko(pools: list[Pool]) -> list[Pool]:
     """
     Coingecko calculates their prices with a blackbox thingamajig that is wrong due to
@@ -32,96 +36,96 @@ def clean_pools_for_coingecko(pools: list[Pool]) -> list[Pool]:
         if p.base_liquidity + p.quote_liquidity < settings.COINGECKO_LIQUIDITY_CUTOFF:
             # Skip low pools
             continue
-        # TODO: RM this later
-        if 'IUSDC' in p.name:
-            continue
-
-        if p.name == 'sICX/ICX' and settings.COINGECKO_HACK:
-            p.price = 1
-            p.price_24h = 1
-            p.price_24h_high = 1
-            p.price_24h_low = 1
-            p.quote_volume_24h = p.base_volume_24h
-            p.quote_volume_30d = p.base_volume_30d
+        # # TODO: RM this later
+        # if "IUSDC" in p.name:
+        #     continue
+        #
+        # if p.name == "sICX/ICX" and settings.COINGECKO_HACK:
+        #     p.price = 1
+        #     p.price_24h = 1
+        #     p.price_24h_high = 1
+        #     p.price_24h_low = 1
+        #     p.quote_volume_24h = p.base_volume_24h
+        #     p.quote_volume_30d = p.base_volume_30d
 
         output.append(p)
     return output
 
 
-def update_coingecko_pairs(session: 'Session'):
+def update_coingecko_pairs(session: "Session"):
     logger.info("Updating coingecko pairs cache...")
     pools = clean_pools_for_coingecko(get_pools(session=session))
 
     summaries = []
     for p in pools:
-        names = p.name.split('/')
-        summaries.append(PairsCoinGecko(
-            ticker_id='_'.join(names),
-            base=names[0],
-            target=names[1],
-            pool_id='_'.join([p.base_address, p.quote_address]),
-        ).dict())
+        names = p.name.split("/")
+        summaries.append(
+            PairsCoinGecko(
+                ticker_id="_".join(names),
+                base=names[0],
+                target=names[1],
+                pool_id="_".join([p.base_address, p.quote_address]),
+            ).model_dump()
+        )
     cache.coingecko_pairs = summaries
 
 
-def update_coingecko_tickers(session: 'Session'):
+def update_coingecko_tickers(session: "Session"):
     logger.info("Updating coingecko tickers cache...")
     pools = clean_pools_for_coingecko(get_pools(session=session))
 
     tickers = []
     for p in pools:
-        names = p.name.split('/')
-        tickers.append(TickerCoinGecko(
-            ticker_id='_'.join(names),
-            base_currency=names[0],
-            target_currency=names[1],
-            last_price=p.price,
-            base_volume=p.base_volume_24h,
-            target_volume=p.quote_volume_24h,
-            pool_id='_'.join([p.base_address, p.quote_address]),
-            liquidity_in_usd=p.base_liquidity + p.quote_liquidity,
-            bid=p.price * .997,
-            ask=p.price * 1.003,
-            high=p.price_24h_high,
-            low=p.price_24h_low,
-        ).dict())
+        names = p.name.split("/")
+        tickers.append(
+            TickerCoinGecko(
+                ticker_id="_".join(names),
+                base_currency=names[0],
+                target_currency=names[1],
+                last_price=p.price,
+                base_volume=p.base_volume_24h,
+                target_volume=p.quote_volume_24h,
+                pool_id="_".join([p.base_address, p.quote_address]),
+                liquidity_in_usd=p.base_liquidity + p.quote_liquidity,
+                bid=p.price * 0.997,
+                ask=p.price * 1.003,
+                high=p.price_24h_high,
+                low=p.price_24h_low,
+            ).model_dump()
+        )
     cache.coingecko_tickers = tickers
 
 
-def update_coingecko_orderbook(session: 'Session'):
+def update_coingecko_orderbook(session: "Session"):
     logger.info("Updating coingecko orderbook cache...")
     pools = clean_pools_for_coingecko(get_pools(session=session))
 
     order_book_dict = {}
     for p in pools:
-        names = p.name.split('/')
-        market_pair = '_'.join(names)
+        names = p.name.split("/")
+        market_pair = "_".join(names)
 
         order_book_dict[market_pair] = OrderBookCoinGecko(
             # Note they ask for milliseconds
             timestamp=int(datetime.now().timestamp() * 1e3),
-            ticker_id='_'.join(names),
-            bids=[
-                [p.price * .997, 1]
-            ],
-            asks=[
-                [p.price * 1.003, 1]
-            ],
-        ).dict()
+            ticker_id="_".join(names),
+            bids=[[p.price * 0.997, 1]],
+            asks=[[p.price * 1.003, 1]],
+        ).model_dump()
     cache.coingecko_orderbook = order_book_dict
 
 
-def update_coingecko_historical(session: 'Session'):
+def update_coingecko_historical(session: "Session"):
     logger.info("Updating coingecko historical cache...")
     pools = clean_pools_for_coingecko(get_pools(session=session))
 
     trades = {}
     for p in pools:
-        names = p.name.split('/')
-        market_pair = '_'.join(names)
+        names = p.name.split("/")
+        market_pair = "_".join(names)
         trades[market_pair] = {
-            'buy': [],
-            'sell': [],
+            "buy": [],
+            "sell": [],
         }
 
         swaps = get_dex_swaps(
@@ -132,7 +136,7 @@ def update_coingecko_historical(session: 'Session'):
 
         for s in swaps:
             pool_data = get_cached_pool_stats(p.pool_id)
-            if s.from_token == pool_data['quote_address']:
+            if s.from_token == pool_data["quote_address"]:
                 swap_type = "sell"
             else:
                 swap_type = "buy"
@@ -141,17 +145,21 @@ def update_coingecko_historical(session: 'Session'):
                 # This is insanely dumb - but we tried...
                 price = 1
                 target_volume = s.base_token_value_decimal
+                base_volume = s.base_token_value_decimal
             else:
-                price = s.effective_fill_price_decimal
-                target_volume = s.quote_token_value_decimal
+                price = 1 / s.effective_fill_price_decimal
+                target_volume = s.base_token_value_decimal
+                base_volume = s.quote_token_value_decimal
 
-            trades[market_pair][swap_type].append(HistoricalCoinGecko(
-                trade_id=s.transaction_hash,
-                price=price,
-                base_volume=s.base_token_value_decimal,
-                target_volume=target_volume,
-                # Note they ask for milliseconds
-                trade_timestamp=int(s.timestamp * 1e3),
-                type=swap_type,
-            ).dict())
+            trades[market_pair][swap_type].append(
+                HistoricalCoinGecko(
+                    trade_id=s.transaction_hash,
+                    price=price,
+                    base_volume=base_volume,
+                    target_volume=target_volume,
+                    # Note they ask for milliseconds
+                    trade_timestamp=int(s.timestamp * 1e3),
+                    type=swap_type,
+                ).model_dump()
+            )
     cache.coingecko_historical = trades

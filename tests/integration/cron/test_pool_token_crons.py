@@ -57,8 +57,7 @@ def test_run_token_prices(db):
         result = session.execute(select(Token))
         token_pools: list[Token] = result.scalars().all()
 
-    # # TODO: Fix in CI? This passes locally so not sure what is going on
-    # assert token_pools[0].price > 0
+    assert token_pools[0].price > 0
 
 
 @pytest.mark.order(1)

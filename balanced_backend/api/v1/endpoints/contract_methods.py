@@ -12,7 +12,7 @@ from balanced_backend.tables.historical import DailyHistorical
 router = APIRouter()
 
 
-@router.get("/contract-methods")
+@router.get("/contract-methods", response_model=List[DailyHistorical])
 async def contract_methods(
     session: AsyncSession = Depends(get_session),
     skip: int = Query(0),
@@ -74,7 +74,7 @@ async def contract_methods(
 
 
 # TODO: RM after FE change
-@router.get("/historical")
+@router.get("/historical", response_model=List[DailyHistorical])
 async def historical(
     session: AsyncSession = Depends(get_session),
     skip: int = Query(0),

@@ -13,7 +13,7 @@ from balanced_backend.tables.holders import Holder
 router = APIRouter()
 
 
-@router.get("/holders")
+@router.get("/holders", response_model=list[Holder])
 async def holders(
         response: Response,
         session: AsyncSession = Depends(get_session),

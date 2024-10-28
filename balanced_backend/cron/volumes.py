@@ -61,7 +61,7 @@ def set_table_value_from_time_period(
     context.update_time()
 
     model = ContractMethodVolume(
-        **context.dict(),
+        **context.model_dump(),
         value=value,
         start_date=datetime.datetime.utcfromtimestamp(context.start_timestamp),
         end_date=datetime.datetime.utcfromtimestamp(context.end_timestamp),

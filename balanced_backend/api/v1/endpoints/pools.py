@@ -15,7 +15,7 @@ from balanced_backend.config import settings
 router = APIRouter()
 
 
-@router.get("/pools")
+@router.get("/pools", response_model=List[Pool])
 async def get_pools(
     response: Response,
     session: AsyncSession = Depends(get_session),
@@ -109,7 +109,10 @@ INTERVAL_MAP = {
 INTERVALS = {k for k, _ in INTERVAL_MAP.items()}
 
 
-@router.get("/pools/series/{pool_id}/{interval}/{start}/{end}")
+@router.get(
+    "/pools/series/{pool_id}/{interval}/{start}/{end}",
+    response_model=List[PoolSeriesTableType],
+)
 async def get_pools_series(
     response: Response,
     session: AsyncSession = Depends(get_session),
@@ -164,7 +167,10 @@ async def get_pools_series(
     return timeseries
 
 
-@router.get("/pools/series/implied/{token_a}/{token_b}/{interval}/{start}/{end}")
+@router.get(
+    "/pools/series/implied/{token_a}/{token_b}/{interval}/{start}/{end}",
+    response_model=List[PoolSeriesTableType],
+)
 async def get_pools_series_implied(
     response: Response,
     token_a: str,
@@ -272,7 +278,7 @@ async def get_pools_series_implied(
     return output
 
 
-@router.get("/pools/dividends")
+@router.get("/pools/dividends", response_model=List[Dividend])
 async def pools_dividends(
     response: Response,
     session: AsyncSession = Depends(get_session),

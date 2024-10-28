@@ -12,13 +12,14 @@ from balanced_backend.api.v1.endpoints.pools import INTERVALS, INTERVAL_MAP
 from balanced_backend.config import settings
 from balanced_backend.tables.utils import get_token_series_table
 
-if TYPE_CHECKING:
-    from balanced_backend.tables.utils import TokenSeriesTableType
+from balanced_backend.tables.utils import TokenSeriesTableType
+# if TYPE_CHECKING:
+#     pass
 
 router = APIRouter()
 
 
-@router.get("/tokens")
+@router.get("/tokens", response_model=List[Token])
 async def tokens(
         response: Response,
         session: AsyncSession = Depends(get_session),
@@ -120,7 +121,10 @@ async def get_token_series_interval(
     return timeseries
 
 
-@router.get("/tokens/series/{interval}/{start}/{end}")
+@router.get(
+    "/tokens/series/{interval}/{start}/{end}",
+    response_model=List[TokenSeriesTableType],
+)
 async def get_tokens_series(
         response: Response,
         session: AsyncSession = Depends(get_session),
@@ -129,7 +133,7 @@ async def get_tokens_series(
         end: int = None,
         address: str = None,
         symbol: str = None,
-) -> Union[List['TokenSeriesTableType'], Response]:
+) -> Union[List[TokenSeriesTableType], Response]:
     """
     Return list of tokens price/volumes time series. Either symbol or address must be
      supplied. To get the most up to date data, use 0 for the `end` parameter.
@@ -147,12 +151,12 @@ async def get_tokens_series(
 
 async def get_token_price_latest(
         *,
-        table: 'TokenSeriesTableType',
+        table: TokenSeriesTableType,
         session: AsyncSession,
         response: Response,
         address: str = None,
         symbol: str = None,
-) -> Union[List['TokenSeriesTableType'], Response]:
+) -> Union[List[TokenSeriesTableType], Response]:
     # This happens when the block height / timestamp is above the last record
     query = select(table).where(
         table.chain_id == settings.CHAIN_ID,
@@ -192,7 +196,7 @@ async def get_token_price(
         address: str,
         symbol: str,
         head: bool,
-) -> Union[List['TokenSeriesTableType'], Response]:
+) -> Union[List[TokenSeriesTableType], Response]:
     if address is None and symbol is None:
         raise HTTPException(
             status_code=400,
@@ -275,7 +279,7 @@ async def get_token_price(
     return [prices[0]]
 
 
-@router.get("/tokens/prices")
+@router.get("/tokens/prices", response_model=List[TokenSeriesTableType])
 async def get_tokens_prices(
         response: Response,
         session: AsyncSession = Depends(get_session),
@@ -287,7 +291,7 @@ async def get_tokens_prices(
         address: str = None,
         symbol: str = None,
         head: bool = False,
-) -> Union[List['TokenSeriesTableType'], Response]:
+) -> Union[List[TokenSeriesTableType], Response]:
     """
     Return list of token prices/volumes over an interval with `start`/`end` timestamps
     or the closest price when given the `height`/`timestamp` value.

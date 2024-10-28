@@ -12,7 +12,7 @@ from balanced_backend.log import logger
 router = APIRouter()
 
 
-@router.get("/historical/stability")
+@router.get("/historical/stability", response_model=List)
 async def historical_stability(
     response: Response,
     session: AsyncSession = Depends(get_session),
@@ -52,7 +52,7 @@ stability_cached_output = None
 stability_last_updated = None
 
 
-@router.get("/stability/balances")
+@router.get("/stability/balances", response_model=Dict)
 async def stability_token_balances() -> Union[Dict, Response]:
     global stability_cached_output, stability_last_updated
 

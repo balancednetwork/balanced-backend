@@ -2,7 +2,7 @@ import asyncio
 
 from loguru import logger
 from typing import TypedDict, Callable
-from apscheduler.schedulers.background import BlockingScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 from balanced_backend.cache import cmc, coingecko
 from balanced_backend.db import session_factory
@@ -62,8 +62,7 @@ async def run_all_crons():
 
 
 def cache_cron():
-    logger.info("Starting metrics server.")
-    sched = BlockingScheduler()
+    sched = BlockingScheduler(timezone='utc')
 
     # # Run the jobs immediately in parallel
     # asyncio.run(run_all_crons())

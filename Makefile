@@ -1,6 +1,9 @@
 .PHONY: test help
 
-test: up-dbs test-unit test-integration
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
+
+test: up-dbs test-unit test-integration  ## Run all tests
 
 up-dbs:  ## Bring up the DBs
 	docker compose -f docker-compose.db.yml up -d
@@ -22,7 +25,7 @@ up:  ## Bring everything up as containers
 down:  ## Take down all the containers
 	docker compose -f docker-compose.db.yml -f docker-compose.yml down
 
-clean:
+clean:  ## Clean all the containers and volumes
 	docker volume rm $(docker volume ls -q)
 
 build:  ## Build everything
@@ -34,8 +37,16 @@ ps:  ## List all containers and running status
 postgres-console:  ## Start postgres terminal
 	docker compose -f docker-compose.db.yml -f docker-compose.yml exec postgres psql -U postgres
 
-help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
+# install-streaming -> Not used right now
+install: install-common install-api install-cron install-dev  ## Install all deps
 
-install:
-	pip install -r requirements-api.txt -r requirements-cron.txt -r requirements-dev.txt
+install-common:
+	pip install --upgrade -r requirements-common.txt
+install-api:
+	pip install --upgrade -r requirements-api.txt
+install-cron:
+	pip install --upgrade -r requirements-cron.txt
+install-streaming:
+	pip install --upgrade -r requirements-streaming.txt
+install-dev:
+	pip install --upgrade -r requirements-dev.txt

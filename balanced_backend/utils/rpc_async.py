@@ -73,11 +73,14 @@ async def get_total_supply_async_resp(
 
     try:
         async with session.post(
-            url=settings.ICON_NODE_URL, data=json.dumps(data), timeout=2,
+            url=settings.ICON_NODE_URL,
+            data=json.dumps(data),
+            timeout=4,
+            headers={"Content-Type": "application/json", "User-Agent": "backend/1.0"},
         ) as response:
             resp = await response.read()
             total_supply = int(json.loads(resp)['result'], 0)
-    except asyncio.exceptions.TimeoutError:
+    except asyncio.exceptions.TimeoutError as e:
         logger.info(f"Timed out for total supply request for pool {pool_id} and block "
                     f"height {height}...")
         total_supply = 0

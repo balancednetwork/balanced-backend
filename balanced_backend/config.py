@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 import os
 
 from dotenv import dotenv_values
-from pydantic import BaseSettings
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 
 class Settings(BaseSettings):
@@ -10,6 +14,9 @@ class Settings(BaseSettings):
     VERSION: str = "v0.7.0"  # x-release-please-version
 
     CHAIN_ID: int = 1  # 1 mainnet, 2 sejong, 7 lisbon
+
+    # Debug
+    VERBOSE: bool = False
 
     # Ports
     PORT: int = 8000
@@ -37,7 +44,7 @@ class Settings(BaseSettings):
     # Community API
     COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
 
-    # DB
+    # # DB
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "changeme"
     POSTGRES_SERVER: str = "127.0.0.1"
@@ -49,7 +56,7 @@ class Settings(BaseSettings):
     CONSUMER_GROUP: str = "balanced2"
     CONSUMER_AUTO_OFFSET_RESET: str = "earliest"
     CONSUMER_TOPIC_BLOCKS: str = "blocks"
-    CONSUMER_END_BLOCK: int = None
+    CONSUMER_END_BLOCK: int | None = None
 
     # Endpoints
     MAX_PAGE_SIZE: int = 100
@@ -57,7 +64,7 @@ class Settings(BaseSettings):
     LOANS_CHART_MIN_TIME_STEP_MIN: int = 60 * 24
 
     FIRST_BLOCK: int = 33518615
-    FIRST_BLOCK_TIMESTAMP: int = None  # Will be updated in volumes cron
+    FIRST_BLOCK_TIMESTAMP: int | None = None  # Will be updated in volumes cron
     BLOCK_SYNC_CHUNK: int = 10000  # For 20M blocks this is 2000 gets
     MAX_TS_RECORDS: int = 5000
 
@@ -65,8 +72,13 @@ class Settings(BaseSettings):
     COINGECKO_DISABLE: bool = False
     COINGECKO_HACK: bool = False
 
-    class Config:
-        case_sensitive = True
+    # class Config:
+    #     case_sensitive = True
+
+    model_config = SettingsConfigDict(
+        case_sensitive=True,
+    )
+
 
 
 def load_env_to_variables(env_file_path):

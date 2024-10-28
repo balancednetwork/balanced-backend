@@ -15,7 +15,7 @@ def get_dex_swaps(
         end_time: int = None,
         pool_id: int = None,
         limit: int = None,
-        columns: list[str] = None,
+        columns: list = None,
 ) -> list[DexSwap]:
     query = select(DexSwap).where(DexSwap.chain_id == settings.CHAIN_ID)
 

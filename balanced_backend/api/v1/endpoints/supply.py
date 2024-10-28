@@ -11,7 +11,7 @@ from balanced_backend.config import settings
 router = APIRouter()
 
 
-@router.get("/token/circulating-supply/symbol/{symbol}")
+@router.get("/token/circulating-supply/symbol/{symbol}", response_model=float)
 async def get_coingecko_summary(
         session: AsyncSession = Depends(get_session),
         symbol: str = None,
@@ -31,7 +31,7 @@ async def get_coingecko_summary(
     return total_supply[0]
 
 
-@router.get("/token/circulating-supply/address/{address}")
+@router.get("/token/circulating-supply/address/{address}", response_model=float)
 async def get_coingecko_summary(
         session: AsyncSession = Depends(get_session),
         address: str = None,

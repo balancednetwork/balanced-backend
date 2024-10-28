@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import logging
 
 import networkx as nx
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+from starlette.config import Config
 
 from balanced_backend.utils.rpc import get_band_price
 from balanced_backend.log import logger
@@ -19,18 +22,20 @@ class PoolPrice(BaseModel):
     base_address: str
     price: float
 
-    class Config:
-        extra = "ignore"
+    model_config = ConfigDict(
+        extra="ignore",
+    )
 
 
 class TokenPrice(BaseModel):
     """Minimal representation of a token to calculate the price."""
     address: str
-    price: float = None
-    path: list = None
+    price: float | None = None
+    path: list | None = None
 
-    class Config:
-        extra = "ignore"
+    model_config = ConfigDict(
+        extra="ignore",
+    )
 
 
 def get_token_prices(

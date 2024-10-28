@@ -1,21 +1,27 @@
-from typing import Optional, NewType, Union
+from __future__ import annotations
+
+from typing import NewType, Union
 
 from sqlalchemy.orm import declared_attr
 from sqlmodel import SQLModel, Field
+from sqlmodel.main import SQLModelConfig
 
 
 class TokenSeriesBase(SQLModel):
-    address: Optional[str] = Field(primary_key=True)
-    timestamp: Optional[int] = Field(primary_key=True)
-    chain_id: int = Field(None, index=True)
-    symbol: str = Field(None, index=True)
-    price: float = Field(None)
-    price_high: float = Field(None)
-    price_low: float = Field(None)
-    block_height: int = Field(None)
+    address: str = Field(primary_key=True)
+    timestamp: int = Field(primary_key=True)
+    chain_id: int | None = Field(None, index=True)
+    symbol: str | None = Field(None, index=True)
+    price: float | None = Field(None)
+    price_high: float | None = Field(None)
+    price_low: float | None = Field(None)
+    block_height: int | None = Field(None)
+    # The latest record which doesn't fall in normal interval. Can be only one.
+    head: bool = Field(False)
 
-    class Config:
-        extra = "ignore"
+    model_config = SQLModelConfig(
+        extra="ignore",
+    )
 
 
 class TokenSeries5Min(TokenSeriesBase, table=True):
@@ -74,27 +80,31 @@ TokenSeriesTableType = NewType(
 
 
 class PoolSeriesBase(SQLModel):
-    chain_id: int = Field(None, primary_key=True)
-    pool_id: int = Field(None, primary_key=True)
-    timestamp: int = Field(None, primary_key=True)
+    chain_id: int | None = Field(None, primary_key=True)
+    pool_id: int | None = Field(None, primary_key=True)
+    timestamp: int | None = Field(None, primary_key=True)
 
-    close: float = Field(None)
-    open: float = Field(None)
-    high: float = Field(None)
-    low: float = Field(None)
+    close: float | None = Field(None)
+    open: float | None = Field(None)
+    high: float | None = Field(None)
+    low: float | None = Field(None)
 
-    base_volume: float = Field(None)
-    quote_volume: float = Field(None)
-    block_height: int = Field(None)
-    total_supply: float = Field(None)
+    base_volume: float | None = Field(None)
+    quote_volume: float | None = Field(None)
+    block_height: int | None = Field(None)
+    total_supply: float | None = Field(None)
 
-    quote_lp_fees: float = Field(None)
-    quote_baln_fees: float = Field(None)
-    base_lp_fees: float = Field(None)
-    base_baln_fees: float = Field(None)
+    quote_lp_fees: float | None = Field(None)
+    quote_baln_fees: float | None = Field(None)
+    base_lp_fees: float | None = Field(None)
+    base_baln_fees: float | None = Field(None)
 
-    class Config:
-        extra = "ignore"
+    # The latest record which doesn't fall in normal interval. Can be only one.
+    # head: bool = Field(False)
+
+    model_config = SQLModelConfig(
+        extra="ignore",
+    )
 
 
 class PoolSeries5Min(PoolSeriesBase, table=True):

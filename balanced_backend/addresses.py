@@ -1,5 +1,5 @@
 import os
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Addresses(BaseSettings):
@@ -25,8 +25,9 @@ class Addresses(BaseSettings):
     REBALANCING_CONTRACT_ADDRESS: str = "cx40d59439571299bca40362db2a7d8cae5b0b30b0"
     STABILITY_FUND_CONTRACT_ADDRESS: str = "cxa09dbb60dcb62fffbd232b6eae132d730a2aafa6"
 
-    class Config:
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        case_sensitive=True,
+    )
 
 
 if os.environ.get("ADDRESS_ENV_FILE", False):

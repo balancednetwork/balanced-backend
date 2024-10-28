@@ -9,7 +9,7 @@ from balanced_backend.tables.stats import Stats
 router = APIRouter()
 
 
-@router.get("/stats")
+@router.get("/stats", response_model=Stats)
 async def get_stats(
         session: AsyncSession = Depends(get_session),
 ) -> Union[Stats, Response]:

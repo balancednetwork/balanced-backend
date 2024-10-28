@@ -1,0 +1,7 @@
+requests
+loguru
+prometheus_client
+pydantic-settings
+asyncpg>=0.30.0
+alembic>=1.13.3
+sqlmodel==0.0.22

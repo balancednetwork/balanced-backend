@@ -1,11 +1,4 @@
-requests==2.26.0
-loguru==0.5.3
-prometheus_client==0.11.0
-alembic==1.9.3
-asyncpg==0.24.0
 psycopg2-binary
-sqlmodel==0.0.8
 APScheduler==3.9.1
 networkx==3.0
 aiohttp==3.8.4
-python-dotenv

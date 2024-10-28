@@ -13,7 +13,7 @@ from balanced_backend.tables.volumes import ContractMethodVolume
 router = APIRouter()
 
 
-@router.get("/contract-volumes")
+@router.get("/contract-volumes", response_model=List[ContractMethodVolume])
 async def contract_volumes(
         session: AsyncSession = Depends(get_session),
         skip: int = Query(0),
@@ -82,7 +82,7 @@ async def contract_volumes(
     return time_series
 
 # TODO: RM after FE change
-@router.get("/contract-method-volumes")
+@router.get("/contract-method-volumes", response_model=List[ContractMethodVolume])
 async def contract_volumes(
         session: AsyncSession = Depends(get_session),
         skip: int = Query(0),

@@ -3,6 +3,8 @@
 .idea/
 .vscode/
 
+scratch*
+
 .old/
 
 # Byte-compiled / optimized / DLL files
