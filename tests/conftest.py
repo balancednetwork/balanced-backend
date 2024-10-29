@@ -1,3 +1,4 @@
+import asyncio
 from typing import Generator
 import os
 
@@ -37,9 +38,16 @@ def db_migration():
     # from balanced_backend.alembic.env import run_migrations_offline
     # run_migrations_offline()
 
+@pytest.yield_fixture(scope='session')
+def event_loop(request):
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
+
 
 @pytest.fixture(scope="module")
-def client() -> Generator:
+def client(event_loop) -> Generator:
     from balanced_backend.main_api import app
 
     with TestClient(app) as c:
