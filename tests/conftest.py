@@ -46,12 +46,11 @@ def event_loop(request):
     loop.close()
 
 
-@pytest.fixture(scope="module")
-def client(event_loop) -> Generator:
+@pytest.fixture
+def client(event_loop) -> TestClient:
     from balanced_backend.main_api import app
 
-    with TestClient(app) as c:
-        yield c
+    return TestClient(app)
 
 
 @pytest.fixture(scope='function')
