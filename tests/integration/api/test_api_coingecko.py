@@ -3,6 +3,12 @@ from fastapi.testclient import TestClient
 
 from balanced_backend.config import settings
 
+@pytest.fixture
+def client(event_loop) -> TestClient:
+    from balanced_backend.main_api import app
+    with TestClient(app) as client:
+        yield client
+
 
 @pytest.mark.anyio
 def test_api_get_coingecko_summary(client: TestClient):
