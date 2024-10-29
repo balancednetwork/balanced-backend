@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-import logging
-
 import networkx as nx
 from pydantic import BaseModel, ConfigDict
-from starlette.config import Config
 
 from balanced_backend.utils.rpc import get_band_price
 from balanced_backend.log import logger
