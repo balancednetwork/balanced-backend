@@ -17,7 +17,7 @@ class TokenSeriesBase(SQLModel):
     price_low: float | None = Field(None)
     block_height: int | None = Field(None)
     # The latest record which doesn't fall in normal interval. Can be only one.
-    head: bool = Field(False)
+    head: bool | None = Field(False)
 
     model_config = SQLModelConfig(
         extra="ignore",
@@ -100,7 +100,7 @@ class PoolSeriesBase(SQLModel):
     base_baln_fees: float | None = Field(None)
 
     # The latest record which doesn't fall in normal interval. Can be only one.
-    # head: bool = Field(False)
+    head: bool | None = Field(False)
 
     model_config = SQLModelConfig(
         extra="ignore",

@@ -33,26 +33,26 @@ class SeriesTable(BaseModel):
 
 
 TIME_SERIES_TABLES: list[SeriesTable] = [
-    # SeriesTable(
-    #     table_suffix="5Min",
-    #     delta=60 * 5,
-    # ),
-    # SeriesTable(
-    #     table_suffix="15Min",
-    #     delta=60 * 15,
-    # ),
-    # SeriesTable(
-    #     table_suffix="1Hour",
-    #     delta=60 * 60,
-    # ),
-    # SeriesTable(
-    #     table_suffix="4Hour",
-    #     delta=60 * 60 * 4,
-    # ),
-    # SeriesTable(
-    #     table_suffix="1Day",
-    #     delta=60 * 60 * 24,
-    # ),
+    SeriesTable(
+        table_suffix="5Min",
+        delta=60 * 5,
+    ),
+    SeriesTable(
+        table_suffix="15Min",
+        delta=60 * 15,
+    ),
+    SeriesTable(
+        table_suffix="1Hour",
+        delta=60 * 60,
+    ),
+    SeriesTable(
+        table_suffix="4Hour",
+        delta=60 * 60 * 4,
+    ),
+    SeriesTable(
+        table_suffix="1Day",
+        delta=60 * 60 * 24,
+    ),
     SeriesTable(
         table_suffix="1Week",
         delta=60 * 60 * 24 * 7,

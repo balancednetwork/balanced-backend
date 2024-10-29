@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import List, Union, Optional
+from typing import List, Union
 
 from fastapi import APIRouter, Depends, Response, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
