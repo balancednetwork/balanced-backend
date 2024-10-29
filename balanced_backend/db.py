@@ -38,14 +38,21 @@ async def init_db():
 
 async def get_session() -> AsyncSession:
     async_session = sessionmaker(
-        async_engine, class_=AsyncSession, expire_on_commit=False
+        create_async_engine(
+            ASYNC_SQLALCHEMY_DATABASE_URL,
+            echo=True,
+            future=True,
+            pool_size=20,
+            max_overflow=10,
+        ),
+        class_=AsyncSession,
+        expire_on_commit=False,
     )
+    session = async_session()
     try:
-        async with async_session() as session:
-            yield session
-    except SQLAlchemyError as e:
-        logger.error(f"Failed to get a database session: {e}")
-        raise SystemExit(e)
+        yield session
+    finally:
+        session.close()
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
