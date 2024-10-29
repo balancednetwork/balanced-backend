@@ -141,15 +141,9 @@ def update_coingecko_historical(session: "Session"):
             else:
                 swap_type = "buy"
 
-            if p.name == "sICX/ICX" and settings.COINGECKO_HACK:
-                # This is insanely dumb - but we tried...
-                price = 1
-                target_volume = s.base_token_value_decimal
-                base_volume = s.base_token_value_decimal
-            else:
-                price = 1 / s.effective_fill_price_decimal
-                target_volume = s.base_token_value_decimal
-                base_volume = s.quote_token_value_decimal
+            price = 1 / s.effective_fill_price_decimal
+            target_volume = s.base_token_value_decimal
+            base_volume = s.quote_token_value_decimal
 
             trades[market_pair][swap_type].append(
                 HistoricalCoinGecko(
