@@ -138,11 +138,12 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
 
         if volume_time > current_time:
             head = True
+            volume_time = datetime.now().timestamp()
 
         swaps = get_dex_swaps(
             session=session,
-            start_time=volume_time,
-            end_time=volume_time + pool_volume.delta,
+            start_time=volume_time - pool_volume.delta,
+            end_time=volume_time,
             columns=[
                 DexSwap.pool_id,
                 DexSwap.ending_price_decimal,
