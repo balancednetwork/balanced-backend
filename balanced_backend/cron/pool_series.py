@@ -129,9 +129,6 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
         pool_series = [i for i in last_volume_timeseries if i.pool_id == p][0]
         pool_volume.pool_close[p] = pool_series.open
 
-    # TODO: Rm this tmp
-    volume_time += pool_volume.delta
-
     current_time = datetime.now().timestamp()
     head = False
     while volume_time < last_swap_time + pool_volume.delta:
