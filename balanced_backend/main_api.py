@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from multiprocessing.pool import ThreadPool
 import uvicorn
 from fastapi import FastAPI
@@ -21,6 +22,19 @@ tags_metadata = [
     {"name": "balanced-backend", "description": description, },
 ]
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Starting metrics server.")
+    metrics_pool = ThreadPool(1)
+    metrics_pool.apply_async(
+        start_http_server,(settings.METRICS_PORT, settings.METRICS_ADDRESS)
+    )
+    logger.info("Starting cache loop...")
+    pool = ThreadPool(1)
+    pool.apply_async(cache_cron)
+    yield
+
+
 app = FastAPI(
     title="Balanced Backend Service",
     description=description,
@@ -28,6 +42,7 @@ app = FastAPI(
     openapi_tags=tags_metadata,
     openapi_url=f"{settings.DOCS_PREFIX}/openapi.json",
     docs_url=f"{settings.DOCS_PREFIX}",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -45,19 +60,6 @@ app.add_middleware(
     quality=8,
 )
 
-
-@app.on_event("startup")
-async def setup():
-    logger.info("Starting metrics server.")
-    metrics_pool = ThreadPool(1)
-    metrics_pool.apply_async(start_http_server,
-                             (settings.METRICS_PORT, settings.METRICS_ADDRESS))
-
-    logger.info("Starting cache loop...")
-    pool = ThreadPool(1)
-    pool.apply_async(cache_cron)
-
-
 logger.info("Starting application...")
 # /health
 app.add_api_route(settings.HEALTH_PREFIX, health([
@@ -70,12 +72,12 @@ app.add_api_route(settings.READINESS_PREFIX, health([
 # /api/v1
 app.include_router(api_router, prefix=settings.REST_PREFIX)
 
+
 if __name__ == "__main__":
     uvicorn.run(
         "main_api:app",
         host="0.0.0.0",
         port=settings.PORT,
         log_level="info",
-        debug=True,
         workers=1,
     )
