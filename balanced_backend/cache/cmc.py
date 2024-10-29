@@ -12,6 +12,9 @@ from balanced_backend.utils.pools import get_cached_pool_stats
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
+# Ideal Endpoint Documentation
+# https://docs.google.com/document/d/1S4urpzUnO2t7DmS_1dc4EL4tgnnbTObPYXvDeBnukCg/edit
+
 
 def update_cmc_summary(session: 'Session'):
     logger.info("Updating cmc summary cache...")

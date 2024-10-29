@@ -66,8 +66,10 @@ async def get_coingecko_trades(
         response.headers["x-total-count"] = str(len(cache.coingecko_historical))
         output = cache.coingecko_historical
         if type:
+            type_output = {}
             for k, v in output.items():
-                output[k] = output[k][type]
+                type_output[k] = output[k][type]
+            return type_output
         return output
     try:
         output = cache.coingecko_historical[ticker_id]
