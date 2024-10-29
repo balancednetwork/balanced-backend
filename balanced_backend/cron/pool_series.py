@@ -44,14 +44,17 @@ TIME_SERIES_TABLES: list[SeriesTable] = [
     SeriesTable(
         table_suffix="1Hour",
         delta=60 * 60,
+        skip_modulo=2,
     ),
     SeriesTable(
         table_suffix="4Hour",
         delta=60 * 60 * 4,
+        skip_modulo=3,
     ),
     SeriesTable(
         table_suffix="1Day",
         delta=60 * 60 * 24,
+        skip_modulo=5,
     ),
     SeriesTable(
         table_suffix="1Week",
@@ -131,7 +134,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
 
     current_time = datetime.now().timestamp()
     head = False
-    while volume_time < last_swap_time + pool_volume.delta:
+    while volume_time < current_time + pool_volume.delta:
 
         if volume_time > current_time:
             head = True
