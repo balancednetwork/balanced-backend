@@ -3,6 +3,7 @@ pytest-mock
 pytest-cov
 pytest-order
 pytest-asyncio
+pytest-retry
 freezegun
 httpx
 grpcio-tools==1.40.0

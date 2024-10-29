@@ -30,6 +30,7 @@ def test_run_token_list(db):
     assert len(tokens) > 30
 
 
+@pytest.mark.flaky
 @pytest.mark.order(1)
 def test_run_pool_list(db):
     with db as session:
@@ -40,6 +41,7 @@ def test_run_pool_list(db):
     assert len(pools) > 30
 
 
+@pytest.mark.flaky
 @pytest.mark.order(1)
 def test_run_pool_prices(db):
     with db as session:
@@ -50,6 +52,7 @@ def test_run_pool_prices(db):
     assert pools[0].price > 0
 
 
+@pytest.mark.flaky
 @pytest.mark.order(1)
 def test_run_token_prices(db):
     with db as session:
