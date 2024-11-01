@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from loguru import logger
+from sqlalchemy import text
 
 from balanced_backend.addresses import addresses
 from balanced_backend.utils.rpc import (
@@ -14,7 +15,7 @@ from sqlalchemy.orm import Session
 
 
 def create_replace_stability_fund_balance(session: Session, contract_names: list[str]):
-    sql_query = f"""
+    sql_query = text(f"""
     DROP MATERIALIZED VIEW IF EXISTS stability_fund_balance;
 
     CREATE MATERIALIZED VIEW stability_fund_balance AS
@@ -29,7 +30,7 @@ def create_replace_stability_fund_balance(session: Session, contract_names: list
     {' ,'.join([f"'{name}'" for name in contract_names])}
     ) GROUP BY timestamp, date, update_interval
     ORDER BY timestamp DESC;
-    """
+    """)
 
     try:
         session.execute(sql_query)
