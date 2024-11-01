@@ -249,6 +249,10 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
                 head=head,
             )
 
+            if head:
+                query = delete(Table).where(Table.head).where(Table.pool_id == p)
+                session.execute(query)
+
             session.merge(t)
             # We have a memory issue that this seemed to fix
             # if num_swaps > 10000:
