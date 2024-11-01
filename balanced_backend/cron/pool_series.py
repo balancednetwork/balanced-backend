@@ -70,7 +70,7 @@ TIME_SERIES_TABLES: list[SeriesTable] = [
 
 def get_last_volume_time(session: 'Session', table: PoolSeriesTableType) -> int:
     result = session.execute(select(table).where(
-        table.chain_id == settings.CHAIN_ID
+        table.chain_id == settings.CHAIN_ID and not table.head
     ).order_by(table.timestamp.desc()).limit(1).limit(1))
     last_volume = result.scalars().first()
     if last_volume is None:
@@ -134,10 +134,12 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
 
     current_time = datetime.now().timestamp()
     head = False
-    while volume_time < last_swap_time + pool_volume.delta:
+    while volume_time < current_time + pool_volume.delta:
 
         if volume_time > current_time:
             head = True
+            query = delete(Table).where(Table.head)
+            session.execute(query)
             volume_time = datetime.now().timestamp()
 
         swaps = get_dex_swaps(
@@ -188,11 +190,6 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
             # if settings.VERBOSE:
             logger.info(
                 f"Processing pool: {p} in segment: {pool_volume.table_suffix}...")
-
-            if head:
-                query = delete(Table).where(Table.head).where(Table.pool_id == p)
-                session.execute(query)
-                volume_time = datetime.now().timestamp()
 
             total_supply = [i for i in total_supplies if i['pool_id'] == p][0][
                 'total_supply']
