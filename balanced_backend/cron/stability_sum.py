@@ -77,7 +77,7 @@ def build_stability_sum(session: 'Session'):
 def run_stability_sum(session: 'Session'):
     logger.info(f"Starting {__name__} cron")
     view_name = 'stability_fund_balance'
-    refresh_query = f"REFRESH MATERIALIZED VIEW {view_name}"
+    refresh_query = text(f"REFRESH MATERIALIZED VIEW {view_name}")
     try:
         session.execute(refresh_query)
         session.commit()
