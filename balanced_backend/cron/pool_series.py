@@ -69,9 +69,13 @@ TIME_SERIES_TABLES: list[SeriesTable] = [
 
 
 def get_last_volume_time(session: 'Session', table: PoolSeriesTableType) -> int:
-    result = session.execute(select(table).where(
-        table.chain_id == settings.CHAIN_ID and not table.head
-    ).order_by(table.timestamp.desc()).limit(1).limit(1))
+    query = select(table).where(
+        table.chain_id == settings.CHAIN_ID
+    ).where(
+        table.head != True
+    ).order_by(table.timestamp.desc()).limit(1).limit(1)
+
+    result = session.execute(query)
     last_volume = result.scalars().first()
     if last_volume is None:
         volume_time = int(get_timestamp_from_block(block=settings.FIRST_BLOCK) / 1e6)
@@ -138,8 +142,6 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
 
         if volume_time > current_time:
             head = True
-            query = delete(Table).where(Table.head)
-            session.execute(query)
             volume_time = datetime.now().timestamp()
 
         swaps = get_dex_swaps(
@@ -250,7 +252,9 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
             )
 
             if head:
-                query = delete(Table).where(Table.head).where(Table.pool_id == p)
+                query = delete(Table).where(
+                    Table.head == True  # noqa
+                ).where(Table.pool_id == p)
                 session.execute(query)
 
             session.merge(t)
