@@ -30,16 +30,19 @@ class SeriesTable(BaseModel):
     pool_ids: set[int] = set()
     pool_close: dict[int, float] = {}
     skip_modulo: int = 1  # Do run_number % skip_modulo == 0 for skipping long updates
+    run_count: int = 0
 
 
 TIME_SERIES_TABLES: list[SeriesTable] = [
     SeriesTable(
         table_suffix="5Min",
         delta=60 * 5,
+        skip_modulo=1,
     ),
     SeriesTable(
         table_suffix="15Min",
         delta=60 * 15,
+        skip_modulo=1,
     ),
     SeriesTable(
         table_suffix="1Hour",
@@ -84,17 +87,9 @@ def get_last_volume_time(session: 'Session', table: PoolSeriesTableType) -> int:
     return volume_time
 
 
-RUN_NUMBER_COUNT_DICT: dict[int, int] = {}
-
-
 def _skip_time_series(pool_volume: SeriesTable) -> bool:
-    if pool_volume.delta not in RUN_NUMBER_COUNT_DICT:
-        RUN_NUMBER_COUNT_DICT[pool_volume.delta] = 0
-
-    RUN_NUMBER_COUNT_DICT[pool_volume.delta] += 1
-    run_count = RUN_NUMBER_COUNT_DICT[pool_volume.delta]
-
-    if not run_count - 1 % pool_volume.skip_modulo == 0:
+    pool_volume.run_count += 1
+    if not pool_volume.run_count % pool_volume.skip_modulo == 0:
         return True
     return False
 
@@ -102,6 +97,7 @@ def _skip_time_series(pool_volume: SeriesTable) -> bool:
 def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     # Get the table we want to be building the series dynamically since there are many
     if _skip_time_series(pool_volume):
+        logger.info(f"Skipping pool volume series - {pool_volume.table_suffix} - run count={pool_volume.}")
         return
 
     Table = get_pool_series_table(table_suffix=pool_volume.table_suffix)
@@ -140,7 +136,7 @@ def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     head = False
     while volume_time < current_time + pool_volume.delta:
 
-        if volume_time > current_time:
+        if volume_time > last_swap_time:
             head = True
             volume_time = datetime.now().timestamp()
 
