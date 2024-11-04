@@ -97,7 +97,7 @@ def _skip_time_series(pool_volume: SeriesTable) -> bool:
 def get_time_series_for_interval(session: 'Session', pool_volume: SeriesTable):
     # Get the table we want to be building the series dynamically since there are many
     if _skip_time_series(pool_volume):
-        logger.info(f"Skipping pool volume series - {pool_volume.table_suffix} - run count={pool_volume.}")
+        logger.info(f"Skipping pool volume series - {pool_volume.table_suffix} - run count={pool_volume.run_count}")
         return
 
     Table = get_pool_series_table(table_suffix=pool_volume.table_suffix)
