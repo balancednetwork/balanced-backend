@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.8.0](https://github.com/balancednetwork/balanced-backend/compare/v0.7.0...v0.8.0) (2024-11-05)
+
+
+### Features
+
+* add last datapoint for pool and token series [#69](https://github.com/balancednetwork/balanced-backend/issues/69) ([7baeef4](https://github.com/balancednetwork/balanced-backend/commit/7baeef4f7fe2f7257857b157bf0787be02dfff95))
+* add stability fund balances [#66](https://github.com/balancednetwork/balanced-backend/issues/66) ([fd1fa64](https://github.com/balancednetwork/balanced-backend/commit/fd1fa645c9367645d649292b009351dc6dc6c13c))
+* bump pydantic, sqlmodel, and fastapi ([e3fc2cc](https://github.com/balancednetwork/balanced-backend/commit/e3fc2cc45da5c5646f8dbba7479b55122687923e))
+
+
+### Bug Fixes
+
+* add head attribute to series table and delete all head entries before adding a new one ([53fe55c](https://github.com/balancednetwork/balanced-backend/commit/53fe55c8c1e3055c8b4c48afb51388e849c53f33))
+* change the period for getting prices from time + delta to time - delta to allow head record to be current ([0379fc0](https://github.com/balancednetwork/balanced-backend/commit/0379fc03c2aa74f3e3c793e34d4f239c9d623cd7))
+* issue with cg api where cache was being corrupted with a specific query combo ([7c90333](https://github.com/balancednetwork/balanced-backend/commit/7c9033377b98070dd2820a47686e461ede4946f9))
+* update stability fund sum by replacing materialized view [#68](https://github.com/balancednetwork/balanced-backend/issues/68) ([a047e7b](https://github.com/balancednetwork/balanced-backend/commit/a047e7beaa54f31936f023301cb83ae7593d693e))
+* update the token and pool series API so that 0 for end means most up to date [#69](https://github.com/balancednetwork/balanced-backend/issues/69) ([0ee304e](https://github.com/balancednetwork/balanced-backend/commit/0ee304e9cde093a8a34c1f075250a3fd04b74c05))
+
 ## [0.7.0](https://github.com/balancednetwork/balanced-backend/compare/v0.6.4...v0.7.0) (2024-09-03)
 
 
