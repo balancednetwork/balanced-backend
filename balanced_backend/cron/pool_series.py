@@ -34,11 +34,11 @@ class SeriesTable(BaseModel):
 
 
 TIME_SERIES_TABLES: list[SeriesTable] = [
-    SeriesTable(
-        table_suffix="5Min",
-        delta=60 * 5,
-        skip_modulo=1,
-    ),
+    # SeriesTable(
+    #     table_suffix="5Min",
+    #     delta=60 * 5,
+    #     skip_modulo=1,
+    # ),
     SeriesTable(
         table_suffix="15Min",
         delta=60 * 15,
