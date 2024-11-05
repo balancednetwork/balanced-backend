@@ -75,7 +75,7 @@ def get_last_volume_time(session: 'Session', table: PoolSeriesTableType) -> int:
     query = select(table).where(
         table.chain_id == settings.CHAIN_ID
     ).where(
-        table.head != True
+        (table.head.is_(None)) | (table.head == False)
     ).order_by(table.timestamp.desc()).limit(1).limit(1)
 
     result = session.execute(query)
