@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/balancednetwork/balanced-backend/compare/v0.8.0...v0.8.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* broken query from sqla upgrade ([a8414e5](https://github.com/balancednetwork/balanced-backend/commit/a8414e5257d936b5a3fbcec86903787e9cf43e97))
+
 ## [0.8.0](https://github.com/balancednetwork/balanced-backend/compare/v0.7.0...v0.8.0) (2024-11-05)
 
 
