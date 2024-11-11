@@ -4,6 +4,7 @@ from typing import List, Union, Dict
 
 from fastapi import APIRouter, Depends, Response, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
 
 from balanced_backend.db import get_session
 from balanced_backend.utils.rpc import get_icx_call
@@ -35,7 +36,7 @@ async def historical_stability(
 
     query += f" ORDER BY timestamp DESC LIMIT {limit} OFFSET {skip}"
 
-    result = await session.execute(query)
+    result = await session.execute(text(query))
     time_series = result.fetchall()
 
     # Check if exists
