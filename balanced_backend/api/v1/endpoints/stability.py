@@ -5,6 +5,7 @@ from typing import List, Union, Dict
 from fastapi import APIRouter, Depends, Response, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
+from sqlmodel import select
 
 from balanced_backend.db import get_session
 from balanced_backend.utils.rpc import get_icx_call
@@ -21,7 +22,7 @@ async def historical_stability(
     limit: int = Query(1000, gt=0, lt=1001),
     start_timestamp: int = None,
     end_timestamp: int = None,
-) -> Union[List, Response]:
+) -> List:
     """Return list of stability fund balance over time."""
     query = "SELECT * FROM stability_fund_balance"
     conditions = []
@@ -37,7 +38,7 @@ async def historical_stability(
     query += f" ORDER BY timestamp DESC LIMIT {limit} OFFSET {skip}"
 
     result = await session.execute(text(query))
-    time_series = result.fetchall()
+    time_series = [dict(row) for row in result.mappings().all()]
 
     # Check if exists
     if len(time_series) == 0:
