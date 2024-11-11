@@ -11,7 +11,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     NAME: str = "balanced-backend"
     NETWORK_NAME: str = "mainnet"  # Not used?
-    VERSION: str = "v0.8.1"  # x-release-please-version
+    VERSION: str = "v0.8.2"  # x-release-please-version
 
     CHAIN_ID: int = 1  # 1 mainnet, 2 sejong, 7 lisbon
 
