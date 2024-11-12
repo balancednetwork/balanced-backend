@@ -48,11 +48,8 @@ async def get_session() -> AsyncSession:
         class_=AsyncSession,
         expire_on_commit=False,
     )
-    session = async_session()
-    try:
+    async with async_session() as session:
         yield session
-    finally:
-        session.close()
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
