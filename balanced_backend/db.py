@@ -40,7 +40,6 @@ async def get_session() -> AsyncSession:
     async_session = sessionmaker(
         create_async_engine(
             ASYNC_SQLALCHEMY_DATABASE_URL,
-            echo=True,
             future=True,
             pool_size=20,
             max_overflow=10,
