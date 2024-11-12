@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://github.com/balancednetwork/balanced-backend/compare/v0.8.1...v0.8.2) (2024-11-11)
+
+
+### Bug Fixes
+
+* fastapi type validation issue ([87747ae](https://github.com/balancednetwork/balanced-backend/commit/87747aebcc73e0d2dc049a6ce6ef90342d147bc6))
+
 ## [0.8.1](https://github.com/balancednetwork/balanced-backend/compare/v0.8.0...v0.8.1) (2024-11-11)
 
 
