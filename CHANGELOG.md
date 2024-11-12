@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.3](https://github.com/balancednetwork/balanced-backend/compare/v0.8.2...v0.8.3) (2024-11-12)
+
+
+### Bug Fixes
+
+* session management connection issue ([0b53def](https://github.com/balancednetwork/balanced-backend/commit/0b53def3d6a2ba818904a17fefa65ed0d371bea5))
+
 ## [0.8.2](https://github.com/balancednetwork/balanced-backend/compare/v0.8.1...v0.8.2) (2024-11-11)
 
 
