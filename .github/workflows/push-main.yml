@@ -80,6 +80,8 @@ jobs:
         include:
           - cluster: prod-ams
             network_name: mainnet
+          - cluster: cluster2
+            network_name: mainnet
 #          - cluster: prod-sng
 #            network_name: mainnet
 
