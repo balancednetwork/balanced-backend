@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 import sqlalchemy as sa
 from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, SQLModel
@@ -16,6 +15,8 @@ class DailyHistorical(SQLModel, table=True):
 
     address: str | None = Field(..., primary_key=True, index=True)
 
+    # TODO: Modify the migrations manually to add this index which is required otherwise
+    #  error-> duplicate key value violates unique constraint "daily_historicals_pkey"
     contract_name: str | None = Field(..., primary_key=True, index=True)
     method: str | None = Field(..., primary_key=True, index=True)
     value: float | None = Field(None, index=False)

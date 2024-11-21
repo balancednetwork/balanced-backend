@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('contract_name', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('method', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('value', sa.Float(), nullable=True),
-    sa.PrimaryKeyConstraint('timestamp', 'address', 'method')
+    sa.PrimaryKeyConstraint('timestamp', 'address', 'method', 'contract_name')
     )
     op.create_index(op.f('ix_daily_historicals_address'), 'daily_historicals', ['address'], unique=False)
     op.create_index(op.f('ix_daily_historicals_contract_name'), 'daily_historicals', ['contract_name'], unique=False)
