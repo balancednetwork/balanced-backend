@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.4](https://github.com/balancednetwork/balanced-backend/compare/v0.8.3...v0.8.4) (2024-11-21)
+
+
+### Bug Fixes
+
+* add missing value in pkey init migration ([72f6495](https://github.com/balancednetwork/balanced-backend/commit/72f6495b0d807112a7a55e56010efaef2aa814bf))
+
 ## [0.8.3](https://github.com/balancednetwork/balanced-backend/compare/v0.8.2...v0.8.3) (2024-11-12)
 
 
