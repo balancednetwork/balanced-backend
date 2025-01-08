@@ -78,7 +78,7 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - cluster: prod-ams
+          - cluster: cluster1
             network_name: mainnet
           - cluster: cluster2
             network_name: mainnet
