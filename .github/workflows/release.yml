@@ -97,10 +97,13 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-#          - cluster: cluster1
-#            network_name: mainnet
-          - cluster: prod-sng
+
+          - cluster: cluster1
             network_name: mainnet
+#          - cluster: cluster2
+#            network_name: mainnet
+#          - cluster: prod-sng
+#            network_name: mainnet
 
     steps:
       - name: Checkout charts repo
