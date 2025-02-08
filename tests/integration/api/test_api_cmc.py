@@ -26,11 +26,11 @@ def test_api_get_cmc_ticker(client: TestClient):
 
 @pytest.mark.anyio
 def test_api_get_cmc_orderbook(client: TestClient):
-    response = client.get(f"{settings.REST_PREFIX}/coin-market-cap/orderbook/sICX_ICX")
+    response = client.get(f"{settings.REST_PREFIX}/coin-market-cap/orderbook/sICX_BTCB")
     assert response.status_code == 200
 
 
 @pytest.mark.anyio
 def test_api_get_cmc_trades(client: TestClient):
-    response = client.get(f"{settings.REST_PREFIX}/coin-market-cap/trades/sICX_ICX")
+    response = client.get(f"{settings.REST_PREFIX}/coin-market-cap/trades/sICX_BTCB")
     assert response.status_code == 200
