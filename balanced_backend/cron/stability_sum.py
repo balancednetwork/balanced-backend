@@ -15,30 +15,36 @@ from sqlalchemy.orm import Session
 
 
 def create_replace_stability_fund_balance(session: Session, contract_names: list[str]):
-    sql_query = text(f"""
-    DROP MATERIALIZED VIEW IF EXISTS stability_fund_balance;
-
-    CREATE MATERIALIZED VIEW stability_fund_balance AS
-    SELECT timestamp,
-           date,
-           update_interval,
-           COALESCE(SUM(CASE WHEN contract_name IN (
-           {' ,'.join([f"'{name}'" for name in contract_names])}
-           ) THEN value ELSE 0 END), 0) AS balance
-    FROM daily_historicals
-    WHERE contract_name IN (
-    {' ,'.join([f"'{name}'" for name in contract_names])}
-    ) GROUP BY timestamp, date, update_interval
-    ORDER BY timestamp DESC;
-    """)
-
+    sql_query = text("REFRESH MATERIALIZED VIEW stability_fund_balance;")
     try:
         session.execute(sql_query)
         session.commit()
-    except Exception as e:
+    except Exception:
+        logger.info(f"Creating stability_fund_balance.")
         session.rollback()
-        logger.error(f"Error creating materialized view: {str(e)}")
-        raise e
+
+        sql_query = text(f"""
+        CREATE MATERIALIZED VIEW stability_fund_balance AS
+        SELECT timestamp,
+               date,
+               update_interval,
+               COALESCE(SUM(CASE WHEN contract_name IN (
+               {' ,'.join([f"'{name}'" for name in contract_names])}
+               ) THEN value ELSE 0 END), 0) AS balance
+        FROM daily_historicals
+        WHERE contract_name IN (
+        {' ,'.join([f"'{name}'" for name in contract_names])}
+        ) GROUP BY timestamp, date, update_interval
+        ORDER BY timestamp DESC;
+        """)
+        try:
+            session.execute(sql_query)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Error creating materialized view: {str(e)}")
+            raise e
+
 
 def build_stability_sum(session: 'Session'):
     """Sum all the stability fund."""
@@ -67,7 +73,8 @@ def build_stability_sum(session: 'Session'):
             # contract['name'] = f"stability_{contract['symbol']}_balance"
             # contracts.append(contract)
 
-            contract_names.append(f'stability_{get_contract_method_str(to_address=c, method="symbol")}_balance')
+            contract_names.append(
+                f'stability_{get_contract_method_str(to_address=c, method="symbol")}_balance')
 
     create_replace_stability_fund_balance(session, contract_names)
 
@@ -87,7 +94,6 @@ def run_stability_sum(session: 'Session'):
         logger.error(f"Error refreshing materialized view '{view_name}': {str(e)}")
         raise e
     logger.info(f"Ending {__name__} cron")
-
 
 
 if __name__ == "__main__":
