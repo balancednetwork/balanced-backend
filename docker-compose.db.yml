@@ -1,5 +1,3 @@
-version: "3.7"
-
 x-extractor-env: &extractor-env
   # API
   API_PORT: "8080"

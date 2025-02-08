@@ -1,5 +1,3 @@
-version: "3.7"
-
 x-env: &env
   NAME: "balanced"
   NETWORK_NAME: "mainnet"
