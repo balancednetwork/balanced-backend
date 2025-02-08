@@ -27,6 +27,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
       - name: Install deps
         run: make install
 #          sudo apt-get install librdkafka-dev
@@ -101,8 +105,6 @@ jobs:
           - cluster: cluster1
             network_name: mainnet
 #          - cluster: cluster2
-#            network_name: mainnet
-#          - cluster: prod-sng
 #            network_name: mainnet
 
     steps:
