@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.4](https://github.com/balancednetwork/balanced-backend/compare/v0.8.3...v0.8.4) (2025-02-17)
+
+
+### Bug Fixes
+
+* add missing value in pkey init migration ([72f6495](https://github.com/balancednetwork/balanced-backend/commit/72f6495b0d807112a7a55e56010efaef2aa814bf))
+* issue with dropping the stability fund chart ([e5fcec1](https://github.com/balancednetwork/balanced-backend/commit/e5fcec1357abdb3bdc5147c6210d6a0747d3735f))
+* issue with total supply calc on icx ([0e475c3](https://github.com/balancednetwork/balanced-backend/commit/0e475c37f18ef4488332706f49d808be38944a35))
+* total supply issue ([6c40b1e](https://github.com/balancednetwork/balanced-backend/commit/6c40b1e926563f0937a7b8c5a49f35615b8357af))
+
 ## [0.8.3](https://github.com/balancednetwork/balanced-backend/compare/v0.8.2...v0.8.3) (2024-11-12)
 
 
