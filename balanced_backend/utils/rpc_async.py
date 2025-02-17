@@ -84,6 +84,9 @@ async def get_total_supply_async_resp(
         logger.info(f"Timed out for total supply request for pool {pool_id} and block "
                     f"height {height}...")
         total_supply = 0
+    except KeyError as e:
+        logger.info(f"Got error with jsonrpc post data={data}")
+        raise e
 
     return {'pool_id': pool_id, 'total_supply': total_supply}
 
