@@ -20,7 +20,7 @@ def run_token_stats(
 
     for t in tokens:
 
-        if t.address == 'ICX':
+        if t.name == 'ICX':
             # Not really useful info unless we want to get all the in the tracker
             t.holders = 0
             t.total_supply = get_icx_stats()['circulating-supply']
