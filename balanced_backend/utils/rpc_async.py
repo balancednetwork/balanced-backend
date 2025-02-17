@@ -49,7 +49,8 @@ async def get_pool_stats_async(pool_ids: list[int], height: int = None):
 
 
 async def get_total_supply_async_resp(
-        session, pool_id: int,
+        session,
+        pool_id: int,
         height: int = None,
 ) -> dict:
     data = {
@@ -62,7 +63,7 @@ async def get_total_supply_async_resp(
             "data": {
                 'method': 'totalSupply',
                 'params': {
-                    '_id': str(pool_id)
+                    '_id': hex(pool_id)
                 }
             }
         },
