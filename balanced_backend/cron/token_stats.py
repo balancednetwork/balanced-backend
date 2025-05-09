@@ -24,6 +24,11 @@ def run_token_stats(
             # Not really useful info unless we want to get all the in the tracker
             t.holders = 0
             t.total_supply = get_icx_stats()['circulating-supply']
+        elif t.address == 'cx2000000000000000000000000000000000000000':
+            # Not sure what is going on here -> wETH is missing
+            # https://github.com/balancednetwork/balanced-backend/issues/82
+            t.holders = 0
+            t.total_supply = 0
         else:
             t.holders = get_token_holders(t.address)
             total_supply = get_contract_method_str(
