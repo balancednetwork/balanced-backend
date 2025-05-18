@@ -15,7 +15,7 @@ contract_methods: list[dict] = [
             "dataType": "call",
             "data": {"method": "getTotalCollateral"},
         },
-        "init_chart_time": 1619308800,
+        "init_chart_time": 1747353600,
     },
     {
         "contract_name": "bnusd",
