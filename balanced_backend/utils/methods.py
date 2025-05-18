@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Union, TYPE_CHECKING
 from sqlmodel import select
 
+from balanced_backend.addresses import addresses
 from balanced_backend.log import logger
 from balanced_backend.metrics import prom_metrics
 from balanced_backend.tables.historical import DailyHistorical
@@ -106,6 +107,9 @@ def build_interval_time_series(
             context.update_time()
             value = get_value_from_timestamp(context=context)
 
+            if context.address == addresses.LOANS_CONTRACT_ADDRESS:
+                logger.info(f"Skipping {addresses.LOANS_CONTRACT_ADDRESS} value")
+                continue
             if value is None:
                 raise Exception(
                     "Could not get value amount, endpoint not reachable most likely.")
