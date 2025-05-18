@@ -106,6 +106,7 @@ jobs:
 #            network_name: mainnet
           - cluster: cluster2
             network_name: mainnet
+            version: v2
 
     steps:
       - name: Checkout charts repo
@@ -116,12 +117,12 @@ jobs:
           path: charts
           token: ${{ secrets.INFRA_DEPLOYMENT_PAT }}
 
-      - name: Update API ${{ matrix.cluster }}/${{ matrix.network_name }} deployment values file
+      - name: Update API ${{ matrix.cluster }}/${{ matrix.network_name }} - ${{ matrix.version }}deployment values file
         uses: fjogeleit/yaml-update-action@master
         with:
           workDir: charts
           repository: balancednetwork/balanced-community-infra
-          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}/backend-v2/tags.yaml'
+          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}/backend-${{ matrix.version }}/tags.yaml'
           propertyPath: 'api.image.tag'
           value: ${{needs.docker.outputs.tag}}
           branch: main
@@ -129,12 +130,12 @@ jobs:
           updateFile: true
           commitChange: false
 
-      - name: Update worker ${{ matrix.cluster }}/${{ matrix.network_name }} deployment values file
+      - name: Update worker ${{ matrix.cluster }}/${{ matrix.network_name }} - ${{ matrix.version }} deployment values file
         uses: fjogeleit/yaml-update-action@master
         with:
           workDir: charts
           repository: balancednetwork/balanced-community-infra
-          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}/backend-v2/tags.yaml'
+          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}/backend-${{ matrix.version }}/tags.yaml'
           propertyPath: 'cron.image.tag'
           value: ${{needs.docker.outputs.tag}}
           branch: main
