@@ -15,7 +15,8 @@ contract_methods: list[dict] = [
             "dataType": "call",
             "data": {"method": "getTotalCollateral"},
         },
-        "init_chart_time": 1747353600,
+        # https://github.com/balancednetwork/balanced-backend/issues/84
+        "init_chart_block": 97373833 + int(86400/2),  # Day after last known date it being in DB
     },
     {
         "contract_name": "bnusd",
