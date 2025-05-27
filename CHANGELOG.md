@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.4](https://github.com/balancednetwork/balanced-backend/compare/v0.8.3...v0.8.4) (2025-05-18)
+
+
+### Bug Fixes
+
+* add missing value in pkey init migration ([72f6495](https://github.com/balancednetwork/balanced-backend/commit/72f6495b0d807112a7a55e56010efaef2aa814bf))
+* add skip on wETH address which does not exist [#82](https://github.com/balancednetwork/balanced-backend/issues/82) ([d2a8035](https://github.com/balancednetwork/balanced-backend/commit/d2a80355e4c4913d276fcf60a56bf101bf7a29d3))
+* broken method at height ([f9c2c87](https://github.com/balancednetwork/balanced-backend/commit/f9c2c873252aee298cde27b38b67ba14b24ff768))
+* broken method at height [#84](https://github.com/balancednetwork/balanced-backend/issues/84) ([2d2d183](https://github.com/balancednetwork/balanced-backend/commit/2d2d1838803048a0a5f660470c77f92511bad674))
+* issue with dropping the stability fund chart ([e5fcec1](https://github.com/balancednetwork/balanced-backend/commit/e5fcec1357abdb3bdc5147c6210d6a0747d3735f))
+* issue with total supply calc on icx ([0e475c3](https://github.com/balancednetwork/balanced-backend/commit/0e475c37f18ef4488332706f49d808be38944a35))
+* total supply issue ([6c40b1e](https://github.com/balancednetwork/balanced-backend/commit/6c40b1e926563f0937a7b8c5a49f35615b8357af))
+
 ## [0.8.3](https://github.com/balancednetwork/balanced-backend/compare/v0.8.2...v0.8.3) (2024-11-12)
 
 
