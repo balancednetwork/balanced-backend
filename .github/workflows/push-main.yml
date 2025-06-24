@@ -83,14 +83,12 @@ jobs:
       matrix:
         include:
 
-          - cluster: cluster1
-            network_name: mainnet
-            version: v2
-          - cluster: cluster1
-            network_name: mainnet
-            version: v4
-#          - cluster: cluster2
+#          - cluster: cluster1
 #            network_name: mainnet
+#            version: v4
+          - cluster: cluster2
+            network_name: mainnet
+            version: v3
 
     steps:
       - name: Checkout charts repo
