@@ -1,5 +1,6 @@
+from typing import AsyncGenerator
+
 from loguru import logger
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine
@@ -29,6 +30,12 @@ async_engine = create_async_engine(
     max_overflow=10,
 )
 
+async_session = sessionmaker(
+    bind=async_engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
+
 
 # Run onetime if we want to init with a prebuilt table of attributes
 async def init_db():
@@ -36,17 +43,7 @@ async def init_db():
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
-async def get_session() -> AsyncSession:
-    async_session = sessionmaker(
-        create_async_engine(
-            ASYNC_SQLALCHEMY_DATABASE_URL,
-            future=True,
-            pool_size=20,
-            max_overflow=10,
-        ),
-        class_=AsyncSession,
-        expire_on_commit=False,
-    )
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         yield session
 
