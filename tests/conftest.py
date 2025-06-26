@@ -3,7 +3,7 @@ from typing import AsyncGenerator
 import os
 
 import pytest
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from sqlalchemy.orm import sessionmaker
 
 from balanced_backend.db import engine
@@ -50,7 +50,8 @@ def event_loop(request):
 
 @pytest.fixture
 async def client() -> AsyncGenerator[AsyncClient, None]:
-    async with AsyncClient(app=app, base_url="http://test") as c:
+    async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test") as c:
         yield c
 
 
