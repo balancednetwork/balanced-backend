@@ -1,26 +1,25 @@
 import pytest
-from fastapi.testclient import TestClient
 
 from balanced_backend.config import settings
 
 
 @pytest.mark.anyio
-def test_api_get_pools(client: TestClient):
-    response = client.get(f"{settings.REST_PREFIX}/pools")
+async def test_api_get_pools(client):
+    response = await client.get(f"{settings.REST_PREFIX}/pools")
     assert response.status_code in [200, 204]
     assert len(response.json()) > 0
 
 
 @pytest.mark.anyio
-def test_api_get_pools_series(client: TestClient):
-    response = client.get(f"{settings.REST_PREFIX}/pools/series/2/5m/1/1000")
+async def test_api_get_pools_series(client):
+    response = await client.get(f"{settings.REST_PREFIX}/pools/series/2/5m/1/1000")
     # This table should have no data in tests
     assert response.status_code in [204, 200]
 
 
 @pytest.mark.anyio
-def test_api_get_pools_dividends(client: TestClient):
-    response = client.get(f"{settings.REST_PREFIX}/pools/dividends")
+async def test_api_get_pools_dividends(client):
+    response = await client.get(f"{settings.REST_PREFIX}/pools/dividends")
     # This table should have no data in tests
     assert response.status_code in [204, 200]
 
@@ -38,10 +37,8 @@ def test_api_get_pools_dividends(client: TestClient):
     ],
 )
 @pytest.mark.anyio
-def test_api_get_pools_dividends(
-    client: TestClient, token_a, token_b, interval, start, end
-):
-    response = client.get(
+async def test_api_get_pools_dividends(client, token_a, token_b, interval, start, end):
+    response = await client.get(
         f"{settings.REST_PREFIX}/pools/series/implied/{token_a}/{token_b}/{interval}/{start}/{end}"
     )
     # This table should have no data in tests

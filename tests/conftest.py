@@ -1,12 +1,13 @@
 import asyncio
-from typing import Generator
+from typing import AsyncGenerator
 import os
 
 import pytest
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from sqlalchemy.orm import sessionmaker
 
 from balanced_backend.db import engine
+from balanced_backend.main_api import app
 from balanced_backend.models.contract_method_base import ContractMethodBase, Params
 from balanced_backend.models.volumes_base import VolumeIntervalBase
 
@@ -38,6 +39,7 @@ def db_migration():
     # from balanced_backend.alembic.env import run_migrations_offline
     # run_migrations_offline()
 
+
 @pytest.yield_fixture(scope='session')
 def event_loop(request):
     """Create an instance of the default event loop for each test case."""
@@ -47,17 +49,18 @@ def event_loop(request):
 
 
 @pytest.fixture
-def client(event_loop) -> TestClient:
-    from balanced_backend.main_api import app
-
-    return TestClient(app)
+async def client() -> AsyncGenerator[AsyncClient, None]:
+    async with AsyncClient(app=app, base_url="http://test") as c:
+        yield c
 
 
 @pytest.fixture(scope='function')
 def get_fixture(request):
     """Get the fixtures dir in the current directory of the test."""
+
     def f(fixture_name):
         return os.path.join(request.fspath.dirname, 'fixtures', fixture_name)
+
     return f
 
 
