@@ -5,8 +5,9 @@ import os
 import pytest
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from balanced_backend.db import engine
+from balanced_backend.db import engine, async_session
 from balanced_backend.main_api import app
 from balanced_backend.models.contract_method_base import ContractMethodBase, Params
 from balanced_backend.models.volumes_base import VolumeIntervalBase
@@ -18,6 +19,16 @@ def db():
     session = SessionMade()
 
     yield session
+
+
+@pytest.fixture
+async def db_session() -> AsyncGenerator[AsyncSession, None]:
+    """
+    TODO: Update sync engine to async. In tests this has caused major issues as the
+     sync pg engine doesn't play nice with async and in tests these two are mixed.
+    """
+    async with async_session() as session:
+        yield session
 
 
 @pytest.fixture()
