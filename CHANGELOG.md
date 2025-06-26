@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.5](https://github.com/balancednetwork/balanced-backend/compare/v0.8.4...v0.8.5) (2025-06-26)
+
+
+### Bug Fixes
+
+* bug in db context management ([9a4014a](https://github.com/balancednetwork/balanced-backend/commit/9a4014aa2fad0087e649989df57d369e112335a6))
+
 ## [0.8.4](https://github.com/balancednetwork/balanced-backend/compare/v0.8.3...v0.8.4) (2025-05-18)
 
 
