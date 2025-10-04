@@ -1,3 +1,4 @@
+import re
 from typing import TYPE_CHECKING
 from loguru import logger
 
@@ -9,6 +10,8 @@ from balanced_backend.crud.pools import get_pools
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
+
+PROBLEM_ADDRESS_RE = r"^cx0{38}(0[2-9a-fA-F]|[1-9a-fA-F][0-9a-fA-F])$"
 
 def run_token_stats(
         session: 'Session',
@@ -27,6 +30,11 @@ def run_token_stats(
         elif t.address == 'cx2000000000000000000000000000000000000000':
             # Not sure what is going on here -> wETH is missing
             # https://github.com/balancednetwork/balanced-backend/issues/82
+            t.holders = 0
+            t.total_supply = 0
+        elif re.match(PROBLEM_ADDRESS_RE, t.address):
+            # Same thing as above - special addresses but aren't real tokens breaking
+            # one cluster but not the other (dev thankfully...)
             t.holders = 0
             t.total_supply = 0
         else:
